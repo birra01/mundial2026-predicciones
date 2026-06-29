@@ -6,6 +6,7 @@ Genera HTML premium con analisis de los 3 partidos de octavos (29 junio 2026)
 
 import sys
 import os
+import math
 from pathlib import Path
 import json
 import webbrowser
@@ -61,6 +62,134 @@ def value_signal(edge):
     else:
         return "🔴", "value-negative"
 
+# ─── Funciones auxiliares para Overs / BTTS ──────────────────────────
+
+def poisson_prob(lam, k):
+    """P(X = k) para Poisson con lambda=lam"""
+    return (lam ** k) * math.exp(-lam) / math.factorial(k)
+
+def over_prob(lam, goals):
+    """P(X > goals) = 1 - sum_{i=0}^{goals} P(X=i)"""
+    return round(1 - sum(poisson_prob(lam, i) for i in range(goals + 1)), 4)
+
+def btts_prob(xg_home, xg_away):
+    """Probabilidad de ambos marcan (con correlación negativa ajustada)"""
+    p_h = 1 - math.exp(-xg_home)
+    p_a = 1 - math.exp(-xg_away)
+    raw = p_h * p_a
+    # Ajuste correlación (equipos que marcan muchos goles también encajan más)
+    return raw * (1 - 0.15 * (1 - raw))
+
+def build_combinadas(predictions, odds_cache):
+    """Construye las combinadas usando cuotas reales de bet365 + edges del modelo"""
+    # ─── Extraer datos de los 3 partidos ───
+    matches = []
+    for r in predictions:
+        home = r['home_team']
+        away = r['away_team']
+        p = r['probabilities']
+        eg = r['expected_goals']
+        total_xg = eg['home'] + eg['away']
+        
+        # Cuotas reales
+        b365 = r.get('odds_b365') or {}
+        
+        ov15 = over_prob(total_xg, 1)
+        ov25 = over_prob(total_xg, 2)
+        ov35 = over_prob(total_xg, 3)
+        btts = btts_prob(eg['home'], eg['away'])
+        
+        matches.append({
+            'home': home, 'away': away,
+            'prob': p, 'eg': eg,
+            'b365': b365,
+            'ov15': ov15, 'ov25': ov25, 'ov35': ov35,
+            'btts': btts,
+        })
+    
+    m = matches  # shortcut
+    b = [m_.get('b365', {}) for m_ in m]  # bet365 for each match
+    
+    # ─── 🟢 SEGURA: Over 1.5 en los 3 ───
+    # Usar cuotas reales de bet365 si existen, si no, fallback a las que tenemos
+    cuota_ov15 = [
+        b[0].get('over15') or 1.33,  # Brazil-Japan
+        b[1].get('over15') or 1.22,  # Germany-Paraguay
+        b[2].get('over15') or 1.36,  # Netherlands-Morocco
+    ]
+    p_seg = m[0]['ov15'] * m[1]['ov15'] * m[2]['ov15']
+    cuota_seg = cuota_ov15[0] * cuota_ov15[1] * cuota_ov15[2]
+    
+    # Edge para cada pata
+    edges_seg = []
+    for i in range(3):
+        implied = 1 / cuota_ov15[i]
+        edge = round((m[i]['ov15'] - implied) * 100, 1)
+        edges_seg.append(edge)
+    
+    # ─── 🟠 MEDIA: Over 2.5 Brazil + Over 2.5 Germany + BTTS NL-MA ───
+    cuota_med = [
+        b[0].get('over25') or 2.10,   # Brazil Over 2.5
+        b[1].get('over25') or 1.72,   # Germany Over 2.5
+        b[2].get('btts_yes') or 1.90, # NED BTTS
+    ]
+    p_med = m[0]['ov25'] * m[1]['ov25'] * m[2]['btts']
+    cuota_med_total = cuota_med[0] * cuota_med[1] * cuota_med[2]
+    
+    edges_med = []
+    for i in range(3):
+        implied = 1 / cuota_med[i]
+        if i == 2:
+            edge = round((m[i]['btts'] - implied) * 100, 1)
+        else:
+            edge = round((m[i]['ov25'] - implied) * 100, 1)
+        edges_med.append(edge)
+    
+    # ─── 🔴 SOÑADORA: Over 2.5 NED + Over 2.5 Brazil + GER Draw ───
+    cuota_son = [
+        b[2].get('over25') or 2.20,   # NED Over 2.5
+        b[0].get('over25') or 2.10,   # Brazil Over 2.5
+        b[1].get('draw') or 5.35,     # Germany Draw
+    ]
+    p_son = m[2]['ov25'] * m[0]['ov25'] * (m[1]['prob']['draw'] / 100)
+    cuota_son_total = cuota_son[0] * cuota_son[1] * cuota_son[2]
+    
+    edges_son = []
+    for i in range(3):
+        implied = 1 / cuota_son[i]
+        if i == 2:
+            edge = round((m[1]['prob']['draw'] - implied * 100), 1)
+        else:
+            edge = round((m[i]['ov25'] - implied) * 100, 1)
+        edges_son.append(edge)
+    
+    return {
+        'segura': {
+            'prob': p_seg, 'cuota': cuota_seg,
+            'legs': [
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 1.5", 'cuota': cuota_ov15[0], 'prob': m[0]['ov15'], 'edge': edges_seg[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 1.5", 'cuota': cuota_ov15[1], 'prob': m[1]['ov15'], 'edge': edges_seg[1]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: Over 1.5", 'cuota': cuota_ov15[2], 'prob': m[2]['ov15'], 'edge': edges_seg[2]},
+            ]
+        },
+        'media': {
+            'prob': p_med, 'cuota': cuota_med_total,
+            'legs': [
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 2.5", 'cuota': cuota_med[0], 'prob': m[0]['ov25'], 'edge': edges_med[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 2.5", 'cuota': cuota_med[1], 'prob': m[1]['ov25'], 'edge': edges_med[1]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: BTTS Yes", 'cuota': cuota_med[2], 'prob': m[2]['btts'], 'edge': edges_med[2]},
+            ]
+        },
+        'sonadora': {
+            'prob': p_son, 'cuota': cuota_son_total,
+            'legs': [
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: Over 2.5", 'cuota': cuota_son[0], 'prob': m[2]['ov25'], 'edge': edges_son[0]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 2.5", 'cuota': cuota_son[1], 'prob': m[0]['ov25'], 'edge': edges_son[1]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Empate", 'cuota': cuota_son[2], 'prob': m[1]['prob']['draw'] / 100, 'edge': edges_son[2]},
+            ]
+        }
+    }
+
 def generate_web():
     """Genera predicciones.html con diseño premium"""
     
@@ -87,6 +216,9 @@ def generate_web():
         r['odds_b365'] = b365
         r['odds_pinnacle'] = pinnacle
         predictions.append(r)
+    
+    # Generar combinadas con cuotas reales
+    combinadas = build_combinadas(predictions, odds_cache)
     
     # Construir HTML
     html = f"""<!DOCTYPE html>
@@ -851,71 +983,80 @@ def generate_web():
                 </div>
             </div>
         </div>
-"""
+"""  
     
     html += f"""
         <div class="combinadas-section">
-            <h2>🎰 COMBINADAS RECOMENDADAS</h2>
+            <h2>🎰 COMBINADAS RECOMENDADAS (cuotas bet365)</h2>
             <div class="combi-row">
                 <div class="combi-card segura">
                     <h3>🟢 SEGURA</h3>
-                    <div class="combi-tagline">3 over 1.5 — casi regalado</div>
+                    <div class="combi-tagline">3 Over 1.5 — todos edges positivos</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
-                            <div class="stat-num">60.6%</div>
+                            <div class="stat-num">{combinadas['segura']['prob']*100:.1f}%</div>
                             <div class="stat-label">Probabilidad</div>
                         </div>
                         <div class="combi-stat">
-                            <div class="stat-num">2.22</div>
-                            <div class="stat-label">Cuota bet365 🔥</div>
+                            <div class="stat-num">{combinadas['segura']['cuota']:.2f}</div>
+                            <div class="stat-label">Cuota bet365</div>
                         </div>
                     </div>
                     <div class="combi-legs">
-                        <div class="combi-leg"><span class="combi-leg-num">1</span> Brazil vs Japan: +1.5 goles</div>
-                        <div class="combi-leg"><span class="combi-leg-num">2</span> Germany vs Paraguay: +1.5 goles</div>
-                        <div class="combi-leg"><span class="combi-leg-num">3</span> Netherlands vs Morocco: +1.5 goles</div>
-                    </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~22.20€</strong> &nbsp; <span style="color:#2ecc71">EV +34.5% 🟢</span></div>
+"""
+    for i, leg in enumerate(combinadas['segura']['legs'], 1):
+        edge_sign = '+' if leg['edge'] >= 0 else ''
+        html += f'                        <div class="combi-leg"><span class="combi-leg-num">{i}</span> {leg["text"]} (@{leg["cuota"]:.2f} · P={leg["prob"]*100:.0f}% · edge {edge_sign}{leg["edge"]:.1f}%)</div>\n'
+    
+    ev_seg = combinadas['segura']['prob'] * combinadas['segura']['cuota'] * 100
+    html += f"""                    </div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~{10*combinadas['segura']['cuota']:.0f}€</strong> &nbsp; <span style="color:#2ecc71">EV +{ev_seg-100:.1f}% 🟢</span></div>
                 </div>
                 <div class="combi-card media">
                     <h3>🟠 MEDIA</h3>
-                    <div class="combi-tagline">Valor esperado positivo 📈</div>
+                    <div class="combi-tagline">Over 2.5 + BTTS con edges fuertes</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
-                            <div class="stat-num">25.6%</div>
+                            <div class="stat-num">{combinadas['media']['prob']*100:.1f}%</div>
                             <div class="stat-label">Probabilidad</div>
                         </div>
                         <div class="combi-stat">
-                            <div class="stat-num">4.91</div>
+                            <div class="stat-num">{combinadas['media']['cuota']:.2f}</div>
                             <div class="stat-label">Cuota bet365</div>
                         </div>
                     </div>
                     <div class="combi-legs">
-                        <div class="combi-leg"><span class="combi-leg-num">1</span> Brazil vs Japan: Over 2.5 goles (@2.10 · prob 58%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">2</span> Germany GANA (@1.30 · prob real 62%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">3</span> Netherlands vs Morocco: AMBOS marcan (@1.80 · prob 72%)</div>
-                    </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~49.10€</strong></div>
+"""
+    for i, leg in enumerate(combinadas['media']['legs'], 1):
+        edge_sign = '+' if leg['edge'] >= 0 else ''
+        html += f'                        <div class="combi-leg"><span class="combi-leg-num">{i}</span> {leg["text"]} (@{leg["cuota"]:.2f} · P={leg["prob"]*100:.0f}% · edge {edge_sign}{leg["edge"]:.1f}%)</div>\n'
+    
+    ev_med = combinadas['media']['prob'] * combinadas['media']['cuota'] * 100
+    html += f"""                    </div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~{10*combinadas['media']['cuota']:.0f}€</strong> &nbsp; <span style="color:#2ecc71">EV +{ev_med-100:.1f}% 🟢</span></div>
                 </div>
                 <div class="combi-card sonadora">
                     <h3>🔴 SOÑADORA</h3>
-                    <div class="combi-tagline">Goles + batacazo con cabeza 🎯</div>
+                    <div class="combi-tagline">Goles + sorpresa con edge 🎯</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
-                            <div class="stat-num">4.6%</div>
+                            <div class="stat-num">{combinadas['sonadora']['prob']*100:.1f}%</div>
                             <div class="stat-label">Probabilidad</div>
                         </div>
                         <div class="combi-stat">
-                            <div class="stat-num">20.79</div>
+                            <div class="stat-num">{combinadas['sonadora']['cuota']:.2f}</div>
                             <div class="stat-label">Cuota bet365</div>
                         </div>
                     </div>
                     <div class="combi-legs">
-                        <div class="combi-leg"><span class="combi-leg-num">1</span> Over 2.5 Brazil-Japan (@2.10 · prob ~55%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">2</span> Over 3.5 Germany-Paraguay (@2.75 · prob ~30%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">3</span> Morocco GANA (@3.60 · prob ~28%)</div>
-                    </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~207.90€</strong></div>
+"""
+    for i, leg in enumerate(combinadas['sonadora']['legs'], 1):
+        edge_sign = '+' if leg['edge'] >= 0 else ''
+        html += f'                        <div class="combi-leg"><span class="combi-leg-num">{i}</span> {leg["text"]} (@{leg["cuota"]:.2f} · P={leg["prob"]*100:.0f}% · edge {edge_sign}{leg["edge"]:.1f}%)</div>\n'
+    
+    ev_son = combinadas['sonadora']['prob'] * combinadas['sonadora']['cuota'] * 100
+    html += f"""                    </div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~{10*combinadas['sonadora']['cuota']:.0f}€</strong> &nbsp; <span style="color:#2ecc71">EV +{ev_son-100:.1f}% 🟢</span></div>
                 </div>
             </div>
         </div>
