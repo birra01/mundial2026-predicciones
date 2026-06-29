@@ -218,6 +218,19 @@ def build_value_bets(matches_data, odds_cache):
 
     # Ordenar por edge descendente (más positivos primero)
     value_bets.sort(key=lambda x: x['edge_pct'], reverse=True)
+    
+    # DEDUPLICAR: solo mejor línea por partido+stat (mayor EV)
+    seen = {}
+    deduped = []
+    for vb in value_bets:
+        key = (vb['match'], vb['stat_key'])
+        if key in seen:
+            # Quedarse con el de mayor EV
+            if vb['ev_pct'] > seen[key]['ev_pct']:
+                seen[key] = vb
+        else:
+            seen[key] = vb
+    value_bets = sorted(seen.values(), key=lambda x: x['edge_pct'], reverse=True)
 
     return value_bets, team_stats
 

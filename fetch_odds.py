@@ -108,7 +108,8 @@ def extract_odds(odds_data):
                 outcomes = mdata.get("outcomes", {})
                 for oid, odata in outcomes.items():
                     oid_int = int(oid)
-                    side = "over" if oid_int > int(mid) else "under"
+                    # OddsPapi: outcome_id == market_id → Over, outcome_id == market_id+1 → Under
+                    side = "over" if oid_int == int(mid) else "under"
                     price = odata.get("players", {}).get("0", {}).get("price")
                     if stat_key not in result[slug]:
                         result[slug][stat_key] = {}
