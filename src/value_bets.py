@@ -220,3 +220,122 @@ def build_value_bets(matches_data, odds_cache):
     value_bets.sort(key=lambda x: x['edge_pct'], reverse=True)
 
     return value_bets, team_stats
+
+
+def build_matchup_narrative(home_team, away_team, team_stats):
+    """Genera una narrativa estadística del enfrentamiento comparando 
+    medias de cada equipo, lo que permiten al rival, y detectando puntos clave.
+    
+    Retorna un string HTML listo para insertar en la web."""
+    
+    LABELS = {
+        'cornerKicks': 'córners', 'yellowCards': 'tarjetas amarillas',
+        'totalShotsOnGoal': 'disparos totales', 'shotsOnGoal': 'tiros a puerta',
+        'fouls': 'faltas'
+    }
+    ICONS = {
+        'cornerKicks': '🏳️', 'yellowCards': '🟨', 'totalShotsOnGoal': '⚽',
+        'shotsOnGoal': '🎯', 'fouls': '⚡'
+    }
+    
+    ht = team_stats.get(home_team, {})
+    at = team_stats.get(away_team, {})
+    if not ht or not at:
+        return ''
+    
+    h_for = ht.get('for', {})
+    h_ag = ht.get('against', {})
+    a_for = at.get('for', {})
+    a_ag = at.get('against', {})
+    
+    # Media de liga para referencia
+    all_for = {}
+    for key in LABELS:
+        vals = [t['for'].get(key, 0) for t in team_stats.values() if t['for'].get(key, 0) > 0]
+        all_for[key] = sum(vals) / len(vals) if vals else 1
+    
+    # Construir frases narrativas para los 5 stats
+    phrases = []
+    
+    for key in ['shotsOnGoal', 'cornerKicks', 'yellowCards', 'totalShotsOnGoal', 'fouls']:
+        hf = h_for.get(key, 0)
+        af = a_for.get(key, 0)
+        ha = h_ag.get(key, 0)
+        aa = a_ag.get(key, 0)
+        liga = all_for[key]
+        label = LABELS[key]
+        icon = ICONS[key]
+        
+        if hf < 0.3 and af < 0.3:
+            continue
+        
+        total = hf + af
+        
+        # Frase narrativa
+        if hf >= af * 1.5:
+            # Local domina mucho
+            pct = int((hf - liga) / liga * 100) if liga > 0 else 0
+            pct = abs(pct)
+            if aa > liga * 1.1:
+                phrases.append(
+                    f"{icon} Se esperan <strong>~{total:.0f} {label}</strong>. "
+                    f"{home_team} genera <strong>{hf:.1f}</strong> (+{pct}% sobre la media) "
+                    f"y {away_team} encaja {aa:.1f} por partido."
+                )
+            else:
+                phrases.append(
+                    f"{icon} Dominio claro de {home_team} en {label}: <strong>{hf:.1f}</strong> por partido "
+                    f"frente a solo {af:.1f} de {away_team}. Se esperan ~{total:.0f} en total."
+                )
+        elif af >= hf * 1.5:
+            # Visitante domina mucho
+            pct = int((af - liga) / liga * 100) if liga > 0 else 0
+            pct = abs(pct)
+            if ha > liga * 1.1:
+                phrases.append(
+                    f"{icon} Ojo a {away_team}: promedia <strong>{af:.1f} {label}</strong> (+{pct}% sobre la media) "
+                    f"y {home_team} permite {ha:.1f}. Se esperan ~{total:.0f} en total."
+                )
+            else:
+                phrases.append(
+                    f"{icon} {away_team} llega con <strong>{af:.1f} {label}</strong> por partido "
+                    f"vs {hf:.1f} de {home_team}. Se esperan ~{total:.0f}."
+                )
+        elif abs(hf - af) > liga * 0.4:
+            # Diferencia notable pero no abismal
+            stronger = home_team if hf > af else away_team
+            weaker = away_team if hf > af else home_team
+            s_val = max(hf, af)
+            w_val = min(hf, af)
+            phrases.append(
+                f"{icon} {stronger} ({s_val:.1f}) supera a {weaker} ({w_val:.1f}) en {label}. "
+                f"Se esperan ~{total:.0f} en total."
+            )
+        else:
+            # Equilibrado
+            if hf > liga * 1.05 and af > liga * 1.05:
+                phrases.append(
+                    f"{icon} Ambos equipos por encima de la media en {label}: "
+                    f"{hf:.1f} y {af:.1f}. Partido con ~{total:.0f} esperados."
+                )
+            elif hf < liga * 0.95 and af < liga * 0.95:
+                phrases.append(
+                    f"{icon} Pocos {label} esperados: {hf:.1f} y {af:.1f} por partido "
+                    f"(ambos por debajo de la media de {liga:.1f})."
+                )
+            else:
+                phrases.append(
+                    f"{icon} Equilibrio en {label}: {home_team} {hf:.1f} — {away_team} {af:.1f}. "
+                    f"Total esperado ~{total:.0f}."
+                )
+    
+    if not phrases:
+        return ''
+    
+    # Cabecera con resumen del partido
+    html = '<div class="matchup-narrative"><strong>🔬 Radiografía estadística del partido</strong>'
+    for p in phrases:
+        html += f'<div class="narrative-line">{p}</div>\n'
+    html += '</div>'
+    
+    return html

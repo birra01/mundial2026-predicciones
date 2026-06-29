@@ -14,7 +14,7 @@ import webbrowser
 # Añadir src al path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 from worldcup.engine import WorldCupEngine
-from value_bets import build_value_bets, load_all_matches
+from value_bets import build_value_bets, load_all_matches, build_matchup_narrative, compute_team_averages
 
 # ─── Cuotas reales (OddsPapi) ───────────────────────────────────────────
 
@@ -278,6 +278,10 @@ def generate_web():
     # Cargar motor
     engine = WorldCupEngine()
     engine.load_data()
+    
+    # Cargar estadísticas de equipo para narrativas de enfrentamiento
+    matches_data = load_all_matches()
+    team_stats_narrative = compute_team_averages(matches_data)
     
     # Cargar cuotas reales
     odds_cache = load_odds_cache()
@@ -551,6 +555,32 @@ def generate_web():
             font-size: 0.9em;
             line-height: 1.5;
             margin-bottom: 16px;
+        }}
+        
+        .matchup-narrative {{
+            background: linear-gradient(135deg, #0d1030 0%, #111540 100%);
+            border: 1px solid #2a2f4a;
+            border-left: 4px solid #60a0f0;
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 16px;
+            font-size: 0.85em;
+            line-height: 1.8;
+            color: #b0c0e0;
+        }}
+        
+        .matchup-narrative strong {{
+            color: #80b0f0;
+        }}
+        
+        .narrative-line {{
+            padding: 3px 0;
+            padding-left: 6px;
+            border-bottom: 1px solid rgba(42,47,74,0.3);
+        }}
+        
+        .narrative-line:last-child {{
+            border-bottom: none;
         }}
         
         .model-breakdown {{
@@ -1259,12 +1289,14 @@ def generate_web():
                     <div class="stat-name-center">{label}</div>
                     <div class="stat-value-away">{s['away']:.1f}</div>"""
         
-        html += f"""
-                </div>
+        html += f"""                </div>
             </div>
             
             <div class="narrative">📊 {r['narrative']}</div>
             
+"""
+        html += build_matchup_narrative(r['home_team'], r['away_team'], team_stats_narrative)
+        html += f"""
             <div class="model-breakdown">
                 <div class="model-chip">Elo: <span>{r['model_breakdown']['elo']}% local</span></div>
                 <div class="model-chip">Estadístico: <span>{r['model_breakdown']['statistical']}% local</span></div>
@@ -1278,7 +1310,7 @@ def generate_web():
                 </div>
             </div>
         </div>
-"""  
+"""
     
     html += f"""
         </div><!-- /tab-partidos -->
@@ -1358,16 +1390,14 @@ def generate_web():
                 </div>
             </div>
         </div>
-+        </div><!-- /tab-combinadas -->
-+        
-+        <div id="tab-valuebets" class="tab-panel">
+        </div><!-- /tab-combinadas -->
+        
+        <div id="tab-valuebets" class="tab-panel">
 """ + _build_value_bets_html() + """
         </div><!-- /tab-valuebets -->
 """
 
     html += f"""
-        </div><!-- /combinadas -->
-        
         <div class="footer">
             ⚡ Sistema de predicción basado en modelo compuesto (Elo + Estadísticas + Goles esperados)<br>
             Datos de Sofascore · 72 partidos analizados · 48 selecciones · {len(engine.team_stats)} con estadísticas completas<br>
