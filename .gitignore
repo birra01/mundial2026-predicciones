@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# HTML de salida se regenera con worldcup_web.py
+# index.html NO se ignora — es lo que ve GitHub Pages
+
+# Datos de partidos (72 JSONs de Sofascore, solo necesitamos all_matches.json)
+data/worldcup/*
+!data/worldcup/all_matches.json
+
+# IDE
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+Thumbs.db
