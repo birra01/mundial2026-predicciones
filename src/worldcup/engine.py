@@ -426,6 +426,7 @@ class WorldCupEngine:
             'passes': 'pases', 'touchesInPenaltyArea': 'toques en área',
             'finalThirdEntries': 'entradas último tercio', 'crosses': 'centros',
             'goalkeeperSaves': 'paradas del portero', 'fouls': 'faltas',
+            'yellowCards': 'tarjetas amarillas',
             'errorsLeadToGoal': 'errores que terminan en gol',
         }
         return labels.get(key, key)
