@@ -16,6 +16,6 @@ data/worldcup/*
 .vscode/
 .idea/
 
-# Sistema
-.DS_Store
-Thumbs.db
+# API keys y caché (NUNCA subir)
+.oddspapi_key
+data/odds_cache.json

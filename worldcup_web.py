@@ -14,12 +14,62 @@ import webbrowser
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 from worldcup.engine import WorldCupEngine
 
+# ─── Cuotas reales (OddsPapi) ───────────────────────────────────────────
+
+def load_odds_cache():
+    """Carga el caché de cuotas de OddsPapi"""
+    cache_path = Path(__file__).parent / "data" / "odds_cache.json"
+    if cache_path.exists():
+        with open(cache_path) as f:
+            return json.load(f)
+    return {}
+
+def get_match_odds(cache, home_team, away_team):
+    """Busca las cuotas de un partido por nombres de equipo (fuzzy match)"""
+    home_lower = home_team.lower().strip()
+    away_lower = away_team.lower().strip()
+    
+    for fid, info in cache.items():
+        ch = info.get("home", "").lower().strip()
+        ca = info.get("away", "").lower().strip()
+        # Match exacto o contenido (ej: "Cape Verde" vs "Cape Verde Islands")
+        if (ch == home_lower or home_lower in ch or ch in home_lower) and \
+           (ca == away_lower or away_lower in ca or ca in away_lower):
+            odds = info.get("odds") or {}
+            return odds.get("bet365", {}), odds.get("pinnacle", {})
+    return None, None
+
+def implied_prob(odd):
+    """Probabilidad implícita de una cuota decimal"""
+    if odd and odd > 0:
+        return round(100 / odd, 1)
+    return 0
+
+def value_edge(our_prob, odd):
+    """Diferencia entre nuestra probabilidad y la implícita de la cuota (value positivo = edge)"""
+    impl = implied_prob(odd)
+    return round(our_prob - impl, 1)
+
+def value_signal(edge):
+    """Señal visual de value"""
+    if edge >= 8:
+        return "🟢", "value-strong"
+    elif edge >= 3:
+        return "🟡", "value-mild"
+    elif edge >= 0:
+        return "⚪", "value-flat"
+    else:
+        return "🔴", "value-negative"
+
 def generate_web():
     """Genera predicciones.html con diseño premium"""
     
     # Cargar motor
     engine = WorldCupEngine()
     engine.load_data()
+    
+    # Cargar cuotas reales
+    odds_cache = load_odds_cache()
     
     # Partidos de hoy
     matches_today = [
@@ -32,6 +82,10 @@ def generate_web():
     for home, away, time in matches_today:
         r = engine.predict_match(home, away)
         r['time'] = time
+        # Cuotas reales
+        b365, pinnacle = get_match_odds(odds_cache, home, away)
+        r['odds_b365'] = b365
+        r['odds_pinnacle'] = pinnacle
         predictions.append(r)
     
     # Construir HTML
@@ -506,6 +560,82 @@ def generate_web():
             margin-bottom: 6px;
             font-weight: 500;
         }}
+        
+        .odds-section {{
+            background: #0d1030;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            border: 1px solid #2a2f4a;
+        }}
+        
+        .odds-section h3 {{
+            font-size: 0.8em;
+            font-weight: 700;
+            color: #f0c040;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }}
+        
+        .odds-row {{
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }}
+        
+        .odds-label {{
+            width: 90px;
+            font-size: 0.75em;
+            color: #6a70a0;
+            font-weight: 600;
+            padding: 6px 0;
+            flex-shrink: 0;
+        }}
+        
+        .odds-cells {{
+            display: flex;
+            gap: 8px;
+            flex: 1;
+        }}
+        
+        .odds-cell {{
+            flex: 1;
+            text-align: center;
+            background: #101530;
+            border-radius: 8px;
+            padding: 6px 4px;
+            border: 1px solid #1e2450;
+            font-size: 0.85em;
+        }}
+        
+        .odds-cell .odd-value {{
+            font-weight: 800;
+            font-size: 1.05em;
+        }}
+        
+        .odds-cell .odd-edge {{
+            font-size: 0.72em;
+            margin-top: 2px;
+            font-weight: 600;
+        }}
+        
+        .odds-cell .odd-edge.value-strong {{ color: #60f0a0; }}
+        .odds-cell .odd-edge.value-mild, .odds-cell .odd-edge.value-flat {{ color: #8890b0; }}
+        .odds-cell .odd-edge.value-negative {{ color: #f06090; }}
+        
+        .odds-cell .odd-implied {{
+            font-size: 0.68em;
+            color: #5860a0;
+            margin-top: 1px;
+        }}
+        
+        .odds-source {{
+            font-size: 0.65em;
+            color: #4a5080;
+            text-align: right;
+            margin-top: 4px;
+        }}
     </style>
 </head>
 <body>
@@ -566,6 +696,110 @@ def generate_web():
                 </div>
             </div>
             
+"""
+        
+        # ─── Sección de cuotas reales ───
+        b365 = r.get('odds_b365') or {}
+        pinn = r.get('odds_pinnacle') or {}
+        
+        if b365 or pinn:
+            html += """            <div class="odds-section">
+                <h3>💰 CUOTAS REALES vs PREDICCIÓN</h3>
+                <div class="odds-row">
+                    <div class="odds-label">Modelo</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">""" + str(p['home']) + """%</div>
+                            <div class="odd-implied">""" + r['home_team'] + """</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">""" + str(p['draw']) + """%</div>
+                            <div class="odd-implied">Empate</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">""" + str(p['away']) + """%</div>
+                            <div class="odd-implied">""" + r['away_team'] + """</div>
+                        </div>
+                    </div>
+                </div>
+"""
+        
+        # bet365 row
+        if b365:
+            h_odd = b365.get('home', 0)
+            d_odd = b365.get('draw', 0)
+            a_odd = b365.get('away', 0)
+            he = value_edge(p['home'], h_odd)
+            de = value_edge(p['draw'], d_odd)
+            ae = value_edge(p['away'], a_odd)
+            hs, hc = value_signal(he)
+            ds, dc = value_signal(de)
+            as_, ac = value_signal(ae)
+            
+            html += f"""                <div class="odds-row">
+                    <div class="odds-label" style="color:#e09020">bet365</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">{h_odd}</div>
+                            <div class="odd-edge {hc}">{hs} {he:+}%</div>
+                            <div class="odd-implied">impl. {implied_prob(h_odd)}%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">{d_odd}</div>
+                            <div class="odd-edge {dc}">{ds} {de:+}%</div>
+                            <div class="odd-implied">impl. {implied_prob(d_odd)}%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">{a_odd}</div>
+                            <div class="odd-edge {ac}">{as_} {ae:+}%</div>
+                            <div class="odd-implied">impl. {implied_prob(a_odd)}%</div>
+                        </div>
+                    </div>
+                </div>
+"""
+        
+        # Pinnacle row
+        if pinn:
+            ph_odd = pinn.get('home', 0)
+            pd_odd = pinn.get('draw', 0)
+            pa_odd = pinn.get('away', 0)
+            phe = value_edge(p['home'], ph_odd)
+            pde = value_edge(p['draw'], pd_odd)
+            pae = value_edge(p['away'], pa_odd)
+            phs, phc = value_signal(phe)
+            pds, pdc = value_signal(pde)
+            pas_, pac = value_signal(pae)
+            
+            html += f"""                <div class="odds-row">
+                    <div class="odds-label" style="color:#60a0f0">Pinnacle</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">{ph_odd}</div>
+                            <div class="odd-edge {phc}">{phs} {phe:+}%</div>
+                            <div class="odd-implied">impl. {implied_prob(ph_odd)}%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">{pd_odd}</div>
+                            <div class="odd-edge {pdc}">{pds} {pde:+}%</div>
+                            <div class="odd-implied">impl. {implied_prob(pd_odd)}%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">{pa_odd}</div>
+                            <div class="odd-edge {pac}">{pas_} {pae:+}%</div>
+                            <div class="odd-implied">impl. {implied_prob(pa_odd)}%</div>
+                        </div>
+                    </div>
+                </div>
+"""
+        
+        if b365:
+            html += '                <div class="odds-source">📡 Datos de OddsPapi · Actualizado ' + \
+                     (odds_cache.get(list(odds_cache.keys())[0], {}).get('updated', 'hoy') 
+                      if odds_cache else 'hoy') + '</div>\n'
+        
+        html += '            </div>\n\n'
+        
+        html += f"""
             <div class="stats-section">
                 <h3>📊 ESTADÍSTICAS CLAVE</h3>
                 <div class="stats-two-col">

@@ -469,6 +469,82 @@
             margin-bottom: 6px;
             font-weight: 500;
         }
+        
+        .odds-section {
+            background: #0d1030;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            border: 1px solid #2a2f4a;
+        }
+        
+        .odds-section h3 {
+            font-size: 0.8em;
+            font-weight: 700;
+            color: #f0c040;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .odds-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .odds-label {
+            width: 90px;
+            font-size: 0.75em;
+            color: #6a70a0;
+            font-weight: 600;
+            padding: 6px 0;
+            flex-shrink: 0;
+        }
+        
+        .odds-cells {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .odds-cell {
+            flex: 1;
+            text-align: center;
+            background: #101530;
+            border-radius: 8px;
+            padding: 6px 4px;
+            border: 1px solid #1e2450;
+            font-size: 0.85em;
+        }
+        
+        .odds-cell .odd-value {
+            font-weight: 800;
+            font-size: 1.05em;
+        }
+        
+        .odds-cell .odd-edge {
+            font-size: 0.72em;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+        
+        .odds-cell .odd-edge.value-strong { color: #60f0a0; }
+        .odds-cell .odd-edge.value-mild, .odds-cell .odd-edge.value-flat { color: #8890b0; }
+        .odds-cell .odd-edge.value-negative { color: #f06090; }
+        
+        .odds-cell .odd-implied {
+            font-size: 0.68em;
+            color: #5860a0;
+            margin-top: 1px;
+        }
+        
+        .odds-source {
+            font-size: 0.65em;
+            color: #4a5080;
+            text-align: right;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -510,6 +586,69 @@
                 </div>
             </div>
             
+            <div class="odds-section">
+                <h3>💰 CUOTAS REALES vs PREDICCIÓN</h3>
+                <div class="odds-row">
+                    <div class="odds-label">Modelo</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">48.7%</div>
+                            <div class="odd-implied">Brazil</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">27.9%</div>
+                            <div class="odd-implied">Empate</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">23.4%</div>
+                            <div class="odd-implied">Japan</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="odds-row">
+                    <div class="odds-label" style="color:#e09020">bet365</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">1.71</div>
+                            <div class="odd-edge value-negative">🔴 -9.8%</div>
+                            <div class="odd-implied">impl. 58.5%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">3.78</div>
+                            <div class="odd-edge value-flat">⚪ +1.4%</div>
+                            <div class="odd-implied">impl. 26.5%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">5.65</div>
+                            <div class="odd-edge value-mild">🟡 +5.7%</div>
+                            <div class="odd-implied">impl. 17.7%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="odds-row">
+                    <div class="odds-label" style="color:#60a0f0">Pinnacle</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">1.775</div>
+                            <div class="odd-edge value-negative">🔴 -7.6%</div>
+                            <div class="odd-implied">impl. 56.3%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">3.71</div>
+                            <div class="odd-edge value-flat">⚪ +0.9%</div>
+                            <div class="odd-implied">impl. 27.0%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">5.24</div>
+                            <div class="odd-edge value-mild">🟡 +4.3%</div>
+                            <div class="odd-implied">impl. 19.1%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="odds-source">📡 Datos de OddsPapi · Actualizado 2026-06-29</div>
+            </div>
+
+
             <div class="stats-section">
                 <h3>📊 ESTADÍSTICAS CLAVE</h3>
                 <div class="stats-two-col">
@@ -592,6 +731,69 @@
                 </div>
             </div>
             
+            <div class="odds-section">
+                <h3>💰 CUOTAS REALES vs PREDICCIÓN</h3>
+                <div class="odds-row">
+                    <div class="odds-label">Modelo</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">61.0%</div>
+                            <div class="odd-implied">Germany</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">24.7%</div>
+                            <div class="odd-implied">Empate</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">14.4%</div>
+                            <div class="odd-implied">Paraguay</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="odds-row">
+                    <div class="odds-label" style="color:#e09020">bet365</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">1.36</div>
+                            <div class="odd-edge value-negative">🔴 -12.5%</div>
+                            <div class="odd-implied">impl. 73.5%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">5.35</div>
+                            <div class="odd-edge value-mild">🟡 +6.0%</div>
+                            <div class="odd-implied">impl. 18.7%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">9.8</div>
+                            <div class="odd-edge value-mild">🟡 +4.2%</div>
+                            <div class="odd-implied">impl. 10.2%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="odds-row">
+                    <div class="odds-label" style="color:#60a0f0">Pinnacle</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">1.377</div>
+                            <div class="odd-edge value-negative">🔴 -11.6%</div>
+                            <div class="odd-implied">impl. 72.6%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">5.15</div>
+                            <div class="odd-edge value-mild">🟡 +5.3%</div>
+                            <div class="odd-implied">impl. 19.4%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">9.5</div>
+                            <div class="odd-edge value-mild">🟡 +3.9%</div>
+                            <div class="odd-implied">impl. 10.5%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="odds-source">📡 Datos de OddsPapi · Actualizado 2026-06-29</div>
+            </div>
+
+
             <div class="stats-section">
                 <h3>📊 ESTADÍSTICAS CLAVE</h3>
                 <div class="stats-two-col">
@@ -674,6 +876,69 @@
                 </div>
             </div>
             
+            <div class="odds-section">
+                <h3>💰 CUOTAS REALES vs PREDICCIÓN</h3>
+                <div class="odds-row">
+                    <div class="odds-label">Modelo</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">49.2%</div>
+                            <div class="odd-implied">Netherlands</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">26.2%</div>
+                            <div class="odd-implied">Empate</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">24.6%</div>
+                            <div class="odd-implied">Morocco</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="odds-row">
+                    <div class="odds-label" style="color:#e09020">bet365</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">2.34</div>
+                            <div class="odd-edge value-mild">🟡 +6.5%</div>
+                            <div class="odd-implied">impl. 42.7%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">3.06</div>
+                            <div class="odd-edge value-negative">🔴 -6.5%</div>
+                            <div class="odd-implied">impl. 32.7%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">3.66</div>
+                            <div class="odd-edge value-negative">🔴 -2.7%</div>
+                            <div class="odd-implied">impl. 27.3%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="odds-row">
+                    <div class="odds-label" style="color:#60a0f0">Pinnacle</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">2.32</div>
+                            <div class="odd-edge value-mild">🟡 +6.1%</div>
+                            <div class="odd-implied">impl. 43.1%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">3.17</div>
+                            <div class="odd-edge value-negative">🔴 -5.3%</div>
+                            <div class="odd-implied">impl. 31.5%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">3.63</div>
+                            <div class="odd-edge value-negative">🔴 -2.9%</div>
+                            <div class="odd-implied">impl. 27.5%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="odds-source">📡 Datos de OddsPapi · Actualizado 2026-06-29</div>
+            </div>
+
+
             <div class="stats-section">
                 <h3>📊 ESTADÍSTICAS CLAVE</h3>
                 <div class="stats-two-col">
