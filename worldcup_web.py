@@ -665,23 +665,23 @@ def generate_web():
                 </div>
                 <div class="combi-card sonadora">
                     <h3>🔴 SOÑADORA</h3>
-                    <div class="combi-tagline">3 batacazos... si suena 🚀</div>
+                    <div class="combi-tagline">Goles + batacazo con cabeza 🎯</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
-                            <div class="stat-num">5.9%</div>
+                            <div class="stat-num">4.6%</div>
                             <div class="stat-label">Probabilidad</div>
                         </div>
                         <div class="combi-stat">
-                            <div class="stat-num">67.09</div>
+                            <div class="stat-num">20.79</div>
                             <div class="stat-label">Cuota bet365</div>
                         </div>
                     </div>
                     <div class="combi-legs">
-                        <div class="combi-leg"><span class="combi-leg-num">1</span> Japan GANA (@5.25)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">2</span> Paraguay o Empate (@3.55 · prob 38%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">3</span> Morocco GANA (@3.60)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">1</span> Over 2.5 Brazil-Japan (@2.10 · prob ~55%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">2</span> Over 3.5 Germany-Paraguay (@2.75 · prob ~30%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">3</span> Morocco GANA (@3.60 · prob ~28%)</div>
                     </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~670.90€</strong></div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~207.90€</strong></div>
                 </div>
             </div>
         </div>

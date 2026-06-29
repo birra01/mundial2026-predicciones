@@ -45,9 +45,12 @@ CUOTA_MA_WIN = 3.60
 br_p15 = p_over(eg_br['home'] + eg_br['away'], 1)
 ge_p15 = p_over(eg_ge['home'] + eg_ge['away'], 1)
 ne_p15 = p_over(eg_ne['home'] + eg_ne['away'], 1)
-ge_p35 = p_over(eg_ge['home'] + eg_ge['away'], 3)
+# ─── Probabilidades extra ───
+br_over25_prob = p_over(eg_br['home'] + eg_br['away'], 2)
 ge_p25 = p_over(eg_ge['home'] + eg_ge['away'], 2)
+ge_p35 = p_over(eg_ge['home'] + eg_ge['away'], 3)
 ne_btts_prob = (1-poisson(eg_ne['home'], 0)) * (1-poisson(eg_ne['away'], 0))
+CUOTA_BR_OVER25 = 2.10
 
 # Probabilidad Germany GANA + Over 2.5 (con correlación)
 ge_win_over25 = (p_ge['home'] / 100) * ge_p25 * 0.85
@@ -59,13 +62,15 @@ py_doble = (p_ge['away'] + p_ge['draw']) / 100
 p_seg = br_p15 * ge_p15 * ne_p15
 cuota_seg = CUOTA_BR_OVER15 * CUOTA_GE_OVER15 * CUOTA_NE_OVER15
 
-# ─── 🟠 MEDIA: Japan + Over 3.5 Germ + Ambos marcan NL-MA ───
-p_med = (p_br['away'] / 100) * ge_p35 * ne_btts_prob
-cuota_med = CUOTA_JP_WIN * CUOTA_GE_OVER35 * CUOTA_NE_AM
+# ─── 🟠 MEDIA: Over 2.5 Br-Jp + Germany WIN + Ambos marcan NL-MA ───
+CUOTA_BR_OVER25 = 2.10
+ge_win_over25 = (p_ge['home'] / 100) * ge_p25 * 0.85
+p_med = br_over25_prob * (p_ge['home'] / 100) * ne_btts_prob
+cuota_med = CUOTA_BR_OVER25 * CUOTA_GE_WIN * CUOTA_NE_AM
 
-# ─── 🔴 SOÑADORA: Japan + Par o Emp + Morocco ───
-p_son = (p_br['away'] / 100) * py_doble * (p_ne['away'] / 100)
-cuota_son = CUOTA_JP_WIN * CUOTA_PY_DOBLE * CUOTA_MA_WIN
+# ─── 🔴 SOÑADORA: Over 2.5 Br-Jp + Over 3.5 Germ + Morocco GANA ───
+p_son = br_over25_prob * ge_p35 * (p_ne['away'] / 100)
+cuota_son = CUOTA_BR_OVER25 * CUOTA_GE_OVER35 * CUOTA_MA_WIN
 
 print("=" * 80)
 print("  COMBINADAS CON CUOTAS BET365 — MOTOR V2 (stats ajustadas por rival)")
@@ -78,13 +83,13 @@ for nombre, prob, cuota, emoji, patas in [
         (f"Netherlands vs Morocco: +1.5 goles", CUOTA_NE_OVER15, f"P={ne_p15*100:.0f}%"),
     ]),
     ("MEDIA", p_med, cuota_med, "🟠", [
-        (f"Japan GANA", CUOTA_JP_WIN, f"Prob real {p_br['away']:.0f}%"),
-        (f"Germany vs Paraguay: Over 3.5 goles", CUOTA_GE_OVER35, f"P={ge_p35*100:.0f}%"),
+        (f"Brazil vs Japan: Over 2.5 goles", CUOTA_BR_OVER25, f"P={br_over25_prob*100:.0f}%"),
+        (f"Germany GANA", CUOTA_GE_WIN, f"Prob real {p_ge['home']:.0f}%"),
         (f"Netherlands vs Morocco: AMBOS marcan", CUOTA_NE_AM, f"P={ne_btts_prob*100:.0f}%"),
     ]),
     ("SOÑADORA", p_son, cuota_son, "🔴", [
-        (f"Japan GANA", CUOTA_JP_WIN, f"Prob real {p_br['away']:.0f}%"),
-        (f"Paraguay o Empate", CUOTA_PY_DOBLE, f"P={py_doble*100:.0f}%"),
+        (f"Brazil vs Japan: Over 2.5 goles", CUOTA_BR_OVER25, f"P={br_over25_prob*100:.0f}%"),
+        (f"Germany vs Paraguay: Over 3.5 goles", CUOTA_GE_OVER35, f"P={ge_p35*100:.0f}%"),
         (f"Morocco GANA", CUOTA_MA_WIN, f"Prob real {p_ne['away']:.0f}%"),
     ]),
 ]:
