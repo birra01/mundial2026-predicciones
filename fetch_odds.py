@@ -28,6 +28,30 @@ BOOKMAKERS = ["bet365", "pinnacle"]  # Los que nos interesan
 
 MARKET_LABELS = {"101": "home", "102": "draw", "103": "away"}
 
+# Mercados de córners y bookings que nos interesan
+# Corners Over/Under: IDs 10767-10843, Bookings Over/Under: IDs 10914-10970
+CORNERS_OU_RANGE = range(10767, 10844)
+BOOKINGS_OU_RANGE = range(10914, 10971)
+EXTRA_MARKET_RANGES = [CORNERS_OU_RANGE, BOOKINGS_OU_RANGE]
+
+# Córners 1X2 y Bookings 1X2 (si están disponibles)
+EXTRA_MARKET_IDS = ['10764', '10911']
+
+def market_id_to_line(market_id, base):
+    """Convierte ID de mercado OddsPapi a línea (ej: 10803 → 9.5 para córners)"""
+    return 0.5 + (int(market_id) - base) / 4
+
+def market_id_info(market_id):
+    """Devuelve (stat_key, line) o (None, None)"""
+    mid = int(market_id)
+    if mid in CORNERS_OU_RANGE:
+        return 'cornerKicks', market_id_to_line(mid, 10767)
+    elif mid in BOOKINGS_OU_RANGE:
+        return 'yellowCards', market_id_to_line(mid, 10914)
+    elif str(mid) in EXTRA_MARKET_IDS:
+        return 'special', None
+    return None, None
+
 
 def load_key():
     if not KEY_FILE.exists():
@@ -61,19 +85,35 @@ def fetch_odds(api_key, fixture_id):
 
 
 def extract_odds(odds_data):
-    """Extrae solo los bookmakers que nos interesan"""
+    """Extrae solo los bookmakers que nos interesan (1X2 + córners + bookings)"""
     result = {}
     bom = odds_data.get("bookmakerOdds", {})
     for slug in BOOKMAKERS:
         if slug in bom:
             markets = bom[slug].get("markets", {})
+            result[slug] = {}
+            # 1X2
             if "101" in markets:
                 outcomes = markets["101"].get("outcomes", {})
-                result[slug] = {}
+                result[slug]["1x2"] = {}
                 for oid, o in outcomes.items():
                     label = MARKET_LABELS.get(oid, oid)
                     price = o.get("players", {}).get("0", {}).get("price")
-                    result[slug][label] = price
+                    result[slug]["1x2"][label] = price
+            # Córners y Bookings Over/Under
+            for mid, mdata in markets.items():
+                stat_key, line = market_id_info(mid)
+                if stat_key is None or line is None:
+                    continue
+                outcomes = mdata.get("outcomes", {})
+                for oid, odata in outcomes.items():
+                    oid_int = int(oid)
+                    side = "over" if oid_int > int(mid) else "under"
+                    price = odata.get("players", {}).get("0", {}).get("price")
+                    if stat_key not in result[slug]:
+                        result[slug][stat_key] = {}
+                    line_str = f"{side}_{line}"
+                    result[slug][stat_key][line_str] = price
     return result
 
 

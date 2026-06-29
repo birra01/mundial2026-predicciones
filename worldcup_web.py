@@ -14,6 +14,7 @@ import webbrowser
 # Añadir src al path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 from worldcup.engine import WorldCupEngine
+from value_bets import build_value_bets, load_all_matches
 
 # ─── Cuotas reales (OddsPapi) ───────────────────────────────────────────
 
@@ -33,11 +34,26 @@ def get_match_odds(cache, home_team, away_team):
     for fid, info in cache.items():
         ch = info.get("home", "").lower().strip()
         ca = info.get("away", "").lower().strip()
-        # Match exacto o contenido (ej: "Cape Verde" vs "Cape Verde Islands")
         if (ch == home_lower or home_lower in ch or ch in home_lower) and \
            (ca == away_lower or away_lower in ca or ca in away_lower):
             odds = info.get("odds") or {}
-            return odds.get("bet365", {}), odds.get("pinnacle", {})
+            # Formato nuevo: {bet365: {1x2: {home,draw,away}, cornerKicks: {...}}}
+            # Formato viejo: {bet365: {home,draw,away}}
+            # Compatibilidad con ambos
+            b365_raw = odds.get("bet365", {})
+            pin_raw = odds.get("pinnacle", {})
+            
+            # Si tiene 1x2 anidado, aplanar
+            b365 = b365_raw.get("1x2", b365_raw) if b365_raw else {}
+            pinn = pin_raw.get("1x2", pin_raw) if pin_raw else {}
+            
+            # Si bet365 no tiene 'home' pero está en formato nuevo sin 1x2, aplanar
+            if "home" not in b365 and isinstance(b365_raw, dict):
+                b365 = b365_raw.get("1x2", b365_raw)
+            if isinstance(pinn, dict) and "home" not in pinn and isinstance(pin_raw, dict):
+                pinn = pin_raw.get("1x2", pin_raw)
+            
+            return b365, pinn
     return None, None
 
 def implied_prob(odd):
@@ -189,6 +205,72 @@ def build_combinadas(predictions, odds_cache):
             ]
         }
     }
+
+def _build_value_bets_html():
+    """Genera el HTML de la sección Value Bets"""
+    # Cargar datos SOLO una vez
+    matches_data = load_all_matches()
+    odds_cache = load_odds_cache()
+    value_bets, team_stats = build_value_bets(matches_data, odds_cache)
+    
+    if not value_bets:
+        return '<div class="no-value-bets">🔍 No se encontraron value bets para los próximos partidos.<br><small>Las cuotas de bet365 no cubren suficientes mercados de córners/bookings aún.</small></div>'
+    
+    html = '<div class="value-bets-intro">🎯 Apuestas con edge positivo: la probabilidad del modelo supera a la implícita de bet365</div>\n'
+    html += '<div class="value-bets-grid">\n'
+    
+    for vb in value_bets:
+        # Determinar clase de edge
+        if vb['edge_pct'] >= 5:
+            edge_class = 'edge-strong'
+            edge_icon = '🟢'
+        elif vb['edge_pct'] >= 2:
+            edge_class = 'edge-mild'
+            edge_icon = '🟡'
+        elif vb['edge_pct'] >= 0:
+            edge_class = 'edge-flat'
+            edge_icon = '⚪'
+        else:
+            edge_class = 'edge-negative'
+            edge_icon = '🔴'
+        
+        edge_sign = '+' if vb['edge_pct'] >= 0 else ''
+        ev_sign = '+' if vb['ev_pct'] >= 0 else ''
+        
+        html += f'''        <div class="value-bet-card {edge_class}">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ {vb['match']}</span>
+                <span class="value-bet-market">{vb['icon']} {vb['label']} Over {vb['line']:.1f}</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">{vb['prob_over']:.1f}%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">{vb['odd']}</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">{vb['implied_pct']:.1f}%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict {edge_class}">
+                    <div class="edge-badge">{edge_icon} {edge_sign}{vb['edge_pct']:.1f}%</div>
+                    <div class="edge-label">EDGE · EV {ev_sign}{vb['ev_pct']:.1f}%</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: {vb['total_pred']:.1f} total (local {vb['pred_home']:.1f} + visitante {vb['pred_away']:.1f})</span>
+                <span>📈 Media local: {vb['team_h_for']:.1f} a favor / {vb['team_h_against']:.1f} en contra</span>
+                <span>📉 Media visitante: {vb['team_a_for']:.1f} a favor / {vb['team_a_against']:.1f} en contra</span>
+            </div>
+        </div>
+'''
+    
+    html += '</div>\n'
+    return html
+
 
 def generate_web():
     """Genera predicciones.html con diseño premium"""
@@ -768,6 +850,201 @@ def generate_web():
             text-align: right;
             margin-top: 4px;
         }}
+        
+        /* ─── PESTAÑAS ─── */
+        .tabs-nav {{
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            background: #0d1030;
+            border-radius: 14px;
+            padding: 4px;
+            border: 1px solid #2a2f4a;
+        }}
+        
+        .tab-btn {{
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: #6a70a0;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 11px;
+            transition: all 0.25s;
+            font-family: inherit;
+        }}
+        
+        .tab-btn:hover {{
+            color: #a0a8c0;
+            background: #151a35;
+        }}
+        
+        .tab-btn.active {{
+            background: linear-gradient(135deg, #1a2f50, #152040);
+            color: #e0e0e0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        }}
+        
+        .tab-panel {{
+            display: none;
+        }}
+        
+        .tab-panel.active {{
+            display: block;
+        }}
+        
+        /* ─── VALUE BETS ─── */
+        .value-bets-intro {{
+            text-align: center;
+            color: #8890b0;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }}
+        
+        .value-bets-grid {{
+            display: grid;
+            gap: 16px;
+        }}
+        
+        .value-bet-card {{
+            background: linear-gradient(145deg, #151a35 0%, #111530 100%);
+            border-radius: 12px;
+            padding: 18px 20px;
+            border: 1px solid #2a2f4a;
+            transition: transform 0.2s;
+            position: relative;
+            overflow: hidden;
+        }}
+        
+        .value-bet-card:hover {{
+            transform: translateY(-2px);
+        }}
+        
+        .value-bet-card::before {{
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+        }}
+        
+        .value-bet-card.edge-strong::before {{ background: #60f0a0; }}
+        .value-bet-card.edge-mild::before {{ background: #f0c040; }}
+        .value-bet-card.edge-flat::before {{ background: #8890b0; }}
+        .value-bet-card.edge-negative::before {{ background: #f06090; }}
+        
+        .value-bet-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }}
+        
+        .value-bet-match {{
+            font-weight: 700;
+            font-size: 1.05em;
+            color: #e0e0e0;
+        }}
+        
+        .value-bet-market {{
+            background: #1a1f3a;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #e09020;
+        }}
+        
+        .value-bet-body {{
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: stretch;
+        }}
+        
+        .value-bet-stat {{
+            flex: 1;
+            min-width: 100px;
+            background: #0d1030;
+            border-radius: 10px;
+            padding: 10px 14px;
+            text-align: center;
+        }}
+        
+        .value-bet-stat .stat-num {{
+            font-size: 1.3em;
+            font-weight: 800;
+            color: #e0e0e0;
+        }}
+        
+        .value-bet-stat .stat-label {{
+            font-size: 0.7em;
+            color: #6a70a0;
+            margin-top: 3px;
+        }}
+        
+        .value-bet-stat.highlight {{
+            border: 1px solid #2a4a3a;
+        }}
+        
+        .value-bet-stat.highlight .stat-num {{
+            color: #60f0a0;
+        }}
+        
+        .value-bet-verdict {{
+            flex: 1.5;
+            min-width: 200px;
+            background: #0d1030;
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }}
+        
+        .value-bet-verdict .edge-badge {{
+            font-size: 1.6em;
+            font-weight: 800;
+        }}
+        
+        .value-bet-verdict .edge-label {{
+            font-size: 0.7em;
+            color: #6a70a0;
+        }}
+        
+        .edge-strong .edge-badge {{ color: #60f0a0; }}
+        .edge-mild .edge-badge {{ color: #f0c040; }}
+        .edge-flat .edge-badge {{ color: #8890b0; }}
+        .edge-negative .edge-badge {{ color: #f06090; }}
+        
+        .value-bet-context {{
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #1a1f3a;
+            font-size: 0.73em;
+            color: #6a70a0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }}
+        
+        .value-bet-context span {{
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }}
+        
+        .no-value-bets {{
+            text-align: center;
+            padding: 40px;
+            color: #5a6080;
+            font-size: 1.1em;
+        }}
     </style>
 </head>
 <body>
@@ -777,6 +1054,24 @@ def generate_web():
             <div class="subtitle">Predicciones basadas en 72 partidos · 48 equipos · Estadísticas reales de Sofascore</div>
             <div class="badge">📅 29 de junio de 2026 · 3 partidos</div>
         </div>
+        
+        <!-- ─── PESTAÑAS ─── -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab('partidos')">📊 Partidos</button>
+            <button class="tab-btn" onclick="switchTab('combinadas')">🎰 Combinadas</button>
+            <button class="tab-btn" onclick="switchTab('valuebets')">🎯 Value Bets</button>
+        </div>
+        
+        <script>
+            function switchTab(tab) {{
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.querySelector('.tab-btn[onclick*=\"' + tab + '\"]').classList.add('active');
+                document.getElementById('tab-' + tab).classList.add('active');
+            }}
+        </script>
+        
+        <div id="tab-partidos" class="tab-panel active">
 """
     
     for r in predictions:
@@ -986,6 +1281,9 @@ def generate_web():
 """  
     
     html += f"""
+        </div><!-- /tab-partidos -->
+        
+        <div id="tab-combinadas" class="tab-panel">
         <div class="combinadas-section">
             <h2>🎰 COMBINADAS RECOMENDADAS (cuotas bet365)</h2>
             <div class="combi-row">
@@ -1060,7 +1358,16 @@ def generate_web():
                 </div>
             </div>
         </div>
++        </div><!-- /tab-combinadas -->
++        
++        <div id="tab-valuebets" class="tab-panel">
+""" + _build_value_bets_html() + """
+        </div><!-- /tab-valuebets -->
+"""
 
+    html += f"""
+        </div><!-- /combinadas -->
+        
         <div class="footer">
             ⚡ Sistema de predicción basado en modelo compuesto (Elo + Estadísticas + Goles esperados)<br>
             Datos de Sofascore · 72 partidos analizados · 48 selecciones · {len(engine.team_stats)} con estadísticas completas<br>
