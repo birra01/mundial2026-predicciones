@@ -766,6 +766,116 @@
             color: #5a6080;
             font-size: 1.1em;
         }
+        
+        /* ─── COMPARATIVA ─── */
+        .comparison-intro {
+            text-align: center;
+            padding: 20px;
+            color: #a0a8c0;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        
+        .comparison-match {
+            background: #111636;
+            border: 1px solid #2a2f4a;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .comparison-match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #1a1f3a;
+        }
+        
+        .comparison-match-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #f0c040;
+        }
+        
+        .comparison-avg-acc {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        
+        .comparison-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .comparison-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 14px;
+            background: #0c1029;
+            border-radius: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .comparison-stat-name {
+            min-width: 140px;
+            color: #c0c8e0;
+            font-weight: 600;
+        }
+        
+        .comparison-values {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 300px;
+            font-size: 0.92em;
+        }
+        
+        .comp-pred {
+            color: #60a0f0;
+        }
+        
+        .comp-vs {
+            color: #5a6080;
+        }
+        
+        .comp-real {
+            color: #60f0a0;
+        }
+        
+        .comp-diff {
+            margin-left: 8px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            background: #1a1f3a;
+            color: #f0a060;
+        }
+        
+        .comparison-bar-track {
+            flex: 1;
+            min-width: 100px;
+            height: 8px;
+            background: #1a1f3a;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .comparison-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .comparison-acc {
+            font-weight: bold;
+            min-width: 60px;
+            text-align: right;
+            font-size: 0.92em;
+        }
     </style>
 </head>
 <body>
@@ -773,7 +883,7 @@
         <div class="header">
             <h1>🏆 Mundial 2026 — Octavos de Final</h1>
             <div class="subtitle">Predicciones basadas en 72 partidos · 48 equipos · Estadísticas reales de Sofascore</div>
-            <div class="badge">📅 29 de junio de 2026 · 3 partidos</div>
+            <div class="badge">📅 30 de junio de 2026 · 3 partidos</div>
         </div>
         
         <!-- ─── PESTAÑAS ─── -->
@@ -781,6 +891,7 @@
             <button class="tab-btn active" onclick="switchTab('partidos')">📊 Partidos</button>
             <button class="tab-btn" onclick="switchTab('combinadas')">🎰 Combinadas</button>
             <button class="tab-btn" onclick="switchTab('valuebets')">🎯 Value Bets</button>
+            <button class="tab-btn" onclick="switchTab('comparativa')">📈 Comparativa</button>
         </div>
         
         <script>
@@ -796,32 +907,32 @@
 
         <div class="match-card">
             <div class="match-header">
-                <div class="match-time">⏰ 12:00</div>
+                <div class="match-time">⏰ 17:00</div>
                 <div class="teams">
-                    <span class="team">Brazil</span>
+                    <span class="team">Côte d'Ivoire</span>
                     <span class="vs">vs</span>
-                    <span class="team">Japan</span>
+                    <span class="team">Norway</span>
                 </div>
                 <div>
-                    <span class="prediction-badge HOME">Gana Brazil<span class="confidence">MEDIA</span></span>
+                    <span class="prediction-badge HOME">Gana Côte d'Ivoire<span class="confidence">MEDIA</span></span>
                 </div>
             </div>
             
             <div class="probabilities">
                 <div class="prob-bar home">
-                    <div class="label">Brazil</div>
-                    <div class="value">48.7%</div>
-                    <div class="bar-track"><div class="bar-fill home" style="width:48.7%"></div></div>
+                    <div class="label">Côte d'Ivoire</div>
+                    <div class="value">46.0%</div>
+                    <div class="bar-track"><div class="bar-fill home" style="width:46.0%"></div></div>
                 </div>
                 <div class="prob-bar draw">
                     <div class="label">Empate</div>
-                    <div class="value">27.9%</div>
-                    <div class="bar-track"><div class="bar-fill draw" style="width:27.9%"></div></div>
+                    <div class="value">25.8%</div>
+                    <div class="bar-track"><div class="bar-fill draw" style="width:25.8%"></div></div>
                 </div>
                 <div class="prob-bar away">
-                    <div class="label">Japan</div>
-                    <div class="value">23.4%</div>
-                    <div class="bar-track"><div class="bar-fill away" style="width:23.4%"></div></div>
+                    <div class="label">Norway</div>
+                    <div class="value">28.1%</div>
+                    <div class="bar-track"><div class="bar-fill away" style="width:28.1%"></div></div>
                 </div>
             </div>
             
@@ -831,16 +942,16 @@
                     <div class="odds-label">Modelo</div>
                     <div class="odds-cells">
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">48.7%</div>
-                            <div class="odd-implied">Brazil</div>
+                            <div class="odd-value" style="color:#60f0a0">46.0%</div>
+                            <div class="odd-implied">Côte d'Ivoire</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">27.9%</div>
+                            <div class="odd-value" style="color:#f0e060">25.8%</div>
                             <div class="odd-implied">Empate</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">23.4%</div>
-                            <div class="odd-implied">Japan</div>
+                            <div class="odd-value" style="color:#f060a0">28.1%</div>
+                            <div class="odd-implied">Norway</div>
                         </div>
                     </div>
                 </div>
@@ -848,19 +959,19 @@
                     <div class="odds-label" style="color:#e09020">bet365</div>
                     <div class="odds-cells">
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">1.78</div>
-                            <div class="odd-edge value-negative">🔴 -7.5%</div>
-                            <div class="odd-implied">impl. 56.2%</div>
+                            <div class="odd-value" style="color:#60f0a0">3.6</div>
+                            <div class="odd-edge value-strong">🟢 +18.2%</div>
+                            <div class="odd-implied">impl. 27.8%</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">3.65</div>
-                            <div class="odd-edge value-flat">⚪ +0.5%</div>
-                            <div class="odd-implied">impl. 27.4%</div>
+                            <div class="odd-value" style="color:#f0e060">3.52</div>
+                            <div class="odd-edge value-negative">🔴 -2.6%</div>
+                            <div class="odd-implied">impl. 28.4%</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">5.3</div>
-                            <div class="odd-edge value-mild">🟡 +4.5%</div>
-                            <div class="odd-implied">impl. 18.9%</div>
+                            <div class="odd-value" style="color:#f060a0">2.14</div>
+                            <div class="odd-edge value-negative">🔴 -18.6%</div>
+                            <div class="odd-implied">impl. 46.7%</div>
                         </div>
                     </div>
                 </div>
@@ -868,19 +979,19 @@
                     <div class="odds-label" style="color:#60a0f0">Pinnacle</div>
                     <div class="odds-cells">
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">1.763</div>
-                            <div class="odd-edge value-negative">🔴 -8.0%</div>
-                            <div class="odd-implied">impl. 56.7%</div>
+                            <div class="odd-value" style="color:#60f0a0">3.66</div>
+                            <div class="odd-edge value-strong">🟢 +18.7%</div>
+                            <div class="odd-implied">impl. 27.3%</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">3.73</div>
-                            <div class="odd-edge value-flat">⚪ +1.1%</div>
-                            <div class="odd-implied">impl. 26.8%</div>
+                            <div class="odd-value" style="color:#f0e060">3.48</div>
+                            <div class="odd-edge value-negative">🔴 -2.9%</div>
+                            <div class="odd-implied">impl. 28.7%</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">5.31</div>
-                            <div class="odd-edge value-mild">🟡 +4.6%</div>
-                            <div class="odd-implied">impl. 18.8%</div>
+                            <div class="odd-value" style="color:#f060a0">2.17</div>
+                            <div class="odd-edge value-negative">🔴 -18.0%</div>
+                            <div class="odd-implied">impl. 46.1%</div>
                         </div>
                     </div>
                 </div>
@@ -891,49 +1002,49 @@
             <div class="stats-section">
                 <h3>📊 ESTADÍSTICAS CLAVE</h3>
                 <div class="stats-two-col">
-                    <div class="stats-col-header home">Brazil</div>
+                    <div class="stats-col-header home">Côte d'Ivoire</div>
                     <div></div>
-                    <div class="stats-col-header away">Japan</div>
+                    <div class="stats-col-header away">Norway</div>
                     
-                    <div class="stat-value-home">1.67</div>
+                    <div class="stat-value-home">1.83</div>
                     <div class="stat-name-center">Goles esperados</div>
-                    <div class="stat-value-away">1.33</div>
+                    <div class="stat-value-away">1.67</div>
                     
-                    <div class="stat-value-home">1559</div>
+                    <div class="stat-value-home">1526</div>
                     <div class="stat-name-center">Rating Elo</div>
-                    <div class="stat-value-away">1535</div>
+                    <div class="stat-value-away">1512</div>
                     
-                    <div class="stat-value-home">2.3 ⚽</div>
+                    <div class="stat-value-home">1.3 ⚽</div>
                     <div class="stat-name-center">Goles/partido</div>
-                    <div class="stat-value-away">2.3 ⚽</div>
+                    <div class="stat-value-away">2.7 ⚽</div>
                     
-                    <div class="stat-value-home">2W 1D 0L</div>
+                    <div class="stat-value-home">2W 0D 1L</div>
                     <div class="stat-name-center">Récord Mundial</div>
-                    <div class="stat-value-away">1W 2D 0L</div>
+                    <div class="stat-value-away">2W 0D 1L</div>
 
-                    <div class="stat-value-home">1.4</div>
-                    <div class="stat-name-center">xG (goles esperados)</div>
-                    <div class="stat-value-away">1.0</div>
-                    <div class="stat-value-home">1.4</div>
-                    <div class="stat-name-center">ocasiones claras</div>
-                    <div class="stat-value-away">1.0</div>
                     <div class="stat-value-home">1.1</div>
+                    <div class="stat-name-center">xG (goles esperados)</div>
+                    <div class="stat-value-away">1.4</div>
+                    <div class="stat-value-home">0.9</div>
+                    <div class="stat-name-center">ocasiones claras</div>
+                    <div class="stat-value-away">1.3</div>
+                    <div class="stat-value-home">0.9</div>
                     <div class="stat-name-center">tiros totales</div>
-                    <div class="stat-value-away">0.9</div>                </div>
+                    <div class="stat-value-away">1.1</div>                </div>
             </div>
             
-            <div class="narrative">📊 Elo favorece claramente a Brazil (+54) | Brazil marca 2.3 goles/partido y encaja 0.3 | Japan marca 2.3 goles/partido y encaja 1.0 | Brazil domina en xG (goles esperados) (+42.2%) | Forma: Brazil [WWD] | Japan [DWD]</div>
+            <div class="narrative">📊 Elo ligeramente a favor de Côte d'Ivoire (+44) | Côte d'Ivoire marca 1.3 goles/partido y encaja 0.7 | Norway marca 2.7 goles/partido y encaja 2.3 | Norway domina en xG (goles esperados) (+20.1%) | Forma: Côte d'Ivoire [WLW] | Norway [LWW] | Momento favorable a Côte d'Ivoire</div>
             
-<div class="matchup-narrative"><strong>🔬 Radiografía estadística del partido</strong><div class="narrative-line">🎯 Dominio claro de Brazil en tiros a puerta: <strong>6.3</strong> por partido frente a solo 3.7 de Japan. Se esperan ~10 en total.</div>
-<div class="narrative-line">🏳️ Equilibrio en córners: Brazil 5.3 — Japan 3.7. Total esperado ~9.</div>
-<div class="narrative-line">🟨 Se esperan <strong>~2 tarjetas amarillas</strong>. Brazil genera <strong>1.7</strong> (+21% sobre la media) y Japan encaja 2.5 por partido.</div>
-<div class="narrative-line">⚽ Equilibrio en disparos totales: Brazil 13.7 — Japan 9.7. Total esperado ~23.</div>
-<div class="narrative-line">⚡ Ambos equipos por encima de la media en faltas: 13.3 y 14.0. Partido con ~27 esperados.</div>
+<div class="matchup-narrative"><strong>🔬 Radiografía estadística del partido</strong><div class="narrative-line">🎯 Norway llega con <strong>5.3 tiros a puerta</strong> por partido vs 3.0 de Côte d'Ivoire. Se esperan ~8.</div>
+<div class="narrative-line">🏳️ Equilibrio en córners: Côte d'Ivoire 4.0 — Norway 4.7. Total esperado ~9.</div>
+<div class="narrative-line">🟨 Dominio claro de Côte d'Ivoire en tarjetas amarillas: <strong>2.0</strong> por partido frente a solo 0.5 de Norway. Se esperan ~2 en total.</div>
+<div class="narrative-line">⚽ Equilibrio en disparos totales: Côte d'Ivoire 10.3 — Norway 11.7. Total esperado ~22.</div>
+<div class="narrative-line">⚡ Norway llega con <strong>11.7 faltas</strong> por partido vs 7.7 de Côte d'Ivoire. Se esperan ~19.</div>
 </div>
             <div class="model-breakdown">
-                <div class="model-chip">Elo: <span>61.3% local</span></div>
-                <div class="model-chip">Estadístico: <span>51.9% local</span></div>
-                <div class="model-chip">Poisson: <span>45.3% local</span></div>
+                <div class="model-chip">Elo: <span>60.0% local</span></div>
+                <div class="model-chip">Estadístico: <span>48.0% local</span></div>
+                <div class="model-chip">Poisson: <span>42.3% local</span></div>
                 <button class="model-legend-toggle" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.textContent=='¿Qué es esto?'?'Ocultar':'¿Qué es esto?'">¿Qué es esto?</button>
                 <div class="model-legend">
                     <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria local predice cada modelo por separado. Luego el sistema los <strong>mezcla ponderadamente</strong> (40% Elo + 25% Stats + 25% Poisson + 10% forma) para dar la predicción final que ves arriba.<br><br>
@@ -946,32 +1057,32 @@
 
         <div class="match-card">
             <div class="match-header">
-                <div class="match-time">⏰ 16:30</div>
+                <div class="match-time">⏰ 21:00</div>
                 <div class="teams">
-                    <span class="team">Germany</span>
+                    <span class="team">France</span>
                     <span class="vs">vs</span>
-                    <span class="team">Paraguay</span>
+                    <span class="team">Sweden</span>
                 </div>
                 <div>
-                    <span class="prediction-badge HOME">Gana Germany<span class="confidence">ALTA</span></span>
+                    <span class="prediction-badge HOME">Gana France<span class="confidence">ALTA</span></span>
                 </div>
             </div>
             
             <div class="probabilities">
                 <div class="prob-bar home">
-                    <div class="label">Germany</div>
-                    <div class="value">61.0%</div>
-                    <div class="bar-track"><div class="bar-fill home" style="width:61.0%"></div></div>
+                    <div class="label">France</div>
+                    <div class="value">58.0%</div>
+                    <div class="bar-track"><div class="bar-fill home" style="width:58.0%"></div></div>
                 </div>
                 <div class="prob-bar draw">
                     <div class="label">Empate</div>
-                    <div class="value">24.7%</div>
-                    <div class="bar-track"><div class="bar-fill draw" style="width:24.7%"></div></div>
+                    <div class="value">24.1%</div>
+                    <div class="bar-track"><div class="bar-fill draw" style="width:24.1%"></div></div>
                 </div>
                 <div class="prob-bar away">
-                    <div class="label">Paraguay</div>
-                    <div class="value">14.4%</div>
-                    <div class="bar-track"><div class="bar-fill away" style="width:14.4%"></div></div>
+                    <div class="label">Sweden</div>
+                    <div class="value">17.9%</div>
+                    <div class="bar-track"><div class="bar-fill away" style="width:17.9%"></div></div>
                 </div>
             </div>
             
@@ -981,16 +1092,16 @@
                     <div class="odds-label">Modelo</div>
                     <div class="odds-cells">
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">61.0%</div>
-                            <div class="odd-implied">Germany</div>
+                            <div class="odd-value" style="color:#60f0a0">58.0%</div>
+                            <div class="odd-implied">France</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">24.7%</div>
+                            <div class="odd-value" style="color:#f0e060">24.1%</div>
                             <div class="odd-implied">Empate</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">14.4%</div>
-                            <div class="odd-implied">Paraguay</div>
+                            <div class="odd-value" style="color:#f060a0">17.9%</div>
+                            <div class="odd-implied">Sweden</div>
                         </div>
                     </div>
                 </div>
@@ -998,19 +1109,19 @@
                     <div class="odds-label" style="color:#e09020">bet365</div>
                     <div class="odds-cells">
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">1.37</div>
-                            <div class="odd-edge value-negative">🔴 -12.0%</div>
-                            <div class="odd-implied">impl. 73.0%</div>
+                            <div class="odd-value" style="color:#60f0a0">1.28</div>
+                            <div class="odd-edge value-negative">🔴 -20.1%</div>
+                            <div class="odd-implied">impl. 78.1%</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">5.25</div>
-                            <div class="odd-edge value-mild">🟡 +5.7%</div>
-                            <div class="odd-implied">impl. 19.0%</div>
+                            <div class="odd-value" style="color:#f0e060">6.1</div>
+                            <div class="odd-edge value-mild">🟡 +7.7%</div>
+                            <div class="odd-implied">impl. 16.4%</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">9.8</div>
-                            <div class="odd-edge value-mild">🟡 +4.2%</div>
-                            <div class="odd-implied">impl. 10.2%</div>
+                            <div class="odd-value" style="color:#f060a0">12.0</div>
+                            <div class="odd-edge value-strong">🟢 +9.6%</div>
+                            <div class="odd-implied">impl. 8.3%</div>
                         </div>
                     </div>
                 </div>
@@ -1018,19 +1129,19 @@
                     <div class="odds-label" style="color:#60a0f0">Pinnacle</div>
                     <div class="odds-cells">
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">1.37</div>
-                            <div class="odd-edge value-negative">🔴 -12.0%</div>
-                            <div class="odd-implied">impl. 73.0%</div>
+                            <div class="odd-value" style="color:#60f0a0">1.303</div>
+                            <div class="odd-edge value-negative">🔴 -18.7%</div>
+                            <div class="odd-implied">impl. 76.7%</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">5.25</div>
-                            <div class="odd-edge value-mild">🟡 +5.7%</div>
-                            <div class="odd-implied">impl. 19.0%</div>
+                            <div class="odd-value" style="color:#f0e060">6.0</div>
+                            <div class="odd-edge value-mild">🟡 +7.4%</div>
+                            <div class="odd-implied">impl. 16.7%</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">10.0</div>
-                            <div class="odd-edge value-mild">🟡 +4.4%</div>
-                            <div class="odd-implied">impl. 10.0%</div>
+                            <div class="odd-value" style="color:#f060a0">11.0</div>
+                            <div class="odd-edge value-strong">🟢 +8.8%</div>
+                            <div class="odd-implied">impl. 9.1%</div>
                         </div>
                     </div>
                 </div>
@@ -1041,199 +1152,199 @@
             <div class="stats-section">
                 <h3>📊 ESTADÍSTICAS CLAVE</h3>
                 <div class="stats-two-col">
-                    <div class="stats-col-header home">Germany</div>
+                    <div class="stats-col-header home">France</div>
                     <div></div>
-                    <div class="stats-col-header away">Paraguay</div>
+                    <div class="stats-col-header away">Sweden</div>
                     
-                    <div class="stat-value-home">2.33</div>
+                    <div class="stat-value-home">2.83</div>
                     <div class="stat-name-center">Goles esperados</div>
-                    <div class="stat-value-away">1.0</div>
+                    <div class="stat-value-away">1.5</div>
                     
-                    <div class="stat-value-home">1537</div>
+                    <div class="stat-value-home">1582</div>
                     <div class="stat-name-center">Rating Elo</div>
-                    <div class="stat-value-away">1488</div>
+                    <div class="stat-value-away">1499</div>
                     
                     <div class="stat-value-home">3.3 ⚽</div>
                     <div class="stat-name-center">Goles/partido</div>
+                    <div class="stat-value-away">2.3 ⚽</div>
+                    
+                    <div class="stat-value-home">3W 0D 0L</div>
+                    <div class="stat-name-center">Récord Mundial</div>
+                    <div class="stat-value-away">1W 1D 1L</div>
+
+                    <div class="stat-value-home">1.2</div>
+                    <div class="stat-name-center">entradas último tercio</div>
+                    <div class="stat-value-away">0.8</div>
+                    <div class="stat-value-home">0.6</div>
+                    <div class="stat-name-center">paradas del portero</div>
+                    <div class="stat-value-away">0.9</div>
+                    <div class="stat-value-home">1.1</div>
+                    <div class="stat-name-center">tiros totales</div>
+                    <div class="stat-value-away">1.2</div>                </div>
+            </div>
+            
+            <div class="narrative">📊 Elo favorece claramente a France (+112) | France marca 3.3 goles/partido y encaja 0.7 | Sweden marca 2.3 goles/partido y encaja 2.3 | France domina en entradas último tercio (+51.4%) | Forma: France [WWW] | Sweden [DLW]</div>
+            
+<div class="matchup-narrative"><strong>🔬 Radiografía estadística del partido</strong><div class="narrative-line">🎯 Ambos equipos por encima de la media en tiros a puerta: 7.3 y 6.7. Partido con ~14 esperados.</div>
+<div class="narrative-line">🏳️ Ambos equipos por encima de la media en córners: 5.0 y 5.7. Partido con ~11 esperados.</div>
+<div class="narrative-line">🟨 Sweden llega con <strong>1.7 tarjetas amarillas</strong> por partido vs 0.5 de France. Se esperan ~2.</div>
+<div class="narrative-line">⚽ Ambos equipos por encima de la media en disparos totales: 16.0 y 13.3. Partido con ~29 esperados.</div>
+<div class="narrative-line">⚡ Equilibrio en faltas: France 8.0 — Sweden 11.0. Total esperado ~19.</div>
+</div>
+            <div class="model-breakdown">
+                <div class="model-chip">Elo: <span>68.0% local</span></div>
+                <div class="model-chip">Estadístico: <span>50.7% local</span></div>
+                <div class="model-chip">Poisson: <span>65.0% local</span></div>
+                <button class="model-legend-toggle" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.textContent=='¿Qué es esto?'?'Ocultar':'¿Qué es esto?'">¿Qué es esto?</button>
+                <div class="model-legend">
+                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria local predice cada modelo por separado. Luego el sistema los <strong>mezcla ponderadamente</strong> (40% Elo + 25% Stats + 25% Poisson + 10% forma) para dar la predicción final que ves arriba.<br><br>
+                    <span class="legend-elo">● <strong>Elo:</strong></span> rating histórico basado en resultados y diferencia de goles. Mide la fuerza relativa "teórica" de cada selección.<br>
+                    <span class="legend-stats">● <strong>Estadístico:</strong></span> compara TODAS las stats reales del torneo (xG, tiros, posesión, córners, duelos, pases...). El más "basado en datos duros".<br>
+                    <span class="legend-poisson">● <strong>Poisson:</strong></span> modelo de goles esperados. Calcula la probabilidad de cada marcador posible según los goles que marcan y reciben ambos equipos. Suele ser el más conservador.
+                </div>
+            </div>
+        </div>
+
+        <div class="match-card">
+            <div class="match-header">
+                <div class="match-time">⏰ 01:00</div>
+                <div class="teams">
+                    <span class="team">Mexico</span>
+                    <span class="vs">vs</span>
+                    <span class="team">Ecuador</span>
+                </div>
+                <div>
+                    <span class="prediction-badge HOME">Gana Mexico<span class="confidence">ALTA</span></span>
+                </div>
+            </div>
+            
+            <div class="probabilities">
+                <div class="prob-bar home">
+                    <div class="label">Mexico</div>
+                    <div class="value">56.5%</div>
+                    <div class="bar-track"><div class="bar-fill home" style="width:56.5%"></div></div>
+                </div>
+                <div class="prob-bar draw">
+                    <div class="label">Empate</div>
+                    <div class="value">28.8%</div>
+                    <div class="bar-track"><div class="bar-fill draw" style="width:28.8%"></div></div>
+                </div>
+                <div class="prob-bar away">
+                    <div class="label">Ecuador</div>
+                    <div class="value">14.7%</div>
+                    <div class="bar-track"><div class="bar-fill away" style="width:14.7%"></div></div>
+                </div>
+            </div>
+            
+            <div class="odds-section">
+                <h3>💰 CUOTAS REALES vs PREDICCIÓN</h3>
+                <div class="odds-row">
+                    <div class="odds-label">Modelo</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">56.5%</div>
+                            <div class="odd-implied">Mexico</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">28.8%</div>
+                            <div class="odd-implied">Empate</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">14.7%</div>
+                            <div class="odd-implied">Ecuador</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="odds-row">
+                    <div class="odds-label" style="color:#e09020">bet365</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">2.27</div>
+                            <div class="odd-edge value-strong">🟢 +12.4%</div>
+                            <div class="odd-implied">impl. 44.1%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">2.91</div>
+                            <div class="odd-edge value-negative">🔴 -5.6%</div>
+                            <div class="odd-implied">impl. 34.4%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">4.1</div>
+                            <div class="odd-edge value-negative">🔴 -9.7%</div>
+                            <div class="odd-implied">impl. 24.4%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="odds-row">
+                    <div class="odds-label" style="color:#60a0f0">Pinnacle</div>
+                    <div class="odds-cells">
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#60f0a0">2.32</div>
+                            <div class="odd-edge value-strong">🟢 +13.4%</div>
+                            <div class="odd-implied">impl. 43.1%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f0e060">2.93</div>
+                            <div class="odd-edge value-negative">🔴 -5.3%</div>
+                            <div class="odd-implied">impl. 34.1%</div>
+                        </div>
+                        <div class="odds-cell">
+                            <div class="odd-value" style="color:#f060a0">4.02</div>
+                            <div class="odd-edge value-negative">🔴 -10.2%</div>
+                            <div class="odd-implied">impl. 24.9%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="odds-source">📡 Datos de OddsPapi · Actualizado 2026-06-29</div>
+            </div>
+
+
+            <div class="stats-section">
+                <h3>📊 ESTADÍSTICAS CLAVE</h3>
+                <div class="stats-two-col">
+                    <div class="stats-col-header home">Mexico</div>
+                    <div></div>
+                    <div class="stats-col-header away">Ecuador</div>
+                    
+                    <div class="stat-value-home">1.33</div>
+                    <div class="stat-name-center">Goles esperados</div>
+                    <div class="stat-value-away">0.33</div>
+                    
+                    <div class="stat-value-home">1567</div>
+                    <div class="stat-name-center">Rating Elo</div>
+                    <div class="stat-value-away">1501</div>
+                    
+                    <div class="stat-value-home">2.0 ⚽</div>
+                    <div class="stat-name-center">Goles/partido</div>
                     <div class="stat-value-away">0.7 ⚽</div>
                     
-                    <div class="stat-value-home">2W 0D 1L</div>
+                    <div class="stat-value-home">3W 0D 0L</div>
                     <div class="stat-name-center">Récord Mundial</div>
                     <div class="stat-value-away">1W 1D 1L</div>
 
                     <div class="stat-value-home">1.3</div>
-                    <div class="stat-name-center">xG (goles esperados)</div>
-                    <div class="stat-value-away">0.3</div>
-                    <div class="stat-value-home">1.3</div>
                     <div class="stat-name-center">ocasiones claras</div>
-                    <div class="stat-value-away">0.2</div>
-                    <div class="stat-value-home">0.7</div>
-                    <div class="stat-name-center">errores que terminan en gol</div>
-                    <div class="stat-value-away">1.0</div>                </div>
-            </div>
-            
-            <div class="narrative">📊 Elo favorece claramente a Germany (+79) | Germany marca 3.3 goles/partido y encaja 1.3 | Paraguay marca 0.7 goles/partido y encaja 1.3 | Germany domina en xG (goles esperados) (+312.3%) | Forma: Germany [LWW] | Paraguay [DWL]</div>
-            
-<div class="matchup-narrative"><strong>🔬 Radiografía estadística del partido</strong><div class="narrative-line">🎯 Se esperan <strong>~9 tiros a puerta</strong>. Germany genera <strong>7.3</strong> (+77% sobre la media) y Paraguay encaja 5.3 por partido.</div>
-<div class="narrative-line">🏳️ Se esperan <strong>~7 córners</strong>. Germany genera <strong>6.0</strong> (+40% sobre la media) y Paraguay encaja 6.0 por partido.</div>
-<div class="narrative-line">🟨 Ojo a Paraguay: promedia <strong>2.3 tarjetas amarillas</strong> (+70% sobre la media) y Germany permite 3.0. Se esperan ~3 en total.</div>
-<div class="narrative-line">⚽ Se esperan <strong>~25 disparos totales</strong>. Germany genera <strong>17.7</strong> (+44% sobre la media) y Paraguay encaja 20.0 por partido.</div>
-<div class="narrative-line">⚡ Equilibrio en faltas: Germany 11.0 — Paraguay 13.7. Total esperado ~25.</div>
-</div>
-            <div class="model-breakdown">
-                <div class="model-chip">Elo: <span>64.3% local</span></div>
-                <div class="model-chip">Estadístico: <span>58.6% local</span></div>
-                <div class="model-chip">Poisson: <span>67.0% local</span></div>
-                <button class="model-legend-toggle" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.textContent=='¿Qué es esto?'?'Ocultar':'¿Qué es esto?'">¿Qué es esto?</button>
-                <div class="model-legend">
-                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria local predice cada modelo por separado. Luego el sistema los <strong>mezcla ponderadamente</strong> (40% Elo + 25% Stats + 25% Poisson + 10% forma) para dar la predicción final que ves arriba.<br><br>
-                    <span class="legend-elo">● <strong>Elo:</strong></span> rating histórico basado en resultados y diferencia de goles. Mide la fuerza relativa "teórica" de cada selección.<br>
-                    <span class="legend-stats">● <strong>Estadístico:</strong></span> compara TODAS las stats reales del torneo (xG, tiros, posesión, córners, duelos, pases...). El más "basado en datos duros".<br>
-                    <span class="legend-poisson">● <strong>Poisson:</strong></span> modelo de goles esperados. Calcula la probabilidad de cada marcador posible según los goles que marcan y reciben ambos equipos. Suele ser el más conservador.
-                </div>
-            </div>
-        </div>
-
-        <div class="match-card">
-            <div class="match-header">
-                <div class="match-time">⏰ 19:00</div>
-                <div class="teams">
-                    <span class="team">Netherlands</span>
-                    <span class="vs">vs</span>
-                    <span class="team">Morocco</span>
-                </div>
-                <div>
-                    <span class="prediction-badge HOME">Gana Netherlands<span class="confidence">MEDIA</span></span>
-                </div>
-            </div>
-            
-            <div class="probabilities">
-                <div class="prob-bar home">
-                    <div class="label">Netherlands</div>
-                    <div class="value">49.2%</div>
-                    <div class="bar-track"><div class="bar-fill home" style="width:49.2%"></div></div>
-                </div>
-                <div class="prob-bar draw">
-                    <div class="label">Empate</div>
-                    <div class="value">26.2%</div>
-                    <div class="bar-track"><div class="bar-fill draw" style="width:26.2%"></div></div>
-                </div>
-                <div class="prob-bar away">
-                    <div class="label">Morocco</div>
-                    <div class="value">24.6%</div>
-                    <div class="bar-track"><div class="bar-fill away" style="width:24.6%"></div></div>
-                </div>
-            </div>
-            
-            <div class="odds-section">
-                <h3>💰 CUOTAS REALES vs PREDICCIÓN</h3>
-                <div class="odds-row">
-                    <div class="odds-label">Modelo</div>
-                    <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">49.2%</div>
-                            <div class="odd-implied">Netherlands</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">26.2%</div>
-                            <div class="odd-implied">Empate</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">24.6%</div>
-                            <div class="odd-implied">Morocco</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="odds-row">
-                    <div class="odds-label" style="color:#e09020">bet365</div>
-                    <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">2.25</div>
-                            <div class="odd-edge value-mild">🟡 +4.8%</div>
-                            <div class="odd-implied">impl. 44.4%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">3.0</div>
-                            <div class="odd-edge value-negative">🔴 -7.1%</div>
-                            <div class="odd-implied">impl. 33.3%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">3.5</div>
-                            <div class="odd-edge value-negative">🔴 -4.0%</div>
-                            <div class="odd-implied">impl. 28.6%</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="odds-row">
-                    <div class="odds-label" style="color:#60a0f0">Pinnacle</div>
-                    <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">2.38</div>
-                            <div class="odd-edge value-mild">🟡 +7.2%</div>
-                            <div class="odd-implied">impl. 42.0%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">3.15</div>
-                            <div class="odd-edge value-negative">🔴 -5.5%</div>
-                            <div class="odd-implied">impl. 31.7%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">3.52</div>
-                            <div class="odd-edge value-negative">🔴 -3.8%</div>
-                            <div class="odd-implied">impl. 28.4%</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="odds-source">📡 Datos de OddsPapi · Actualizado 2026-06-29</div>
-            </div>
-
-
-            <div class="stats-section">
-                <h3>📊 ESTADÍSTICAS CLAVE</h3>
-                <div class="stats-two-col">
-                    <div class="stats-col-header home">Netherlands</div>
-                    <div></div>
-                    <div class="stats-col-header away">Morocco</div>
-                    
-                    <div class="stat-value-home">2.17</div>
-                    <div class="stat-name-center">Goles esperados</div>
-                    <div class="stat-value-away">1.67</div>
-                    
-                    <div class="stat-value-home">1556</div>
-                    <div class="stat-name-center">Rating Elo</div>
-                    <div class="stat-value-away">1538</div>
-                    
-                    <div class="stat-value-home">3.3 ⚽</div>
-                    <div class="stat-name-center">Goles/partido</div>
-                    <div class="stat-value-away">2.0 ⚽</div>
-                    
-                    <div class="stat-value-home">2W 1D 0L</div>
-                    <div class="stat-name-center">Récord Mundial</div>
-                    <div class="stat-value-away">2W 1D 0L</div>
-
-                    <div class="stat-value-home">1.5</div>
+                    <div class="stat-value-away">0.8</div>
+                    <div class="stat-value-home">0.3</div>
+                    <div class="stat-name-center">córners</div>
+                    <div class="stat-value-away">1.1</div>
+                    <div class="stat-value-home">0.9</div>
                     <div class="stat-name-center">xG (goles esperados)</div>
-                    <div class="stat-value-away">1.2</div>
-                    <div class="stat-value-home">1.3</div>
-                    <div class="stat-name-center">paradas del portero</div>
-                    <div class="stat-value-away">0.5</div>
-                    <div class="stat-value-home">0.6</div>
-                    <div class="stat-name-center">tarjetas amarillas</div>
-                    <div class="stat-value-away">0.2</div>                </div>
+                    <div class="stat-value-away">1.1</div>                </div>
             </div>
             
-            <div class="narrative">📊 Elo ligeramente a favor de Netherlands (+48) | Netherlands marca 3.3 goles/partido y encaja 1.3 | Morocco marca 2.0 goles/partido y encaja 1.0 | Netherlands domina en xG (goles esperados) (+21.5%) | Forma: Netherlands [WWD] | Morocco [WWD]</div>
+            <div class="narrative">📊 Elo favorece claramente a Mexico (+97) | Mexico marca 2.0 goles/partido y encaja 0.0 | Ecuador marca 0.7 goles/partido y encaja 0.7 | Mexico domina en ocasiones claras (+50.0%) | Forma: Mexico [WWW] | Ecuador [WDL]</div>
             
-<div class="matchup-narrative"><strong>🔬 Radiografía estadística del partido</strong><div class="narrative-line">🎯 Ambos equipos por encima de la media en tiros a puerta: 6.7 y 5.3. Partido con ~12 esperados.</div>
-<div class="narrative-line">🏳️ Equilibrio en córners: Netherlands 4.3 — Morocco 5.3. Total esperado ~10.</div>
-<div class="narrative-line">🟨 Se esperan <strong>~2 tarjetas amarillas</strong>. Netherlands genera <strong>1.5</strong> (+9% sobre la media) y Morocco encaja 2.0 por partido.</div>
-<div class="narrative-line">⚽ Ambos equipos por encima de la media en disparos totales: 13.3 y 16.0. Partido con ~29 esperados.</div>
-<div class="narrative-line">⚡ Pocos faltas esperados: 8.7 y 10.7 por partido (ambos por debajo de la media de 11.2).</div>
+<div class="matchup-narrative"><strong>🔬 Radiografía estadística del partido</strong><div class="narrative-line">🎯 Ecuador (6.3) supera a Mexico (4.3) en tiros a puerta. Se esperan ~11 en total.</div>
+<div class="narrative-line">🏳️ Ecuador llega con <strong>5.7 córners</strong> por partido vs 1.3 de Mexico. Se esperan ~7.</div>
+<div class="narrative-line">🟨 Ecuador llega con <strong>1.7 tarjetas amarillas</strong> por partido vs 0.7 de Mexico. Se esperan ~2.</div>
+<div class="narrative-line">⚽ Equilibrio en disparos totales: Mexico 11.7 — Ecuador 15.3. Total esperado ~27.</div>
+<div class="narrative-line">⚡ Equilibrio en faltas: Mexico 11.3 — Ecuador 11.7. Total esperado ~23.</div>
 </div>
             <div class="model-breakdown">
-                <div class="model-chip">Elo: <span>60.5% local</span></div>
-                <div class="model-chip">Estadístico: <span>49.9% local</span></div>
-                <div class="model-chip">Poisson: <span>49.4% local</span></div>
+                <div class="model-chip">Elo: <span>66.3% local</span></div>
+                <div class="model-chip">Estadístico: <span>49.8% local</span></div>
+                <div class="model-chip">Poisson: <span>62.6% local</span></div>
                 <button class="model-legend-toggle" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.textContent=='¿Qué es esto?'?'Ocultar':'¿Qué es esto?'">¿Qué es esto?</button>
                 <div class="model-legend">
                     <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria local predice cada modelo por separado. Luego el sistema los <strong>mezcla ponderadamente</strong> (40% Elo + 25% Stats + 25% Poisson + 10% forma) para dar la predicción final que ves arriba.<br><br>
@@ -1255,60 +1366,60 @@
                     <div class="combi-tagline">3 Over 1.5 — todos edges positivos</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
-                            <div class="stat-num">60.6%</div>
+                            <div class="stat-num">56.9%</div>
                             <div class="stat-label">Probabilidad</div>
                         </div>
                         <div class="combi-stat">
-                            <div class="stat-num">2.21</div>
+                            <div class="stat-num">2.60</div>
                             <div class="stat-label">Cuota bet365</div>
                         </div>
                     </div>
                     <div class="combi-legs">
-                        <div class="combi-leg"><span class="combi-leg-num">1</span> Brazil vs Japan: Over 1.5 (@1.33 · P=80% · edge +4.9%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">2</span> Germany vs Paraguay: Over 1.5 (@1.22 · P=84% · edge +2.5%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">3</span> Netherlands vs Morocco: Over 1.5 (@1.36 · P=90% · edge +16.1%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">1</span> Côte d'Ivoire vs Norway: 1X (Local o Empate) (@1.78 · P=72% · edge +15.6%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">2</span> France vs Sweden: Over 1.5 Goles (@1.14 · P=93% · edge +5.3%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">3</span> Mexico vs Ecuador: 1X (Local o Empate) (@1.28 · P=85% · edge +7.2%)</div>
                     </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~22€</strong> &nbsp; <span style="color:#2ecc71">EV +33.8% 🟢</span></div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~26€</strong> &nbsp; <span style="color:#2ecc71">EV +47.9% 🟢</span></div>
                 </div>
                 <div class="combi-card media">
                     <h3>🟠 MEDIA</h3>
                     <div class="combi-tagline">Over 2.5 + BTTS con edges fuertes</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
-                            <div class="stat-num">25.7%</div>
+                            <div class="stat-num">18.2%</div>
                             <div class="stat-label">Probabilidad</div>
                         </div>
                         <div class="combi-stat">
-                            <div class="stat-num">6.86</div>
+                            <div class="stat-num">14.30</div>
                             <div class="stat-label">Cuota bet365</div>
                         </div>
                     </div>
                     <div class="combi-legs">
-                        <div class="combi-leg"><span class="combi-leg-num">1</span> Brazil vs Japan: Over 2.5 (@2.10 · P=58% · edge +10.1%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">2</span> Germany vs Paraguay: Over 2.5 (@1.72 · P=65% · edge +6.5%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">3</span> Netherlands vs Morocco: BTTS Yes (@1.90 · P=69% · edge +16.2%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">1</span> Côte d'Ivoire vs Norway: Gana Local (@3.60 · P=46% · edge +18.2%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">2</span> France vs Sweden: Ambos Marcan (BTTS) (@1.75 · P=70% · edge +13.0%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">3</span> Mexico vs Ecuador: Gana Local (@2.27 · P=56% · edge +12.4%)</div>
                     </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~69€</strong> &nbsp; <span style="color:#2ecc71">EV +76.3% 🟢</span></div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~143€</strong> &nbsp; <span style="color:#2ecc71">EV +160.7% 🟢</span></div>
                 </div>
                 <div class="combi-card sonadora">
                     <h3>🔴 SOÑADORA</h3>
                     <div class="combi-tagline">Goles + sorpresa con edge 🎯</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
-                            <div class="stat-num">10.5%</div>
+                            <div class="stat-num">8.4%</div>
                             <div class="stat-label">Probabilidad</div>
                         </div>
                         <div class="combi-stat">
-                            <div class="stat-num">24.26</div>
+                            <div class="stat-num">18.33</div>
                             <div class="stat-label">Cuota bet365</div>
                         </div>
                     </div>
                     <div class="combi-legs">
-                        <div class="combi-leg"><span class="combi-leg-num">1</span> Netherlands vs Morocco: Over 2.5 (@2.20 · P=74% · edge +12.2%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">2</span> Brazil vs Japan: Over 2.5 (@2.10 · P=58% · edge +17.0%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">3</span> Germany vs Paraguay: Empate (@5.25 · P=25% · edge +5.7%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">1</span> Côte d'Ivoire vs Norway: Over 3.5 Goles (@3.00 · P=46% · edge +13.0%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">2</span> France vs Sweden: Over 3.5 Goles (@2.10 · P=63% · edge +15.2%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">3</span> Mexico vs Ecuador: Empate (@2.91 · P=29% · edge -5.6%)</div>
                     </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~243€</strong> &nbsp; <span style="color:#2ecc71">EV +154.9% 🟢</span></div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~183€</strong> &nbsp; <span style="color:#2ecc71">EV +53.7% 🟢</span></div>
                 </div>
             </div>
         </div>
@@ -1436,11 +1547,18 @@
 </div>
 
         </div><!-- /tab-valuebets -->
+        
+        <div id="tab-comparativa" class="tab-panel">
+            <div class="comparison-section">
+                <h2>📈 COMPARATIVA: PREDICCIONES vs REALIDAD</h2>
+                <div class="no-value-bets">🔍 No hay datos reales para comparar aún. Los partidos deben haberse jugado y tener estadísticas en data/real_stats.json.</div>
+            </div>
+        </div><!-- /tab-comparativa -->
 
         <div class="footer">
             ⚡ Sistema de predicción basado en modelo compuesto (Elo + Estadísticas + Goles esperados)<br>
             Datos de Sofascore · 72 partidos analizados · 48 selecciones · 48 con estadísticas completas<br>
-            <small>Generado el 29 de junio de 2026 · Solo con fines informativos</small>
+            <small>Generado el 30 de junio de 2026 · Solo con fines informativos</small>
         </div>
     </div>
 </body>

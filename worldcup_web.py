@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 World Cup 2026 — Predicciones Web
-Genera HTML premium con analisis de los 3 partidos de octavos (29 junio 2026)
+Genera HTML premium con analisis de los 3 partidos de octavos (30 junio 2026)
 """
 
 import sys
@@ -14,7 +14,7 @@ import webbrowser
 # Añadir src al path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 from worldcup.engine import WorldCupEngine
-from value_bets import build_value_bets, load_all_matches, build_matchup_narrative, compute_team_averages
+from value_bets import build_value_bets, load_all_matches, build_matchup_narrative, compute_team_averages, load_real_stats, compare_predictions, build_comparison_html, adjusted_prediction, PREDICTABLE_STATS
 
 # ─── Cuotas reales (OddsPapi) ───────────────────────────────────────────
 
@@ -28,8 +28,14 @@ def load_odds_cache():
 
 def get_match_odds(cache, home_team, away_team):
     """Busca las cuotas de un partido por nombres de equipo (fuzzy match)"""
-    home_lower = home_team.lower().strip()
-    away_lower = away_team.lower().strip()
+    # Alias: motor usa nombres FIFA, el caché puede tener variantes
+    aliases = {
+        "côte d'ivoire": "ivory coast",
+        "south korea": "korea republic",
+        "usa": "united states",
+    }
+    home_lower = aliases.get(home_team.lower().strip(), home_team.lower().strip())
+    away_lower = aliases.get(away_team.lower().strip(), away_team.lower().strip())
     
     for fid, info in cache.items():
         ch = info.get("home", "").lower().strip()
@@ -52,8 +58,14 @@ def get_match_odds(cache, home_team, away_team):
                 b365 = b365_raw.get("1x2", b365_raw)
             if isinstance(pinn, dict) and "home" not in pinn and isinstance(pin_raw, dict):
                 pinn = pin_raw.get("1x2", pin_raw)
-            
-            return b365, pinn
+
+            # Merge: combinar 1x2 con campos extra (over_15, btts_yes, etc.)
+            merged = dict(b365) if b365 else {}
+            if isinstance(b365_raw, dict):
+                for k, v in b365_raw.items():
+                    if k != "1x2" and not isinstance(v, dict) and k not in merged:
+                        merged[k] = v
+            return merged, pinn
     return None, None
 
 def implied_prob(odd):
@@ -106,102 +118,104 @@ def build_combinadas(predictions, odds_cache):
         p = r['probabilities']
         eg = r['expected_goals']
         total_xg = eg['home'] + eg['away']
-        
+
         # Cuotas reales
         b365 = r.get('odds_b365') or {}
-        
+
         ov15 = over_prob(total_xg, 1)
         ov25 = over_prob(total_xg, 2)
         ov35 = over_prob(total_xg, 3)
         btts = btts_prob(eg['home'], eg['away'])
-        
+
+        # Probabilidad 1X (doble oportunidad local)
+        p_1x = (p['home'] + p['draw']) / 100
+
         matches.append({
             'home': home, 'away': away,
             'prob': p, 'eg': eg,
             'b365': b365,
             'ov15': ov15, 'ov25': ov25, 'ov35': ov35,
-            'btts': btts,
+            'btts': btts, 'p_1x': p_1x,
         })
-    
+
     m = matches  # shortcut
     b = [m_.get('b365', {}) for m_ in m]  # bet365 for each match
-    
-    # ─── 🟢 SEGURA: Over 1.5 en los 3 ───
-    # Usar cuotas reales de bet365 si existen, si no, fallback a las que tenemos
-    cuota_ov15 = [
-        b[0].get('over15') or 1.33,  # Brazil-Japan
-        b[1].get('over15') or 1.22,  # Germany-Paraguay
-        b[2].get('over15') or 1.36,  # Netherlands-Morocco
+
+    # ─── 🟢 SEGURA: 1X Ivory Coast + Over 1.5 France + 1X Mexico ───
+    # Cuotas reales: 1X = home*draw / (home+draw) approx, pero usamos 1x2 home como ref
+    # bet365 no da doble oportunidad directa; usamos home como conservador
+    # En realidad calculamos la cuota 1X como (home*draw)/(home+draw)
+    def cuota_1x(bk):
+        h, d = bk.get('home', 1.5), bk.get('draw', 3.5)
+        return round((h * d) / (h + d), 2)
+
+    cuota_seg = [
+        cuota_1x(b[0]),              # Ivory Coast 1X
+        b[1].get('over_15') or 1.14, # France Over 1.5
+        cuota_1x(b[2]),              # Mexico 1X
     ]
-    p_seg = m[0]['ov15'] * m[1]['ov15'] * m[2]['ov15']
-    cuota_seg = cuota_ov15[0] * cuota_ov15[1] * cuota_ov15[2]
-    
-    # Edge para cada pata
-    edges_seg = []
-    for i in range(3):
-        implied = 1 / cuota_ov15[i]
-        edge = round((m[i]['ov15'] - implied) * 100, 1)
-        edges_seg.append(edge)
-    
-    # ─── 🟠 MEDIA: Over 2.5 Brazil + Over 2.5 Germany + BTTS NL-MA ───
+    p_seg = m[0]['p_1x'] * m[1]['ov15'] * m[2]['p_1x']
+    cuota_seg_total = cuota_seg[0] * cuota_seg[1] * cuota_seg[2]
+
+    edges_seg = [
+        round((m[0]['p_1x'] - 1 / cuota_seg[0]) * 100, 1),
+        round((m[1]['ov15'] - 1 / cuota_seg[1]) * 100, 1),
+        round((m[2]['p_1x'] - 1 / cuota_seg[2]) * 100, 1),
+    ]
+
+    # ─── 🟠 MEDIA: Ivory Coast gana + France BTTS Yes + Mexico gana ───
     cuota_med = [
-        b[0].get('over25') or 2.10,   # Brazil Over 2.5
-        b[1].get('over25') or 1.72,   # Germany Over 2.5
-        b[2].get('btts_yes') or 1.90, # NED BTTS
+        b[0].get('home') or 3.6,    # Ivory Coast gana
+        b[1].get('btts_yes') or 1.75, # France BTTS Yes
+        b[2].get('home') or 2.27,   # Mexico gana
     ]
-    p_med = m[0]['ov25'] * m[1]['ov25'] * m[2]['btts']
+    p_med = (m[0]['prob']['home'] / 100) * m[1]['btts'] * (m[2]['prob']['home'] / 100)
     cuota_med_total = cuota_med[0] * cuota_med[1] * cuota_med[2]
-    
-    edges_med = []
-    for i in range(3):
-        implied = 1 / cuota_med[i]
-        if i == 2:
-            edge = round((m[i]['btts'] - implied) * 100, 1)
-        else:
-            edge = round((m[i]['ov25'] - implied) * 100, 1)
-        edges_med.append(edge)
-    
-    # ─── 🔴 SOÑADORA: Over 2.5 NED + Over 2.5 Brazil + GER Draw ───
-    cuota_son = [
-        b[2].get('over25') or 2.20,   # NED Over 2.5
-        b[0].get('over25') or 2.10,   # Brazil Over 2.5
-        b[1].get('draw') or 5.35,     # Germany Draw
+
+    edges_med = [
+        round((m[0]['prob']['home'] / 100 - 1 / cuota_med[0]) * 100, 1),
+        round((m[1]['btts'] - 1 / cuota_med[1]) * 100, 1),
+        round((m[2]['prob']['home'] / 100 - 1 / cuota_med[2]) * 100, 1),
     ]
-    p_son = m[2]['ov25'] * m[0]['ov25'] * (m[1]['prob']['draw'] / 100)
+
+    # ─── 🔴 SOÑADORA: Ivory Coast Over 3.5 + France Over 3.5 + Mexico Empate ───
+    cuota_son = [
+        b[0].get('over_35') or 3.0,  # Ivory Coast Over 3.5
+        b[1].get('over_35') or 2.1,  # France Over 3.5
+        b[2].get('draw') or 2.91,    # Mexico Empate
+    ]
+    p_son = m[0]['ov35'] * m[1]['ov35'] * (m[2]['prob']['draw'] / 100)
     cuota_son_total = cuota_son[0] * cuota_son[1] * cuota_son[2]
-    
-    edges_son = []
-    for i in range(3):
-        implied = 1 / cuota_son[i]
-        if i == 2:
-            edge = round((m[1]['prob']['draw'] - implied * 100), 1)
-        else:
-            edge = round((m[i]['ov25'] - implied) * 100, 1)
-        edges_son.append(edge)
-    
+
+    edges_son = [
+        round((m[0]['ov35'] - 1 / cuota_son[0]) * 100, 1),
+        round((m[1]['ov35'] - 1 / cuota_son[1]) * 100, 1),
+        round((m[2]['prob']['draw'] / 100 - 1 / cuota_son[2]) * 100, 1),
+    ]
+
     return {
         'segura': {
-            'prob': p_seg, 'cuota': cuota_seg,
+            'prob': p_seg, 'cuota': cuota_seg_total,
             'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 1.5", 'cuota': cuota_ov15[0], 'prob': m[0]['ov15'], 'edge': edges_seg[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 1.5", 'cuota': cuota_ov15[1], 'prob': m[1]['ov15'], 'edge': edges_seg[1]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: Over 1.5", 'cuota': cuota_ov15[2], 'prob': m[2]['ov15'], 'edge': edges_seg[2]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: 1X (Local o Empate)", 'cuota': cuota_seg[0], 'prob': m[0]['p_1x'], 'edge': edges_seg[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 1.5 Goles", 'cuota': cuota_seg[1], 'prob': m[1]['ov15'], 'edge': edges_seg[1]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: 1X (Local o Empate)", 'cuota': cuota_seg[2], 'prob': m[2]['p_1x'], 'edge': edges_seg[2]},
             ]
         },
         'media': {
             'prob': p_med, 'cuota': cuota_med_total,
             'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 2.5", 'cuota': cuota_med[0], 'prob': m[0]['ov25'], 'edge': edges_med[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 2.5", 'cuota': cuota_med[1], 'prob': m[1]['ov25'], 'edge': edges_med[1]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: BTTS Yes", 'cuota': cuota_med[2], 'prob': m[2]['btts'], 'edge': edges_med[2]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Gana Local", 'cuota': cuota_med[0], 'prob': m[0]['prob']['home'] / 100, 'edge': edges_med[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Ambos Marcan (BTTS)", 'cuota': cuota_med[1], 'prob': m[1]['btts'], 'edge': edges_med[1]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: Gana Local", 'cuota': cuota_med[2], 'prob': m[2]['prob']['home'] / 100, 'edge': edges_med[2]},
             ]
         },
         'sonadora': {
             'prob': p_son, 'cuota': cuota_son_total,
             'legs': [
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: Over 2.5", 'cuota': cuota_son[0], 'prob': m[2]['ov25'], 'edge': edges_son[0]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 2.5", 'cuota': cuota_son[1], 'prob': m[0]['ov25'], 'edge': edges_son[1]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Empate", 'cuota': cuota_son[2], 'prob': m[1]['prob']['draw'] / 100, 'edge': edges_son[2]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 3.5 Goles", 'cuota': cuota_son[0], 'prob': m[0]['ov35'], 'edge': edges_son[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 3.5 Goles", 'cuota': cuota_son[1], 'prob': m[1]['ov35'], 'edge': edges_son[1]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: Empate", 'cuota': cuota_son[2], 'prob': m[2]['prob']['draw'] / 100, 'edge': edges_son[2]},
             ]
         }
     }
@@ -288,9 +302,9 @@ def generate_web():
     
     # Partidos de hoy
     matches_today = [
-        ("Brazil", "Japan", "12:00"),
-        ("Germany", "Paraguay", "16:30"),
-        ("Netherlands", "Morocco", "19:00"),
+        ("Côte d'Ivoire", "Norway", "17:00"),
+        ("France", "Sweden", "21:00"),
+        ("Mexico", "Ecuador", "01:00"),
     ]
     
     predictions = []
@@ -305,6 +319,26 @@ def generate_web():
     
     # Generar combinadas con cuotas reales
     combinadas = build_combinadas(predictions, odds_cache)
+    
+    # ─── COMPARATIVA PREDICHO vs REAL ───
+    # Inyectar predicciones del modelo (adjusted_prediction) en cada partido
+    for r in predictions:
+        vb_list = []
+        for stat_key in PREDICTABLE_STATS:
+            pred_h, pred_a = adjusted_prediction(team_stats_narrative, r['home_team'], r['away_team'], stat_key)
+            if pred_h > 0 or pred_a > 0:
+                vb_list.append({
+                    'stat_key': stat_key,
+                    'total_pred': round(pred_h + pred_a, 2),
+                    'pred_home': pred_h,
+                    'pred_away': pred_a,
+                    'ev_pct': 0,  # no hay línea de apuesta, solo comparativa
+                })
+        r['value_bets'] = vb_list
+    
+    real_stats = load_real_stats()
+    comparisons = compare_predictions(predictions, real_stats)
+    comparison_html = build_comparison_html(comparisons)
     
     # Construir HTML
     html = f"""<!DOCTYPE html>
@@ -1075,6 +1109,116 @@ def generate_web():
             color: #5a6080;
             font-size: 1.1em;
         }}
+        
+        /* ─── COMPARATIVA ─── */
+        .comparison-intro {{
+            text-align: center;
+            padding: 20px;
+            color: #a0a8c0;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }}
+        
+        .comparison-match {{
+            background: #111636;
+            border: 1px solid #2a2f4a;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }}
+        
+        .comparison-match-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #1a1f3a;
+        }}
+        
+        .comparison-match-name {{
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #f0c040;
+        }}
+        
+        .comparison-avg-acc {{
+            font-size: 1.1em;
+            font-weight: bold;
+        }}
+        
+        .comparison-grid {{
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }}
+        
+        .comparison-row {{
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 14px;
+            background: #0c1029;
+            border-radius: 10px;
+            flex-wrap: wrap;
+        }}
+        
+        .comparison-stat-name {{
+            min-width: 140px;
+            color: #c0c8e0;
+            font-weight: 600;
+        }}
+        
+        .comparison-values {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 300px;
+            font-size: 0.92em;
+        }}
+        
+        .comp-pred {{
+            color: #60a0f0;
+        }}
+        
+        .comp-vs {{
+            color: #5a6080;
+        }}
+        
+        .comp-real {{
+            color: #60f0a0;
+        }}
+        
+        .comp-diff {{
+            margin-left: 8px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            background: #1a1f3a;
+            color: #f0a060;
+        }}
+        
+        .comparison-bar-track {{
+            flex: 1;
+            min-width: 100px;
+            height: 8px;
+            background: #1a1f3a;
+            border-radius: 4px;
+            overflow: hidden;
+        }}
+        
+        .comparison-bar-fill {{
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }}
+        
+        .comparison-acc {{
+            font-weight: bold;
+            min-width: 60px;
+            text-align: right;
+            font-size: 0.92em;
+        }}
     </style>
 </head>
 <body>
@@ -1082,7 +1226,7 @@ def generate_web():
         <div class="header">
             <h1>🏆 Mundial 2026 — Octavos de Final</h1>
             <div class="subtitle">Predicciones basadas en 72 partidos · 48 equipos · Estadísticas reales de Sofascore</div>
-            <div class="badge">📅 29 de junio de 2026 · 3 partidos</div>
+            <div class="badge">📅 30 de junio de 2026 · 3 partidos</div>
         </div>
         
         <!-- ─── PESTAÑAS ─── -->
@@ -1090,6 +1234,7 @@ def generate_web():
             <button class="tab-btn active" onclick="switchTab('partidos')">📊 Partidos</button>
             <button class="tab-btn" onclick="switchTab('combinadas')">🎰 Combinadas</button>
             <button class="tab-btn" onclick="switchTab('valuebets')">🎯 Value Bets</button>
+            <button class="tab-btn" onclick="switchTab('comparativa')">📈 Comparativa</button>
         </div>
         
         <script>
@@ -1395,13 +1540,20 @@ def generate_web():
         <div id="tab-valuebets" class="tab-panel">
 """ + _build_value_bets_html() + """
         </div><!-- /tab-valuebets -->
+        
+        <div id="tab-comparativa" class="tab-panel">
+            <div class="comparison-section">
+                <h2>📈 COMPARATIVA: PREDICCIONES vs REALIDAD</h2>
+                """ + comparison_html + """
+            </div>
+        </div><!-- /tab-comparativa -->
 """
 
     html += f"""
         <div class="footer">
             ⚡ Sistema de predicción basado en modelo compuesto (Elo + Estadísticas + Goles esperados)<br>
             Datos de Sofascore · 72 partidos analizados · 48 selecciones · {len(engine.team_stats)} con estadísticas completas<br>
-            <small>Generado el 29 de junio de 2026 · Solo con fines informativos</small>
+            <small>Generado el 30 de junio de 2026 · Solo con fines informativos</small>
         </div>
     </div>
 </body>
