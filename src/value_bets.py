@@ -139,9 +139,9 @@ def build_value_bets(matches_data, odds_cache):
 
     # Partidos de hoy
     today_matches = [
-        ("Brazil", "Japan"),
-        ("Germany", "Paraguay"),
-        ("Netherlands", "Morocco"),
+        ("Ivory Coast", "Norway"),
+        ("France", "Sweden"),
+        ("Mexico", "Ecuador"),
     ]
 
     for home_team, away_team in today_matches:
@@ -350,5 +350,209 @@ def build_matchup_narrative(home_team, away_team, team_stats):
     for p in phrases:
         html += f'<div class="narrative-line">{p}</div>\n'
     html += '</div>'
+    
+    return html
+
+
+# ─── COMPARATIVA PREDICHO vs REAL ──────────────────────────────────
+
+def load_real_stats():
+    """Carga estadísticas reales de partidos ya jugados desde data/real_stats.json
+    y/o desde la caché de Sofascore (data/sofascore_cache/).
+    """
+    real = {}
+    
+    # 1. Cargar del archivo principal
+    real_path = DATA_DIR.parent / "real_stats.json"
+    if real_path.exists():
+        with open(real_path) as f:
+            data = json.load(f)
+        for key, val in data.items():
+            if key.startswith('_'):
+                continue
+            real[key] = val
+    
+    # 2. Cargar de la caché de Sofascore (datos frescos de API)
+    cache_dir = DATA_DIR.parent / "sofascore_cache"
+    if cache_dir.exists():
+        for cache_file in cache_dir.glob("event_*.json"):
+            try:
+                with open(cache_file) as f:
+                    cached = json.load(f)
+                stats = cached.get('stats', {})
+                if stats:
+                    # Buscar el match key correspondiente
+                    eid = cache_file.stem.replace('event_', '')
+                    # Intentar mapear stats al formato estándar
+                    mapped = {}
+                    for sk in PREDICTABLE_STATS:
+                        if sk in stats:
+                            mapped[sk] = stats[sk]
+                    if mapped:
+                        key = f"event_{eid}"
+                        if key not in real:
+                            real[key] = {'event_id': int(eid), **mapped}
+            except (json.JSONDecodeError, KeyError, ValueError):
+                pass
+    
+    return real
+
+
+def compare_predictions(predictions, real_stats):
+    """
+    Compara las predicciones del modelo con estadísticas reales.
+    
+    Args:
+        predictions: lista de dicts con {home_team, away_team, ...} (de worldcup_web.py)
+        real_stats: dict de real_stats.json
+    
+    Retorna lista de comparaciones por partido+stat, con error absoluto y relativo.
+    """
+    comparisons = []
+    
+    # Construir índice de real_stats por nombre de equipo
+    real_index = {}
+    for key, val in real_stats.items():
+        if key.startswith('_'):
+            continue
+        if val.get('_blocked'):
+            continue
+        home = key.split(' vs ')[0] if ' vs ' in key else ''
+        away = key.split(' vs ')[1] if ' vs ' in key else ''
+        real_index[(home.lower(), away.lower())] = val
+        # También intentar con orden inverso
+        real_index[(away.lower(), home.lower())] = val
+    
+    for pred in predictions:
+        home = pred.get('home_team', '')
+        away = pred.get('away_team', '')
+        match_key = (home.lower().strip(), away.lower().strip())
+        real = real_index.get(match_key)
+        
+        if not real:
+            continue
+        
+        for stat_key in PREDICTABLE_STATS:
+            if stat_key not in real:
+                continue
+            
+            real_total = real[stat_key].get('total')
+            real_home = real[stat_key].get('home')
+            real_away = real[stat_key].get('away')
+            
+            if real_total is None:
+                continue
+            
+            # Obtener predicción del modelo (si existe en los datos)
+            pred_total = None
+            pred_home = None
+            pred_away = None
+            
+            # Intentar de 'value_bets' del prediction dict
+            vb_list = pred.get('value_bets', [])
+            for vb in vb_list:
+                if vb.get('stat_key') == stat_key:
+                    # Tomar la mejor línea (mayor ev_pct)
+                    if pred_total is None or vb.get('ev_pct', -999) > getattr(comparisons[-1] if comparisons else None, 'best_ev', -999):
+                        pred_total = vb.get('total_pred')
+                        pred_home = vb.get('pred_home')
+                        pred_away = vb.get('pred_away')
+            
+            # Si no hay value_bets, intentar de team_stats
+            if pred_total is None:
+                # Buscar en los datos cargados
+                continue
+            
+            error_abs = round(abs(pred_total - real_total), 1)
+            error_pct = round(error_abs / real_total * 100, 1) if real_total > 0 else 0
+            accuracy = round(max(0, 100 - error_pct), 1)
+            
+            comparisons.append({
+                'match': f"{home} vs {away}",
+                'home': home,
+                'away': away,
+                'stat_key': stat_key,
+                'label': PREDICTABLE_STATS[stat_key]['label'],
+                'icon': PREDICTABLE_STATS[stat_key]['icon'],
+                'pred_total': pred_total,
+                'pred_home': pred_home,
+                'pred_away': pred_away,
+                'real_total': real_total,
+                'real_home': real_home,
+                'real_away': real_away,
+                'error_abs': error_abs,
+                'error_pct': error_pct,
+                'accuracy': accuracy,
+            })
+    
+    # Ordenar por precisión (mayor a menor = mejores predicciones)
+    comparisons.sort(key=lambda x: x['accuracy'], reverse=True)
+    
+    return comparisons
+
+
+def build_comparison_html(comparisons):
+    """
+    Genera HTML para la sección de comparativa Predicho vs Real.
+    """
+    if not comparisons:
+        return '<div class="no-value-bets">🔍 No hay datos reales para comparar aún. Los partidos deben haberse jugado y tener estadísticas en data/real_stats.json.</div>'
+    
+    # Agrupar por partido
+    by_match = {}
+    for c in comparisons:
+        m = c['match']
+        if m not in by_match:
+            by_match[m] = []
+        by_match[m].append(c)
+    
+    html = '<div class="comparison-intro">📊 Comparativa: Predicciones del modelo vs Estadísticas Reales (Sofascore)</div>\n'
+    
+    for match_name, items in by_match.items():
+        # Calcular precisión media del partido
+        avg_acc = sum(c['accuracy'] for c in items) / len(items)
+        acc_color = '#60f0a0' if avg_acc >= 80 else '#f0c040' if avg_acc >= 60 else '#f060a0'
+        
+        html += f'''
+        <div class="comparison-match">
+            <div class="comparison-match-header">
+                <span class="comparison-match-name">⚽ {match_name}</span>
+                <span class="comparison-avg-acc" style="color: {acc_color}">Precisión media: {avg_acc:.0f}%</span>
+            </div>
+            <div class="comparison-grid">
+'''
+        for c in items:
+            # Barra visual de precisión
+            bar_width = c['accuracy']
+            bar_color = '#60f0a0' if c['accuracy'] >= 80 else '#f0c040' if c['accuracy'] >= 60 else '#f060a0'
+            
+            # Calcular dirección del error (sobreestimó o subestimó)
+            over_under = ''
+            if c['pred_total'] > c['real_total']:
+                over_under = '⬆️ +' + str(round(c['pred_total'] - c['real_total'], 1))
+            elif c['pred_total'] < c['real_total']:
+                over_under = '⬇️ -' + str(round(c['real_total'] - c['pred_total'], 1))
+            else:
+                over_under = '✅ Exacto'
+            
+            html += f'''
+                <div class="comparison-row">
+                    <div class="comparison-stat-name">{c['icon']} {c['label']}</div>
+                    <div class="comparison-values">
+                        <span class="comp-pred">Pred: <strong>{c['pred_total']:.1f}</strong></span>
+                        <span class="comp-vs">vs</span>
+                        <span class="comp-real">Real: <strong>{c['real_total']}</strong></span>
+                        <span class="comp-diff">{over_under}</span>
+                    </div>
+                    <div class="comparison-bar-track">
+                        <div class="comparison-bar-fill" style="width: {bar_width}%; background: {bar_color}"></div>
+                    </div>
+                    <div class="comparison-acc" style="color: {bar_color}">{c['accuracy']:.0f}% acierto</div>
+                </div>
+'''
+        html += '''
+            </div>
+        </div>
+'''
     
     return html

@@ -28,6 +28,18 @@ BOOKMAKERS = ["bet365", "pinnacle"]  # Los que nos interesan
 
 MARKET_LABELS = {"101": "home", "102": "draw", "103": "away"}
 
+# Mercados de goles Over/Under: market_id → (over_field, under_field)
+# Cada mercado contiene 2 outcomes: market_id=Over, market_id+1=Under
+GOALS_OU_MARKETS = {
+    "106": ("over_05", "under_05"),    # Over/Under 0.5
+    "108": ("over_15", "under_15"),    # Over/Under 1.5
+    "1010": ("over_25", "under_25"),   # Over/Under 2.5
+    "1012": ("over_35", "under_35"),   # Over/Under 3.5
+    "1014": ("over_45", "under_45"),   # Over/Under 4.5
+}
+# BTTS: market 104, outcomes 104=Yes 105=No
+BTTS_MARKET_ID = "104"
+
 # Mercados de córners y bookings que nos interesan
 # Corners Over/Under: IDs 10767-10843, Bookings Over/Under: IDs 10914-10970
 CORNERS_OU_RANGE = range(10767, 10844)
@@ -100,6 +112,27 @@ def extract_odds(odds_data):
                     label = MARKET_LABELS.get(oid, oid)
                     price = o.get("players", {}).get("0", {}).get("price")
                     result[slug]["1x2"][label] = price
+            # Over/Under goles (mercados 106,108,1010,1012,1014)
+            for mid_str, (over_field, under_field) in GOALS_OU_MARKETS.items():
+                if mid_str in markets:
+                    outcomes = markets[mid_str].get("outcomes", {})
+                    for oid, o in outcomes.items():
+                        price = o.get("players", {}).get("0", {}).get("price")
+                        if price is not None:
+                            if oid == mid_str:
+                                result[slug][over_field] = price
+                            elif oid == str(int(mid_str) + 1):
+                                result[slug][under_field] = price
+            # BTTS (mercado 104: outcome 104=Yes, 105=No)
+            if BTTS_MARKET_ID in markets:
+                outcomes = markets[BTTS_MARKET_ID].get("outcomes", {})
+                for oid, o in outcomes.items():
+                    price = o.get("players", {}).get("0", {}).get("price")
+                    if price is not None:
+                        if oid == "104":
+                            result[slug]["btts_yes"] = price
+                        elif oid == "105":
+                            result[slug]["btts_no"] = price
             # Córners y Bookings Over/Under
             for mid, mdata in markets.items():
                 stat_key, line = market_id_info(mid)

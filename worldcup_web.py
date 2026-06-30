@@ -152,67 +152,69 @@ def build_combinadas(predictions, odds_cache):
     m = matches  # shortcut
     b = [m_.get('b365', {}) for m_ in m]  # bet365 for each match
 
-    # ─── 🟢 SEGURA: Over 1.5 France + Under 2.5 Mexico + Over 1.5 Costa de Marfil ───
-    # Todas las patas con edge positivo, campos neutrales
+    # ─── 🟢 SEGURA: Over 1.5 CI + Over 1.5 France + BTTS No Mexico ───
+    # Cuota ~2.23 | Prob 63.5% | EV +41.8% | Todas las patas edge > 5%
     cuota_seg = [
-        b[1].get('over_15') or 1.14,   # France Over 1.5 (edge +5.3%)
-        b[2].get('under_25') or 1.40,  # Mexico Under 2.5 (edge +5.3%)
-        b[0].get('over_15') or 1.25,   # Costa de Marfil Over 1.5 (edge +6.4%)
+        b[0].get('over_15') or 1.28,   # Costa de Marfil Over 1.5 (edge +8.3%)
+        b[1].get('over_15') or 1.14,   # France Over 1.5 (edge +5.0%)
+        b[2].get('btts_no') or 1.53,   # Mexico BTTS No (edge +14.0%)
     ]
-    p_seg = m[1]['ov15'] * (1 - m[2]['ov25']) * m[0]['ov15']
+    p_seg = m[0]['ov15'] * m[1]['ov15'] * (1 - m[2]['btts'])
     cuota_seg_total = cuota_seg[0] * cuota_seg[1] * cuota_seg[2]
 
     edges_seg = [
-        round((m[1]['ov15'] - 1 / cuota_seg[0]) * 100, 1),
-        round((1 - m[2]['ov25'] - 1 / cuota_seg[1]) * 100, 1),
-        round((m[0]['ov15'] - 1 / cuota_seg[2]) * 100, 1),
+        round((m[0]['ov15'] - 1 / cuota_seg[0]) * 100, 1),
+        round((m[1]['ov15'] - 1 / cuota_seg[1]) * 100, 1),
+        round((1 - m[2]['btts'] - 1 / cuota_seg[2]) * 100, 1),
     ]
 
-    # ─── 🟠 MEDIA: Over 2.5 Costa de Marfil + Over 2.5 France + BTTS No Mexico ───
+    # ─── 🟠 MEDIA: Over 1.5 CI + BTTS Sí France + Mexico Gana ───
+    # Cuota ~5.13 | Prob 39.4% | EV +102.3% | Todas las patas edge > 8%
     cuota_med = [
-        b[0].get('over_25') or 1.80,   # Costa de Marfil Over 2.5 (edge +12.4%)
-        b[1].get('over_25') or 1.44,   # France Over 2.5 (edge +11.2%)
-        b[2].get('btts_no') or 1.53,   # Mexico BTTS No (edge +16.4%)
+        b[0].get('over_15') or 1.28,   # Costa de Marfil Over 1.5 (edge +8.3%)
+        b[1].get('btts_yes') or 1.75,  # France BTTS Sí (edge +15.8%)
+        b[2].get('home') or 2.29,      # Mexico Gana (edge +18.9%)
     ]
-    p_med = m[0]['ov25'] * m[1]['ov25'] * (1 - m[2]['btts'])
+    p_med = m[0]['ov15'] * m[1]['btts'] * (m[2]['prob']['home'] / 100)
     cuota_med_total = cuota_med[0] * cuota_med[1] * cuota_med[2]
 
     edges_med = [
-        round((m[0]['ov25'] - 1 / cuota_med[0]) * 100, 1),
-        round((m[1]['ov25'] - 1 / cuota_med[1]) * 100, 1),
-        round((1 - m[2]['btts'] - 1 / cuota_med[2]) * 100, 1),
+        round((m[0]['ov15'] - 1 / cuota_med[0]) * 100, 1),
+        round((m[1]['btts'] - 1 / cuota_med[1]) * 100, 1),
+        round((m[2]['prob']['home'] / 100 - 1 / cuota_med[2]) * 100, 1),
     ]
 
-    # ─── 🔴 SOÑADORA: Costa de Marfil Gana + France Over 3.5 + Mexico BTTS No ───
+    # ─── 🔴 SOÑADORA: CI Gana + France Over 3.5 + Mexico Gana ───
+    # Cuota ~17.1 | Prob 16.5% | EV +183.1% | Todas las patas edge > 14%
     cuota_son = [
-        b[0].get('home') or 3.94,      # Costa de Marfil Gana (edge +20.6%)
-        b[1].get('over_35') or 2.10,   # France Over 3.5 (edge +15.2%)
-        b[2].get('btts_no') or 1.53,   # Mexico BTTS No (edge +16.4%)
+        b[0].get('home') or 3.56,      # Costa de Marfil Gana (edge +14.1%)
+        b[1].get('over_35') or 2.10,   # France Over 3.5 (edge +14.9%)
+        b[2].get('home') or 2.29,      # Mexico Gana (edge +18.9%)
     ]
-    p_son = (m[0]['prob']['home'] / 100) * m[1]['ov35'] * (1 - m[2]['btts'])
+    p_son = (m[0]['prob']['home'] / 100) * m[1]['ov35'] * (m[2]['prob']['home'] / 100)
     cuota_son_total = cuota_son[0] * cuota_son[1] * cuota_son[2]
 
     edges_son = [
         round((m[0]['prob']['home'] / 100 - 1 / cuota_son[0]) * 100, 1),
         round((m[1]['ov35'] - 1 / cuota_son[1]) * 100, 1),
-        round((1 - m[2]['btts'] - 1 / cuota_son[2]) * 100, 1),
+        round((m[2]['prob']['home'] / 100 - 1 / cuota_son[2]) * 100, 1),
     ]
 
     return {
         'segura': {
             'prob': p_seg, 'cuota': cuota_seg_total,
             'legs': [
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 1.5 Goles", 'cuota': cuota_seg[0], 'prob': m[1]['ov15'], 'edge': edges_seg[0]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: Under 2.5 Goles", 'cuota': cuota_seg[1], 'prob': 1 - m[2]['ov25'], 'edge': edges_seg[1]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 1.5 Goles", 'cuota': cuota_seg[2], 'prob': m[0]['ov15'], 'edge': edges_seg[2]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 1.5 Goles", 'cuota': cuota_seg[0], 'prob': m[0]['ov15'], 'edge': edges_seg[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 1.5 Goles", 'cuota': cuota_seg[1], 'prob': m[1]['ov15'], 'edge': edges_seg[1]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: BTTS No (No marcan ambos)", 'cuota': cuota_seg[2], 'prob': 1 - m[2]['btts'], 'edge': edges_seg[2]},
             ]
         },
         'media': {
             'prob': p_med, 'cuota': cuota_med_total,
             'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 2.5 Goles", 'cuota': cuota_med[0], 'prob': m[0]['ov25'], 'edge': edges_med[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 2.5 Goles", 'cuota': cuota_med[1], 'prob': m[1]['ov25'], 'edge': edges_med[1]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: BTTS No (No marcan ambos)", 'cuota': cuota_med[2], 'prob': 1 - m[2]['btts'], 'edge': edges_med[2]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 1.5 Goles", 'cuota': cuota_med[0], 'prob': m[0]['ov15'], 'edge': edges_med[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: BTTS Sí (Marcan ambos)", 'cuota': cuota_med[1], 'prob': m[1]['btts'], 'edge': edges_med[1]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: Gana {m[2]['home']}", 'cuota': cuota_med[2], 'prob': m[2]['prob']['home'] / 100, 'edge': edges_med[2]},
             ]
         },
         'sonadora': {
@@ -220,7 +222,7 @@ def build_combinadas(predictions, odds_cache):
             'legs': [
                 {'text': f"{m[0]['home']} vs {m[0]['away']}: Gana {m[0]['home']}", 'cuota': cuota_son[0], 'prob': m[0]['prob']['home'] / 100, 'edge': edges_son[0]},
                 {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 3.5 Goles", 'cuota': cuota_son[1], 'prob': m[1]['ov35'], 'edge': edges_son[1]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: BTTS No (No marcan ambos)", 'cuota': cuota_son[2], 'prob': 1 - m[2]['btts'], 'edge': edges_son[2]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: Gana {m[2]['home']}", 'cuota': cuota_son[2], 'prob': m[2]['prob']['home'] / 100, 'edge': edges_son[2]},
             ]
         }
     }
@@ -239,6 +241,11 @@ def _build_value_bets_html():
     html += '<div class="value-bets-grid">\n'
     
     for vb in value_bets:
+        # Traducir nombres a español para display
+        vb_home = display_name(vb['home'])
+        vb_away = display_name(vb['away'])
+        vb_match = f"{vb_home} vs {vb_away}"
+        
         # Determinar clase de edge
         if vb['edge_pct'] >= 5:
             edge_class = 'edge-strong'
@@ -258,7 +265,7 @@ def _build_value_bets_html():
         
         html += f'''        <div class="value-bet-card {edge_class}">
             <div class="value-bet-header">
-                <span class="value-bet-match">⚽ {vb['match']}</span>
+                <span class="value-bet-match">⚽ {vb_match}</span>
                 <span class="value-bet-market">{vb['icon']} {vb['label']} Over {vb['line']:.1f}</span>
             </div>
             <div class="value-bet-body">
@@ -281,8 +288,8 @@ def _build_value_bets_html():
             </div>
             <div class="value-bet-context">
                 <span>📊 Pred: {vb['total_pred']:.1f} total ({vb['pred_home']:.1f} + {vb['pred_away']:.1f})</span>
-                <span>📈 Media {vb['home']}: {vb['team_h_for']:.1f} a favor / {vb['team_h_against']:.1f} en contra</span>
-                <span>📉 Media {vb['away']}: {vb['team_a_for']:.1f} a favor / {vb['team_a_against']:.1f} en contra</span>
+                <span>📈 Media {vb_home}: {vb['team_h_for']:.1f} a favor / {vb['team_h_against']:.1f} en contra</span>
+                <span>📉 Media {vb_away}: {vb['team_a_for']:.1f} a favor / {vb['team_a_against']:.1f} en contra</span>
             </div>
         </div>
 '''
@@ -351,7 +358,7 @@ def generate_web():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mundial 2026 — Predicciones 29 Junio</title>
+    <title>Mundial 2026 — Predicciones 30 Junio</title>
     <style>
         * {{
             margin: 0;
@@ -1474,7 +1481,7 @@ def generate_web():
             <div class="combi-row">
                 <div class="combi-card segura">
                     <h3>🟢 SEGURA</h3>
-                    <div class="combi-tagline">Over 1.5 + Under 2.5 — todos edges positivos</div>
+                    <div class="combi-tagline">Over 1.5 x2 + BTTS No — todas con edge +5% o más</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
                             <div class="stat-num">{combinadas['segura']['prob']*100:.1f}%</div>
@@ -1497,7 +1504,7 @@ def generate_web():
                 </div>
                 <div class="combi-card media">
                     <h3>🟠 MEDIA</h3>
-                    <div class="combi-tagline">Over 2.5 x2 + BTTS No con edges fuertes</div>
+                    <div class="combi-tagline">Over 1.5 + BTTS Sí + Mexico gana — edges +8% a +19%</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
                             <div class="stat-num">{combinadas['media']['prob']*100:.1f}%</div>
@@ -1520,7 +1527,7 @@ def generate_web():
                 </div>
                 <div class="combi-card sonadora">
                     <h3>🔴 SOÑADORA</h3>
-                    <div class="combi-tagline">Sorpresa + goles + defensa con edge 🎯</div>
+                    <div class="combi-tagline">Doble victoria + Over 3.5 France — edges todos +14% 🎯</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
                             <div class="stat-num">{combinadas['sonadora']['prob']*100:.1f}%</div>
