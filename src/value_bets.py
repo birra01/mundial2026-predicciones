@@ -278,8 +278,34 @@ def build_matchup_narrative(home_team, away_team, team_stats):
         'shotsOnGoal': '🎯', 'fouls': '⚡'
     }
     
-    ht = team_stats.get(home_team, {})
-    at = team_stats.get(away_team, {})
+    # Resolver aliases de nombres (ej: "Costa de Marfil" → "Côte d'Ivoire")
+    NAME_ALIASES = {
+        "costa de marfil": "côte d'ivoire",
+    }
+    def _resolve(name):
+        return NAME_ALIASES.get(name.lower(), name)
+    
+    def _get_team_stats(name):
+        """Busca en team_stats con case-insensitive + alias fallback."""
+        # Búsqueda directa
+        if name in team_stats:
+            return team_stats[name]
+        # Case-insensitive
+        name_lower = name.lower()
+        for k in team_stats:
+            if k.lower() == name_lower:
+                return team_stats[k]
+        # Alias
+        alias = NAME_ALIASES.get(name_lower, '')
+        if alias:
+            for k in team_stats:
+                if k.lower() == alias:
+                    return team_stats[k]
+        return {}
+    
+    original_home, original_away = home_team, away_team
+    ht = _get_team_stats(home_team)
+    at = _get_team_stats(away_team)
     if not ht or not at:
         return ''
     
