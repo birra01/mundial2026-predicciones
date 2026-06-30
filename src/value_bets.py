@@ -139,12 +139,17 @@ def build_value_bets(matches_data, odds_cache):
 
     # Partidos de hoy
     today_matches = [
-        ("Ivory Coast", "Norway"),
+        ("Côte d'Ivoire", "Norway"),
         ("France", "Sweden"),
         ("Mexico", "Ecuador"),
     ]
 
     for home_team, away_team in today_matches:
+        # Alias para nombres de equipo (Côte d'Ivoire -> Ivory Coast en caché)
+        cache_aliases = {
+            "côte d'ivoire": "ivory coast",
+        }
+        
         # Buscar cuotas en caché
         match_odds = None
         for fid, info in odds_cache.items():
@@ -152,7 +157,9 @@ def build_value_bets(matches_data, odds_cache):
             ca = info.get("away", "").lower().strip()
             hl = home_team.lower().strip()
             al = away_team.lower().strip()
-            if (ch == hl or hl in ch or ch in hl) and \
+            # Intentar alias primero
+            hl_alias = cache_aliases.get(hl, hl)
+            if (ch == hl or ch == hl_alias or hl in ch or ch in hl or hl_alias in ch) and \
                (ca == al or al in ca or ca in al):
                 match_odds = info.get("odds", {})
                 break
@@ -184,18 +191,36 @@ def build_value_bets(matches_data, odds_cache):
                 odd_under = bet365_stat.get(under_key)
 
                 if not odd:
-                    continue  # sin cuota real, no hay edge
+                    # Sin cuota real → mostramos igual la predicción del modelo
+                    value_bets.append({
+                        'match': f"{home_team} vs {away_team}",
+                        'home': home_team, 'away': away_team,
+                        'stat_key': stat_key,
+                        'label': stat_info['label'],
+                        'icon': stat_info['icon'],
+                        'line': line,
+                        'total_pred': round(total_pred, 1),
+                        'pred_home': pred_h,
+                        'pred_away': pred_a,
+                        'prob_over': round(prob * 100, 1),
+                        'odd': None,
+                        'implied_pct': None,
+                        'edge_pct': None,
+                        'ev_pct': None,
+                        'team_h_for': round(team_h_for, 1),
+                        'team_a_for': round(team_a_for, 1),
+                        'team_h_against': round(team_h_against, 1),
+                        'team_a_against': round(team_a_against, 1),
+                    })
+                    continue
 
                 # Edge = probabilidad modelo - probabilidad implícita de la cuota
                 implied = 1.0 / odd if odd > 0 else 0
                 edge_pct = round((prob - implied) * 100, 1)
 
-                # Solo mostrar bets con edge positivo (o cercano a 0 para info)
-                # Mostramos todas para que el usuario tenga contexto, 
-                # pero marcamos claramente las positivas
-                if edge_pct >= -2:  # mostramos desde -2% para comparación
-                    ev = round((prob * odd * 100) - 100, 1)
-                    value_bets.append({
+                # Mostramos SIEMPRE — el usuario quiere ver todas las predicciones
+                ev = round((prob * odd * 100) - 100, 1)
+                value_bets.append({
                         'match': f"{home_team} vs {away_team}",
                         'home': home_team, 'away': away_team,
                         'stat_key': stat_key,
@@ -216,21 +241,23 @@ def build_value_bets(matches_data, odds_cache):
                         'team_a_against': round(team_a_against, 1),
                     })
 
-    # Ordenar por edge descendente (más positivos primero)
-    value_bets.sort(key=lambda x: x['edge_pct'], reverse=True)
+    # Ordenar: con edge primero (descendente), luego sin cuota (por probabilidad)
+    value_bets.sort(key=lambda x: (x['edge_pct'] is not None, x['edge_pct'] or -999), reverse=True)
     
-    # DEDUPLICAR: solo mejor línea por partido+stat (mayor EV)
+    # DEDUPLICAR: solo mejor línea por partido+stat (mayor EV si tiene, o mayor prob)
     seen = {}
     deduped = []
     for vb in value_bets:
         key = (vb['match'], vb['stat_key'])
         if key in seen:
-            # Quedarse con el de mayor EV
-            if vb['ev_pct'] > seen[key]['ev_pct']:
+            # Quedarse con el de mayor EV, o mayor prob si no hay EV
+            ev_a = vb['ev_pct'] or -999
+            ev_b = seen[key]['ev_pct'] or -999
+            if ev_a > ev_b:
                 seen[key] = vb
         else:
             seen[key] = vb
-    value_bets = sorted(seen.values(), key=lambda x: x['edge_pct'], reverse=True)
+    value_bets = sorted(seen.values(), key=lambda x: (x['edge_pct'] is not None, x['edge_pct'] or -999), reverse=True)
 
     return value_bets, team_stats
 

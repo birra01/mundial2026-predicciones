@@ -26,10 +26,10 @@ STAT_DRAW_PEAK = 0.35  # draw máximo del modelo estadístico
 STAT_DRAW_WIDTH = 4.5  # anchura de la campana de draw
 
 # Pesos de mezcla (deben sumar ~1.0)
-W_ELO = 0.10
-W_STATS = 0.40
-W_POISSON = 0.40
-W_FORM = 0.10
+W_ELO = 0.25
+W_STATS = 0.25
+W_POISSON = 0.25
+W_FORM = 0.25
 
 class WorldCupEngine:
     def __init__(self, data_dir=None):

@@ -237,7 +237,7 @@ def _build_value_bets_html():
     if not value_bets:
         return '<div class="no-value-bets">🔍 No se encontraron value bets para los próximos partidos.<br><small>Las cuotas de bet365 no cubren suficientes mercados de córners/bookings aún.</small></div>'
     
-    html = '<div class="value-bets-intro">🎯 Apuestas con edge positivo: la probabilidad del modelo supera a la implícita de bet365</div>\n'
+    html = '<div class="value-bets-intro">🎯 Predicciones de eventos (córners, tarjetas, tiros...). Las que tienen cuota bet365 muestran edge; las marcadas 🔮 Pendiente salen sin cuota para que las revises manualmente</div>\n'
     html += '<div class="value-bets-grid">\n'
     
     for vb in value_bets:
@@ -246,6 +246,38 @@ def _build_value_bets_html():
         vb_away = display_name(vb['away'])
         vb_match = f"{vb_home} vs {vb_away}"
         
+        # ¿Tiene cuota? → render con edge. Sin cuota → solo predicción.
+        if vb['odd'] is None:
+            # Entrada sin cuota: mostrar predicción para que Kevin la evalúe luego
+            html += f'''        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ {vb_match}</span>
+                <span class="value-bet-market">{vb['icon']} {vb['label']} Over {vb['line']:.1f}</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">{vb['prob_over']:.1f}%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: {vb['total_pred']:.1f} total ({vb['pred_home']:.1f} + {vb['pred_away']:.1f})</span>
+                <span>📈 Media {vb_home}: {vb['team_h_for']:.1f} a favor / {vb['team_h_against']:.1f} en contra</span>
+                <span>📉 Media {vb_away}: {vb['team_a_for']:.1f} a favor / {vb['team_a_against']:.1f} en contra</span>
+            </div>
+        </div>
+'''
+            continue
+        
+        # Entrada con cuota → render normal con edge
         # Determinar clase de edge
         if vb['edge_pct'] >= 5:
             edge_class = 'edge-strong'
@@ -1009,6 +1041,7 @@ def generate_web():
         .value-bet-card.edge-mild::before {{ background: #f0c040; }}
         .value-bet-card.edge-flat::before {{ background: #8890b0; }}
         .value-bet-card.edge-negative::before {{ background: #f06090; }}
+        .value-bet-card.no-odds::before {{ background: #606070; }}
         
         .value-bet-header {{
             display: flex;
@@ -1097,6 +1130,7 @@ def generate_web():
         .edge-mild .edge-badge {{ color: #f0c040; }}
         .edge-flat .edge-badge {{ color: #8890b0; }}
         .edge-negative .edge-badge {{ color: #f06090; }}
+        .no-odds .edge-badge {{ color: #9090b0; }}
         
         .value-bet-context {{
             margin-top: 10px;
@@ -1463,7 +1497,7 @@ def generate_web():
                 <div class="model-chip">Poisson: <span>{r['model_breakdown']['poisson']}% {display_name(r['home_team'])}</span></div>
                 <button class="model-legend-toggle" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.textContent=='¿Qué es esto?'?'Ocultar':'¿Qué es esto?'">¿Qué es esto?</button>
                 <div class="model-legend">
-                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para {display_name(r['home_team'])}. Luego el sistema los <strong>mezcla ponderadamente</strong> (40% Elo + 25% Stats + 25% Poisson + 10% forma) para dar la predicción final que ves arriba.<br><br>
+                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para {display_name(r['home_team'])}. Luego el sistema los <strong>mezcla ponderadamente</strong> (25% Elo + 25% Stats + 25% Poisson + 25% forma) para dar la predicción final que ves arriba.<br><br>
                     <span class="legend-elo">● <strong>Elo:</strong></span> rating histórico basado en resultados y diferencia de goles. Mide la fuerza relativa "teórica" de cada selección.<br>
                     <span class="legend-stats">● <strong>Estadístico:</strong></span> compara TODAS las stats reales del torneo (xG, tiros, posesión, córners, duelos, pases...). El más "basado en datos duros".<br>
                     <span class="legend-poisson">● <strong>Poisson:</strong></span> modelo de goles esperados. Calcula la probabilidad de cada marcador posible según los goles que marcan y reciben ambos equipos. Suele ser el más conservador.

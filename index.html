@@ -654,6 +654,7 @@
         .value-bet-card.edge-mild::before { background: #f0c040; }
         .value-bet-card.edge-flat::before { background: #8890b0; }
         .value-bet-card.edge-negative::before { background: #f06090; }
+        .value-bet-card.no-odds::before { background: #606070; }
         
         .value-bet-header {
             display: flex;
@@ -742,6 +743,7 @@
         .edge-mild .edge-badge { color: #f0c040; }
         .edge-flat .edge-badge { color: #8890b0; }
         .edge-negative .edge-badge { color: #f06090; }
+        .no-odds .edge-badge { color: #9090b0; }
         
         .value-bet-context {
             margin-top: 10px;
@@ -921,18 +923,18 @@
             <div class="probabilities">
                 <div class="prob-bar home">
                     <div class="label">Costa de Marfil</div>
-                    <div class="value">46.0%</div>
-                    <div class="bar-track"><div class="bar-fill home" style="width:46.0%"></div></div>
+                    <div class="value">47.4%</div>
+                    <div class="bar-track"><div class="bar-fill home" style="width:47.4%"></div></div>
                 </div>
                 <div class="prob-bar draw">
                     <div class="label">Empate</div>
-                    <div class="value">25.8%</div>
-                    <div class="bar-track"><div class="bar-fill draw" style="width:25.8%"></div></div>
+                    <div class="value">21.7%</div>
+                    <div class="bar-track"><div class="bar-fill draw" style="width:21.7%"></div></div>
                 </div>
                 <div class="prob-bar away">
                     <div class="label">Norway</div>
-                    <div class="value">28.1%</div>
-                    <div class="bar-track"><div class="bar-fill away" style="width:28.1%"></div></div>
+                    <div class="value">30.9%</div>
+                    <div class="bar-track"><div class="bar-fill away" style="width:30.9%"></div></div>
                 </div>
             </div>
             
@@ -942,15 +944,15 @@
                     <div class="odds-label">Modelo</div>
                     <div class="odds-cells">
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">46.0%</div>
+                            <div class="odd-value" style="color:#60f0a0">47.4%</div>
                             <div class="odd-implied">Costa de Marfil</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">25.8%</div>
+                            <div class="odd-value" style="color:#f0e060">21.7%</div>
                             <div class="odd-implied">Empate</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">28.1%</div>
+                            <div class="odd-value" style="color:#f060a0">30.9%</div>
                             <div class="odd-implied">Norway</div>
                         </div>
                     </div>
@@ -960,17 +962,17 @@
                     <div class="odds-cells">
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#60f0a0">3.56</div>
-                            <div class="odd-edge value-strong">🟢 +17.9%</div>
+                            <div class="odd-edge value-strong">🟢 +19.3%</div>
                             <div class="odd-implied">impl. 28.1%</div>
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f0e060">3.52</div>
-                            <div class="odd-edge value-negative">🔴 -2.6%</div>
+                            <div class="odd-edge value-negative">🔴 -6.7%</div>
                             <div class="odd-implied">impl. 28.4%</div>
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f060a0">2.17</div>
-                            <div class="odd-edge value-negative">🔴 -18.0%</div>
+                            <div class="odd-edge value-negative">🔴 -15.2%</div>
                             <div class="odd-implied">impl. 46.1%</div>
                         </div>
                     </div>
@@ -980,17 +982,17 @@
                     <div class="odds-cells">
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#60f0a0">3.66</div>
-                            <div class="odd-edge value-strong">🟢 +18.7%</div>
+                            <div class="odd-edge value-strong">🟢 +20.1%</div>
                             <div class="odd-implied">impl. 27.3%</div>
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f0e060">3.47</div>
-                            <div class="odd-edge value-negative">🔴 -3.0%</div>
+                            <div class="odd-edge value-negative">🔴 -7.1%</div>
                             <div class="odd-implied">impl. 28.8%</div>
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f060a0">2.17</div>
-                            <div class="odd-edge value-negative">🔴 -18.0%</div>
+                            <div class="odd-edge value-negative">🔴 -15.2%</div>
                             <div class="odd-implied">impl. 46.1%</div>
                         </div>
                     </div>
@@ -1042,7 +1044,7 @@
                 <div class="model-chip">Poisson: <span>42.3% Costa de Marfil</span></div>
                 <button class="model-legend-toggle" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.textContent=='¿Qué es esto?'?'Ocultar':'¿Qué es esto?'">¿Qué es esto?</button>
                 <div class="model-legend">
-                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para Costa de Marfil. Luego el sistema los <strong>mezcla ponderadamente</strong> (40% Elo + 25% Stats + 25% Poisson + 10% forma) para dar la predicción final que ves arriba.<br><br>
+                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para Costa de Marfil. Luego el sistema los <strong>mezcla ponderadamente</strong> (25% Elo + 25% Stats + 25% Poisson + 25% forma) para dar la predicción final que ves arriba.<br><br>
                     <span class="legend-elo">● <strong>Elo:</strong></span> rating histórico basado en resultados y diferencia de goles. Mide la fuerza relativa "teórica" de cada selección.<br>
                     <span class="legend-stats">● <strong>Estadístico:</strong></span> compara TODAS las stats reales del torneo (xG, tiros, posesión, córners, duelos, pases...). El más "basado en datos duros".<br>
                     <span class="legend-poisson">● <strong>Poisson:</strong></span> modelo de goles esperados. Calcula la probabilidad de cada marcador posible según los goles que marcan y reciben ambos equipos. Suele ser el más conservador.
@@ -1066,18 +1068,18 @@
             <div class="probabilities">
                 <div class="prob-bar home">
                     <div class="label">France</div>
-                    <div class="value">58.0%</div>
-                    <div class="bar-track"><div class="bar-fill home" style="width:58.0%"></div></div>
+                    <div class="value">58.2%</div>
+                    <div class="bar-track"><div class="bar-fill home" style="width:58.2%"></div></div>
                 </div>
                 <div class="prob-bar draw">
                     <div class="label">Empate</div>
-                    <div class="value">24.1%</div>
-                    <div class="bar-track"><div class="bar-fill draw" style="width:24.1%"></div></div>
+                    <div class="value">21.5%</div>
+                    <div class="bar-track"><div class="bar-fill draw" style="width:21.5%"></div></div>
                 </div>
                 <div class="prob-bar away">
                     <div class="label">Sweden</div>
-                    <div class="value">17.9%</div>
-                    <div class="bar-track"><div class="bar-fill away" style="width:17.9%"></div></div>
+                    <div class="value">20.2%</div>
+                    <div class="bar-track"><div class="bar-fill away" style="width:20.2%"></div></div>
                 </div>
             </div>
             
@@ -1087,15 +1089,15 @@
                     <div class="odds-label">Modelo</div>
                     <div class="odds-cells">
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">58.0%</div>
+                            <div class="odd-value" style="color:#60f0a0">58.2%</div>
                             <div class="odd-implied">France</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">24.1%</div>
+                            <div class="odd-value" style="color:#f0e060">21.5%</div>
                             <div class="odd-implied">Empate</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">17.9%</div>
+                            <div class="odd-value" style="color:#f060a0">20.2%</div>
                             <div class="odd-implied">Sweden</div>
                         </div>
                     </div>
@@ -1105,17 +1107,17 @@
                     <div class="odds-cells">
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#60f0a0">1.28</div>
-                            <div class="odd-edge value-negative">🔴 -20.1%</div>
+                            <div class="odd-edge value-negative">🔴 -19.9%</div>
                             <div class="odd-implied">impl. 78.1%</div>
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f0e060">6.1</div>
-                            <div class="odd-edge value-mild">🟡 +7.7%</div>
+                            <div class="odd-edge value-mild">🟡 +5.1%</div>
                             <div class="odd-implied">impl. 16.4%</div>
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f060a0">12.0</div>
-                            <div class="odd-edge value-strong">🟢 +9.6%</div>
+                            <div class="odd-edge value-strong">🟢 +11.9%</div>
                             <div class="odd-implied">impl. 8.3%</div>
                         </div>
                     </div>
@@ -1125,17 +1127,17 @@
                     <div class="odds-cells">
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#60f0a0">1.303</div>
-                            <div class="odd-edge value-negative">🔴 -18.7%</div>
+                            <div class="odd-edge value-negative">🔴 -18.5%</div>
                             <div class="odd-implied">impl. 76.7%</div>
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f0e060">6.0</div>
-                            <div class="odd-edge value-mild">🟡 +7.4%</div>
+                            <div class="odd-edge value-mild">🟡 +4.8%</div>
                             <div class="odd-implied">impl. 16.7%</div>
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f060a0">11.0</div>
-                            <div class="odd-edge value-strong">🟢 +8.8%</div>
+                            <div class="odd-edge value-strong">🟢 +11.1%</div>
                             <div class="odd-implied">impl. 9.1%</div>
                         </div>
                     </div>
@@ -1192,7 +1194,7 @@
                 <div class="model-chip">Poisson: <span>65.0% France</span></div>
                 <button class="model-legend-toggle" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.textContent=='¿Qué es esto?'?'Ocultar':'¿Qué es esto?'">¿Qué es esto?</button>
                 <div class="model-legend">
-                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para France. Luego el sistema los <strong>mezcla ponderadamente</strong> (40% Elo + 25% Stats + 25% Poisson + 10% forma) para dar la predicción final que ves arriba.<br><br>
+                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para France. Luego el sistema los <strong>mezcla ponderadamente</strong> (25% Elo + 25% Stats + 25% Poisson + 25% forma) para dar la predicción final que ves arriba.<br><br>
                     <span class="legend-elo">● <strong>Elo:</strong></span> rating histórico basado en resultados y diferencia de goles. Mide la fuerza relativa "teórica" de cada selección.<br>
                     <span class="legend-stats">● <strong>Estadístico:</strong></span> compara TODAS las stats reales del torneo (xG, tiros, posesión, córners, duelos, pases...). El más "basado en datos duros".<br>
                     <span class="legend-poisson">● <strong>Poisson:</strong></span> modelo de goles esperados. Calcula la probabilidad de cada marcador posible según los goles que marcan y reciben ambos equipos. Suele ser el más conservador.
@@ -1216,18 +1218,18 @@
             <div class="probabilities">
                 <div class="prob-bar home">
                     <div class="label">Mexico</div>
-                    <div class="value">56.5%</div>
-                    <div class="bar-track"><div class="bar-fill home" style="width:56.5%"></div></div>
+                    <div class="value">57.0%</div>
+                    <div class="bar-track"><div class="bar-fill home" style="width:57.0%"></div></div>
                 </div>
                 <div class="prob-bar draw">
                     <div class="label">Empate</div>
-                    <div class="value">28.8%</div>
-                    <div class="bar-track"><div class="bar-fill draw" style="width:28.8%"></div></div>
+                    <div class="value">24.5%</div>
+                    <div class="bar-track"><div class="bar-fill draw" style="width:24.5%"></div></div>
                 </div>
                 <div class="prob-bar away">
                     <div class="label">Ecuador</div>
-                    <div class="value">14.7%</div>
-                    <div class="bar-track"><div class="bar-fill away" style="width:14.7%"></div></div>
+                    <div class="value">18.6%</div>
+                    <div class="bar-track"><div class="bar-fill away" style="width:18.6%"></div></div>
                 </div>
             </div>
             
@@ -1237,15 +1239,15 @@
                     <div class="odds-label">Modelo</div>
                     <div class="odds-cells">
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">56.5%</div>
+                            <div class="odd-value" style="color:#60f0a0">57.0%</div>
                             <div class="odd-implied">Mexico</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">28.8%</div>
+                            <div class="odd-value" style="color:#f0e060">24.5%</div>
                             <div class="odd-implied">Empate</div>
                         </div>
                         <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">14.7%</div>
+                            <div class="odd-value" style="color:#f060a0">18.6%</div>
                             <div class="odd-implied">Ecuador</div>
                         </div>
                     </div>
@@ -1255,17 +1257,17 @@
                     <div class="odds-cells">
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#60f0a0">2.29</div>
-                            <div class="odd-edge value-strong">🟢 +12.8%</div>
+                            <div class="odd-edge value-strong">🟢 +13.3%</div>
                             <div class="odd-implied">impl. 43.7%</div>
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f0e060">2.91</div>
-                            <div class="odd-edge value-negative">🔴 -5.6%</div>
+                            <div class="odd-edge value-negative">🔴 -9.9%</div>
                             <div class="odd-implied">impl. 34.4%</div>
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f060a0">4.05</div>
-                            <div class="odd-edge value-negative">🔴 -10.0%</div>
+                            <div class="odd-edge value-negative">🔴 -6.1%</div>
                             <div class="odd-implied">impl. 24.7%</div>
                         </div>
                     </div>
@@ -1275,17 +1277,17 @@
                     <div class="odds-cells">
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#60f0a0">2.32</div>
-                            <div class="odd-edge value-strong">🟢 +13.4%</div>
+                            <div class="odd-edge value-strong">🟢 +13.9%</div>
                             <div class="odd-implied">impl. 43.1%</div>
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f0e060">2.93</div>
-                            <div class="odd-edge value-negative">🔴 -5.3%</div>
+                            <div class="odd-edge value-negative">🔴 -9.6%</div>
                             <div class="odd-implied">impl. 34.1%</div>
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f060a0">4.02</div>
-                            <div class="odd-edge value-negative">🔴 -10.2%</div>
+                            <div class="odd-edge value-negative">🔴 -6.3%</div>
                             <div class="odd-implied">impl. 24.9%</div>
                         </div>
                     </div>
@@ -1342,7 +1344,7 @@
                 <div class="model-chip">Poisson: <span>62.6% Mexico</span></div>
                 <button class="model-legend-toggle" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.textContent=='¿Qué es esto?'?'Ocultar':'¿Qué es esto?'">¿Qué es esto?</button>
                 <div class="model-legend">
-                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para Mexico. Luego el sistema los <strong>mezcla ponderadamente</strong> (40% Elo + 25% Stats + 25% Poisson + 10% forma) para dar la predicción final que ves arriba.<br><br>
+                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para Mexico. Luego el sistema los <strong>mezcla ponderadamente</strong> (25% Elo + 25% Stats + 25% Poisson + 25% forma) para dar la predicción final que ves arriba.<br><br>
                     <span class="legend-elo">● <strong>Elo:</strong></span> rating histórico basado en resultados y diferencia de goles. Mide la fuerza relativa "teórica" de cada selección.<br>
                     <span class="legend-stats">● <strong>Estadístico:</strong></span> compara TODAS las stats reales del torneo (xG, tiros, posesión, córners, duelos, pases...). El más "basado en datos duros".<br>
                     <span class="legend-poisson">● <strong>Poisson:</strong></span> modelo de goles esperados. Calcula la probabilidad de cada marcador posible según los goles que marcan y reciben ambos equipos. Suele ser el más conservador.
@@ -1381,7 +1383,7 @@
                     <div class="combi-tagline">Over 1.5 + BTTS Sí + Mexico gana — edges +8% a +19%</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
-                            <div class="stat-num">34.2%</div>
+                            <div class="stat-num">34.6%</div>
                             <div class="stat-label">Probabilidad</div>
                         </div>
                         <div class="combi-stat">
@@ -1392,16 +1394,16 @@
                     <div class="combi-legs">
                         <div class="combi-leg"><span class="combi-leg-num">1</span> Costa de Marfil vs Norway: Over 1.5 Goles (@1.28 · P=86% · edge +8.3%)</div>
                         <div class="combi-leg"><span class="combi-leg-num">2</span> France vs Sweden: BTTS Sí (Marcan ambos) (@1.75 · P=70% · edge +13.0%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">3</span> Mexico vs Ecuador: Gana Mexico (@2.29 · P=56% · edge +12.8%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">3</span> Mexico vs Ecuador: Gana Mexico (@2.29 · P=57% · edge +13.3%)</div>
                     </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~51€</strong> &nbsp; <span style="color:#2ecc71">EV +75.7% 🟢</span></div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~51€</strong> &nbsp; <span style="color:#2ecc71">EV +77.2% 🟢</span></div>
                 </div>
                 <div class="combi-card sonadora">
                     <h3>🔴 SOÑADORA</h3>
                     <div class="combi-tagline">Doble victoria + Over 3.5 France — edges todos +14% 🎯</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
-                            <div class="stat-num">16.3%</div>
+                            <div class="stat-num">17.0%</div>
                             <div class="stat-label">Probabilidad</div>
                         </div>
                         <div class="combi-stat">
@@ -1410,18 +1412,416 @@
                         </div>
                     </div>
                     <div class="combi-legs">
-                        <div class="combi-leg"><span class="combi-leg-num">1</span> Costa de Marfil vs Norway: Gana Costa de Marfil (@3.56 · P=46% · edge +17.9%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">1</span> Costa de Marfil vs Norway: Gana Costa de Marfil (@3.56 · P=47% · edge +19.3%)</div>
                         <div class="combi-leg"><span class="combi-leg-num">2</span> France vs Sweden: Over 3.5 Goles (@2.10 · P=63% · edge +15.2%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">3</span> Mexico vs Ecuador: Gana Mexico (@2.29 · P=56% · edge +12.8%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">3</span> Mexico vs Ecuador: Gana Mexico (@2.29 · P=57% · edge +13.3%)</div>
                     </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~171€</strong> &nbsp; <span style="color:#2ecc71">EV +179.5% 🟢</span></div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~171€</strong> &nbsp; <span style="color:#2ecc71">EV +190.6% 🟢</span></div>
                 </div>
             </div>
         </div>
         </div><!-- /tab-combinadas -->
         
         <div id="tab-valuebets" class="tab-panel">
-<div class="no-value-bets">🔍 No se encontraron value bets para los próximos partidos.<br><small>Las cuotas de bet365 no cubren suficientes mercados de córners/bookings aún.</small></div>
+<div class="value-bets-intro">🎯 Predicciones de eventos (córners, tarjetas, tiros...). Las que tienen cuota bet365 muestran edge; las marcadas 🔮 Pendiente salen sin cuota para que las revises manualmente</div>
+<div class="value-bets-grid">
+        <div class="value-bet-card edge-flat">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Costa de Marfil vs Norway</span>
+                <span class="value-bet-market">🏳️ Córners Over 8.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">61.4%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.66</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">60.2%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-flat">
+                    <div class="edge-badge">⚪ +1.2%</div>
+                    <div class="edge-label">EDGE · EV +2.0%</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 9.6 total (3.4 + 6.1)</span>
+                <span>📈 Media Costa de Marfil: 4.0 a favor / 5.7 en contra</span>
+                <span>📉 Media Norway: 4.7 a favor / 3.7 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card edge-negative">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Mexico vs Ecuador</span>
+                <span class="value-bet-market">🟨 Tarjetas Over 3.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">33.3%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.83</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">54.6%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-negative">
+                    <div class="edge-badge">🔴 -21.4%</div>
+                    <div class="edge-label">EDGE · EV -39.1%</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 2.9 total (1.4 + 1.5)</span>
+                <span>📈 Media Mexico: 0.7 a favor / 1.3 en contra</span>
+                <span>📉 Media Ecuador: 1.7 a favor / 3.0 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card edge-negative">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Costa de Marfil vs Norway</span>
+                <span class="value-bet-market">🟨 Tarjetas Over 2.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">29.6%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.8</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">55.6%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-negative">
+                    <div class="edge-badge">🔴 -25.9%</div>
+                    <div class="edge-label">EDGE · EV -46.7%</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 1.9 total (1.4 + 0.5)</span>
+                <span>📈 Media Costa de Marfil: 2.0 a favor / 1.5 en contra</span>
+                <span>📉 Media Norway: 0.5 a favor / 1.0 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card edge-negative">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ France vs Sweden</span>
+                <span class="value-bet-market">🟨 Tarjetas Over 2.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">16.2%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.83</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">54.6%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-negative">
+                    <div class="edge-badge">🔴 -38.5%</div>
+                    <div class="edge-label">EDGE · EV -70.4%</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 1.4 total (0.2 + 1.1)</span>
+                <span>📈 Media France: 0.5 a favor / 1.0 en contra</span>
+                <span>📉 Media Sweden: 1.7 a favor / 0.7 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card edge-negative">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Mexico vs Ecuador</span>
+                <span class="value-bet-market">🏳️ Córners Over 7.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">5.3%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.72</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">58.1%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-negative">
+                    <div class="edge-badge">🔴 -52.8%</div>
+                    <div class="edge-label">EDGE · EV -90.9%</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 4.0 total (0.5 + 3.5)</span>
+                <span>📈 Media Mexico: 1.3 a favor / 2.7 en contra</span>
+                <span>📉 Media Ecuador: 5.7 a favor / 1.7 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Costa de Marfil vs Norway</span>
+                <span class="value-bet-market">🎯 Tiros Totales Over 12.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">99.7%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 25.1 total (12.7 + 12.4)</span>
+                <span>📈 Media Costa de Marfil: 10.3 a favor / 13.0 en contra</span>
+                <span>📉 Media Norway: 11.7 a favor / 15.0 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Costa de Marfil vs Norway</span>
+                <span class="value-bet-market">🥅 Tiros Puerta Over 6.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">64.7%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 7.7 total (3.4 + 4.3)</span>
+                <span>📈 Media Costa de Marfil: 3.0 a favor / 3.3 en contra</span>
+                <span>📉 Media Norway: 5.3 a favor / 4.7 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Costa de Marfil vs Norway</span>
+                <span class="value-bet-market">⚡ Faltas Over 18.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">29.5%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 16.4 total (6.4 + 10.1)</span>
+                <span>📈 Media Costa de Marfil: 7.7 a favor / 9.7 en contra</span>
+                <span>📉 Media Norway: 11.7 a favor / 9.3 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ France vs Sweden</span>
+                <span class="value-bet-market">🏳️ Córners Over 7.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">35.8%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 6.7 total (2.3 + 4.4)</span>
+                <span>📈 Media France: 5.0 a favor / 3.3 en contra</span>
+                <span>📉 Media Sweden: 5.7 a favor / 2.0 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ France vs Sweden</span>
+                <span class="value-bet-market">🎯 Tiros Totales Over 12.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">89.9%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 17.8 total (10.5 + 7.3)</span>
+                <span>📈 Media France: 16.0 a favor / 6.7 en contra</span>
+                <span>📉 Media Sweden: 13.3 a favor / 8.0 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ France vs Sweden</span>
+                <span class="value-bet-market">🥅 Tiros Puerta Over 6.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">88.9%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 10.3 total (7.1 + 3.2)</span>
+                <span>📈 Media France: 7.3 a favor / 2.0 en contra</span>
+                <span>📉 Media Sweden: 6.7 a favor / 4.0 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ France vs Sweden</span>
+                <span class="value-bet-market">⚡ Faltas Over 18.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">25.7%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 16.0 total (8.8 + 7.2)</span>
+                <span>📈 Media France: 8.0 a favor / 7.3 en contra</span>
+                <span>📉 Media Sweden: 11.0 a favor / 12.3 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Mexico vs Ecuador</span>
+                <span class="value-bet-market">🎯 Tiros Totales Over 12.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">98.4%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 21.9 total (11.5 + 10.5)</span>
+                <span>📈 Media Mexico: 11.7 a favor / 8.3 en contra</span>
+                <span>📉 Media Ecuador: 15.3 a favor / 12.0 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Mexico vs Ecuador</span>
+                <span class="value-bet-market">🥅 Tiros Puerta Over 6.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">40.0%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 6.0 total (3.5 + 2.5)</span>
+                <span>📈 Media Mexico: 4.3 a favor / 1.7 en contra</span>
+                <span>📉 Media Ecuador: 6.3 a favor / 3.3 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Mexico vs Ecuador</span>
+                <span class="value-bet-market">⚡ Faltas Over 18.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">57.4%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 19.5 total (10.1 + 9.4)</span>
+                <span>📈 Media Mexico: 11.3 a favor / 9.0 en contra</span>
+                <span>📉 Media Ecuador: 11.7 a favor / 10.0 en contra</span>
+            </div>
+        </div>
+</div>
+
         </div><!-- /tab-valuebets -->
         
         <div id="tab-comparativa" class="tab-panel">
