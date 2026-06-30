@@ -16,6 +16,19 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 from worldcup.engine import WorldCupEngine
 from value_bets import build_value_bets, load_all_matches, build_matchup_narrative, compute_team_averages, load_real_stats, compare_predictions, build_comparison_html, adjusted_prediction, PREDICTABLE_STATS
 
+# ─── Nombres en español para mostrar ───────────────────────────────────
+DISPLAY_NAMES = {
+    "Côte d'Ivoire": "Costa de Marfil",
+    "South Korea": "Corea del Sur",
+    "USA": "EE.UU.",
+    "Czechia": "República Checa",
+    "Netherlands": "Países Bajos",
+}
+
+def display_name(name):
+    """Traduce nombres de equipos al español para mostrar en la web"""
+    return DISPLAY_NAMES.get(name, name)
+
 # ─── Cuotas reales (OddsPapi) ───────────────────────────────────────────
 
 def load_odds_cache():
@@ -36,7 +49,7 @@ def get_match_odds(cache, home_team, away_team):
     }
     home_lower = aliases.get(home_team.lower().strip(), home_team.lower().strip())
     away_lower = aliases.get(away_team.lower().strip(), away_team.lower().strip())
-    
+
     for fid, info in cache.items():
         ch = info.get("home", "").lower().strip()
         ca = info.get("away", "").lower().strip()
@@ -109,7 +122,8 @@ def btts_prob(xg_home, xg_away):
     return raw * (1 - 0.15 * (1 - raw))
 
 def build_combinadas(predictions, odds_cache):
-    """Construye las combinadas usando cuotas reales de bet365 + edges del modelo"""
+    """Construye las combinadas usando cuotas reales de bet365 + edges del modelo.
+    En un Mundial no hay local/visitante: campo neutral. Solo se incluyen patas con EV+."""
     # ─── Extraer datos de los 3 partidos ───
     matches = []
     for r in predictions:
@@ -127,95 +141,86 @@ def build_combinadas(predictions, odds_cache):
         ov35 = over_prob(total_xg, 3)
         btts = btts_prob(eg['home'], eg['away'])
 
-        # Probabilidad 1X (doble oportunidad local)
-        p_1x = (p['home'] + p['draw']) / 100
-
         matches.append({
-            'home': home, 'away': away,
+            'home': display_name(home), 'away': display_name(away),
             'prob': p, 'eg': eg,
             'b365': b365,
             'ov15': ov15, 'ov25': ov25, 'ov35': ov35,
-            'btts': btts, 'p_1x': p_1x,
+            'btts': btts,
         })
 
     m = matches  # shortcut
     b = [m_.get('b365', {}) for m_ in m]  # bet365 for each match
 
-    # ─── 🟢 SEGURA: 1X Ivory Coast + Over 1.5 France + 1X Mexico ───
-    # Cuotas reales: 1X = home*draw / (home+draw) approx, pero usamos 1x2 home como ref
-    # bet365 no da doble oportunidad directa; usamos home como conservador
-    # En realidad calculamos la cuota 1X como (home*draw)/(home+draw)
-    def cuota_1x(bk):
-        h, d = bk.get('home', 1.5), bk.get('draw', 3.5)
-        return round((h * d) / (h + d), 2)
-
+    # ─── 🟢 SEGURA: Over 1.5 France + Under 2.5 Mexico + Over 1.5 Costa de Marfil ───
+    # Todas las patas con edge positivo, campos neutrales
     cuota_seg = [
-        cuota_1x(b[0]),              # Ivory Coast 1X
-        b[1].get('over_15') or 1.14, # France Over 1.5
-        cuota_1x(b[2]),              # Mexico 1X
+        b[1].get('over_15') or 1.14,   # France Over 1.5 (edge +5.3%)
+        b[2].get('under_25') or 1.40,  # Mexico Under 2.5 (edge +5.3%)
+        b[0].get('over_15') or 1.25,   # Costa de Marfil Over 1.5 (edge +6.4%)
     ]
-    p_seg = m[0]['p_1x'] * m[1]['ov15'] * m[2]['p_1x']
+    p_seg = m[1]['ov15'] * (1 - m[2]['ov25']) * m[0]['ov15']
     cuota_seg_total = cuota_seg[0] * cuota_seg[1] * cuota_seg[2]
 
     edges_seg = [
-        round((m[0]['p_1x'] - 1 / cuota_seg[0]) * 100, 1),
-        round((m[1]['ov15'] - 1 / cuota_seg[1]) * 100, 1),
-        round((m[2]['p_1x'] - 1 / cuota_seg[2]) * 100, 1),
+        round((m[1]['ov15'] - 1 / cuota_seg[0]) * 100, 1),
+        round((1 - m[2]['ov25'] - 1 / cuota_seg[1]) * 100, 1),
+        round((m[0]['ov15'] - 1 / cuota_seg[2]) * 100, 1),
     ]
 
-    # ─── 🟠 MEDIA: Ivory Coast gana + France BTTS Yes + Mexico gana ───
+    # ─── 🟠 MEDIA: Over 2.5 Costa de Marfil + Over 2.5 France + BTTS No Mexico ───
     cuota_med = [
-        b[0].get('home') or 3.6,    # Ivory Coast gana
-        b[1].get('btts_yes') or 1.75, # France BTTS Yes
-        b[2].get('home') or 2.27,   # Mexico gana
+        b[0].get('over_25') or 1.80,   # Costa de Marfil Over 2.5 (edge +12.4%)
+        b[1].get('over_25') or 1.44,   # France Over 2.5 (edge +11.2%)
+        b[2].get('btts_no') or 1.53,   # Mexico BTTS No (edge +16.4%)
     ]
-    p_med = (m[0]['prob']['home'] / 100) * m[1]['btts'] * (m[2]['prob']['home'] / 100)
+    p_med = m[0]['ov25'] * m[1]['ov25'] * (1 - m[2]['btts'])
     cuota_med_total = cuota_med[0] * cuota_med[1] * cuota_med[2]
 
     edges_med = [
-        round((m[0]['prob']['home'] / 100 - 1 / cuota_med[0]) * 100, 1),
-        round((m[1]['btts'] - 1 / cuota_med[1]) * 100, 1),
-        round((m[2]['prob']['home'] / 100 - 1 / cuota_med[2]) * 100, 1),
+        round((m[0]['ov25'] - 1 / cuota_med[0]) * 100, 1),
+        round((m[1]['ov25'] - 1 / cuota_med[1]) * 100, 1),
+        round((1 - m[2]['btts'] - 1 / cuota_med[2]) * 100, 1),
     ]
 
-    # ─── 🔴 SOÑADORA: Ivory Coast Over 3.5 + France Over 3.5 + Mexico Empate ───
+    # ─── 🔴 SOÑADORA: Costa de Marfil Gana + France Over 3.5 + Mexico BTTS No ───
     cuota_son = [
-        b[0].get('over_35') or 3.0,  # Ivory Coast Over 3.5
-        b[1].get('over_35') or 2.1,  # France Over 3.5
-        b[2].get('draw') or 2.91,    # Mexico Empate
+        b[0].get('home') or 3.94,      # Costa de Marfil Gana (edge +20.6%)
+        b[1].get('over_35') or 2.10,   # France Over 3.5 (edge +15.2%)
+        b[2].get('btts_no') or 1.53,   # Mexico BTTS No (edge +16.4%)
     ]
-    p_son = m[0]['ov35'] * m[1]['ov35'] * (m[2]['prob']['draw'] / 100)
+    p_son = (m[0]['prob']['home'] / 100) * m[1]['ov35'] * (1 - m[2]['btts'])
     cuota_son_total = cuota_son[0] * cuota_son[1] * cuota_son[2]
 
     edges_son = [
-        round((m[0]['ov35'] - 1 / cuota_son[0]) * 100, 1),
+        round((m[0]['prob']['home'] / 100 - 1 / cuota_son[0]) * 100, 1),
         round((m[1]['ov35'] - 1 / cuota_son[1]) * 100, 1),
-        round((m[2]['prob']['draw'] / 100 - 1 / cuota_son[2]) * 100, 1),
+        round((1 - m[2]['btts'] - 1 / cuota_son[2]) * 100, 1),
     ]
 
     return {
         'segura': {
             'prob': p_seg, 'cuota': cuota_seg_total,
             'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: 1X (Local o Empate)", 'cuota': cuota_seg[0], 'prob': m[0]['p_1x'], 'edge': edges_seg[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 1.5 Goles", 'cuota': cuota_seg[1], 'prob': m[1]['ov15'], 'edge': edges_seg[1]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: 1X (Local o Empate)", 'cuota': cuota_seg[2], 'prob': m[2]['p_1x'], 'edge': edges_seg[2]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 1.5 Goles", 'cuota': cuota_seg[0], 'prob': m[1]['ov15'], 'edge': edges_seg[0]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: Under 2.5 Goles", 'cuota': cuota_seg[1], 'prob': 1 - m[2]['ov25'], 'edge': edges_seg[1]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 1.5 Goles", 'cuota': cuota_seg[2], 'prob': m[0]['ov15'], 'edge': edges_seg[2]},
             ]
         },
         'media': {
             'prob': p_med, 'cuota': cuota_med_total,
             'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Gana Local", 'cuota': cuota_med[0], 'prob': m[0]['prob']['home'] / 100, 'edge': edges_med[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Ambos Marcan (BTTS)", 'cuota': cuota_med[1], 'prob': m[1]['btts'], 'edge': edges_med[1]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: Gana Local", 'cuota': cuota_med[2], 'prob': m[2]['prob']['home'] / 100, 'edge': edges_med[2]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 2.5 Goles", 'cuota': cuota_med[0], 'prob': m[0]['ov25'], 'edge': edges_med[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 2.5 Goles", 'cuota': cuota_med[1], 'prob': m[1]['ov25'], 'edge': edges_med[1]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: BTTS No (No marcan ambos)", 'cuota': cuota_med[2], 'prob': 1 - m[2]['btts'], 'edge': edges_med[2]},
             ]
         },
         'sonadora': {
             'prob': p_son, 'cuota': cuota_son_total,
             'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Over 3.5 Goles", 'cuota': cuota_son[0], 'prob': m[0]['ov35'], 'edge': edges_son[0]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Gana {m[0]['home']}", 'cuota': cuota_son[0], 'prob': m[0]['prob']['home'] / 100, 'edge': edges_son[0]},
                 {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 3.5 Goles", 'cuota': cuota_son[1], 'prob': m[1]['ov35'], 'edge': edges_son[1]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: Empate", 'cuota': cuota_son[2], 'prob': m[2]['prob']['draw'] / 100, 'edge': edges_son[2]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: BTTS No (No marcan ambos)", 'cuota': cuota_son[2], 'prob': 1 - m[2]['btts'], 'edge': edges_son[2]},
             ]
         }
     }
@@ -275,9 +280,9 @@ def _build_value_bets_html():
                 </div>
             </div>
             <div class="value-bet-context">
-                <span>📊 Pred: {vb['total_pred']:.1f} total (local {vb['pred_home']:.1f} + visitante {vb['pred_away']:.1f})</span>
-                <span>📈 Media local: {vb['team_h_for']:.1f} a favor / {vb['team_h_against']:.1f} en contra</span>
-                <span>📉 Media visitante: {vb['team_a_for']:.1f} a favor / {vb['team_a_against']:.1f} en contra</span>
+                <span>📊 Pred: {vb['total_pred']:.1f} total ({vb['pred_home']:.1f} + {vb['pred_away']:.1f})</span>
+                <span>📈 Media {vb['home']}: {vb['team_h_for']:.1f} a favor / {vb['team_h_against']:.1f} en contra</span>
+                <span>📉 Media {vb['away']}: {vb['team_a_for']:.1f} a favor / {vb['team_a_against']:.1f} en contra</span>
             </div>
         </div>
 '''
@@ -1260,9 +1265,9 @@ def generate_web():
         
         # Predicción en texto
         if r['prediction'] == 'HOME':
-            pred_text = f"Gana {r['home_team']}"
+            pred_text = f"Gana {display_name(r['home_team'])}"
         elif r['prediction'] == 'AWAY':
-            pred_text = f"Gana {r['away_team']}"
+            pred_text = f"Gana {display_name(r['away_team'])}"
         else:
             pred_text = "Empate"
         
@@ -1271,9 +1276,9 @@ def generate_web():
             <div class="match-header">
                 <div class="match-time">⏰ {r['time']}</div>
                 <div class="teams">
-                    <span class="team">{r['home_team']}</span>
+                    <span class="team">{display_name(r['home_team'])}</span>
                     <span class="vs">vs</span>
-                    <span class="team">{r['away_team']}</span>
+                    <span class="team">{display_name(r['away_team'])}</span>
                 </div>
                 <div>
                     <span class="prediction-badge {r['prediction']}">{pred_text}<span class="confidence">{r['confidence']}</span></span>
@@ -1282,7 +1287,7 @@ def generate_web():
             
             <div class="probabilities">
                 <div class="prob-bar home">
-                    <div class="label">{r['home_team']}</div>
+                    <div class="label">{display_name(r['home_team'])}</div>
                     <div class="value">{p['home']}%</div>
                     <div class="bar-track"><div class="bar-fill home" style="width:{p['home']}%"></div></div>
                 </div>
@@ -1292,7 +1297,7 @@ def generate_web():
                     <div class="bar-track"><div class="bar-fill draw" style="width:{p['draw']}%"></div></div>
                 </div>
                 <div class="prob-bar away">
-                    <div class="label">{r['away_team']}</div>
+                    <div class="label">{display_name(r['away_team'])}</div>
                     <div class="value">{p['away']}%</div>
                     <div class="bar-track"><div class="bar-fill away" style="width:{p['away']}%"></div></div>
                 </div>
@@ -1312,7 +1317,7 @@ def generate_web():
                     <div class="odds-cells">
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#60f0a0">""" + str(p['home']) + """%</div>
-                            <div class="odd-implied">""" + r['home_team'] + """</div>
+                            <div class="odd-implied">""" + display_name(r['home_team']) + """</div>
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f0e060">""" + str(p['draw']) + """%</div>
@@ -1320,7 +1325,7 @@ def generate_web():
                         </div>
                         <div class="odds-cell">
                             <div class="odd-value" style="color:#f060a0">""" + str(p['away']) + """%</div>
-                            <div class="odd-implied">""" + r['away_team'] + """</div>
+                            <div class="odd-implied">""" + display_name(r['away_team']) + """</div>
                         </div>
                     </div>
                 </div>
@@ -1405,9 +1410,9 @@ def generate_web():
             <div class="stats-section">
                 <h3>📊 ESTADÍSTICAS CLAVE</h3>
                 <div class="stats-two-col">
-                    <div class="stats-col-header home">{r['home_team']}</div>
+                    <div class="stats-col-header home">{display_name(r['home_team'])}</div>
                     <div></div>
-                    <div class="stats-col-header away">{r['away_team']}</div>
+                    <div class="stats-col-header away">{display_name(r['away_team'])}</div>
                     
                     <div class="stat-value-home">{eg['home']}</div>
                     <div class="stat-name-center">Goles esperados</div>
@@ -1440,15 +1445,18 @@ def generate_web():
             <div class="narrative">📊 {r['narrative']}</div>
             
 """
-        html += build_matchup_narrative(r['home_team'], r['away_team'], team_stats_narrative)
+        # Aplicar traducción de nombres al narrative
+        for orig, disp in DISPLAY_NAMES.items():
+            html = html.replace(orig, disp)
+        html += build_matchup_narrative(display_name(r['home_team']), display_name(r['away_team']), team_stats_narrative)
         html += f"""
             <div class="model-breakdown">
-                <div class="model-chip">Elo: <span>{r['model_breakdown']['elo']}% local</span></div>
-                <div class="model-chip">Estadístico: <span>{r['model_breakdown']['statistical']}% local</span></div>
-                <div class="model-chip">Poisson: <span>{r['model_breakdown']['poisson']}% local</span></div>
+                <div class="model-chip">Elo: <span>{r['model_breakdown']['elo']}% {display_name(r['home_team'])}</span></div>
+                <div class="model-chip">Estadístico: <span>{r['model_breakdown']['statistical']}% {display_name(r['home_team'])}</span></div>
+                <div class="model-chip">Poisson: <span>{r['model_breakdown']['poisson']}% {display_name(r['home_team'])}</span></div>
                 <button class="model-legend-toggle" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.textContent=='¿Qué es esto?'?'Ocultar':'¿Qué es esto?'">¿Qué es esto?</button>
                 <div class="model-legend">
-                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria local predice cada modelo por separado. Luego el sistema los <strong>mezcla ponderadamente</strong> (40% Elo + 25% Stats + 25% Poisson + 10% forma) para dar la predicción final que ves arriba.<br><br>
+                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para {display_name(r['home_team'])}. Luego el sistema los <strong>mezcla ponderadamente</strong> (40% Elo + 25% Stats + 25% Poisson + 10% forma) para dar la predicción final que ves arriba.<br><br>
                     <span class="legend-elo">● <strong>Elo:</strong></span> rating histórico basado en resultados y diferencia de goles. Mide la fuerza relativa "teórica" de cada selección.<br>
                     <span class="legend-stats">● <strong>Estadístico:</strong></span> compara TODAS las stats reales del torneo (xG, tiros, posesión, córners, duelos, pases...). El más "basado en datos duros".<br>
                     <span class="legend-poisson">● <strong>Poisson:</strong></span> modelo de goles esperados. Calcula la probabilidad de cada marcador posible según los goles que marcan y reciben ambos equipos. Suele ser el más conservador.
@@ -1466,7 +1474,7 @@ def generate_web():
             <div class="combi-row">
                 <div class="combi-card segura">
                     <h3>🟢 SEGURA</h3>
-                    <div class="combi-tagline">3 Over 1.5 — todos edges positivos</div>
+                    <div class="combi-tagline">Over 1.5 + Under 2.5 — todos edges positivos</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
                             <div class="stat-num">{combinadas['segura']['prob']*100:.1f}%</div>
@@ -1489,7 +1497,7 @@ def generate_web():
                 </div>
                 <div class="combi-card media">
                     <h3>🟠 MEDIA</h3>
-                    <div class="combi-tagline">Over 2.5 + BTTS con edges fuertes</div>
+                    <div class="combi-tagline">Over 2.5 x2 + BTTS No con edges fuertes</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
                             <div class="stat-num">{combinadas['media']['prob']*100:.1f}%</div>
@@ -1512,7 +1520,7 @@ def generate_web():
                 </div>
                 <div class="combi-card sonadora">
                     <h3>🔴 SOÑADORA</h3>
-                    <div class="combi-tagline">Goles + sorpresa con edge 🎯</div>
+                    <div class="combi-tagline">Sorpresa + goles + defensa con edge 🎯</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
                             <div class="stat-num">{combinadas['sonadora']['prob']*100:.1f}%</div>
