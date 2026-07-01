@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mundial 2026 — Predicciones 30 Junio</title>
+    <title>Mundial 2026 — Predicciones 1 Julio</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             background: #0a0e27;
@@ -19,11 +15,9 @@
             padding: 20px;
         }
         
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1100px; margin: 0 auto; }
         
+        /* ─── HEADER ─── */
         .header {
             text-align: center;
             padding: 40px 20px 30px;
@@ -32,7 +26,6 @@
             margin-bottom: 30px;
             border: 1px solid #2a2f4a;
         }
-        
         .header h1 {
             font-size: 2.4em;
             background: linear-gradient(135deg, #f0c040, #e09020);
@@ -41,12 +34,7 @@
             background-clip: text;
             margin-bottom: 10px;
         }
-        
-        .header .subtitle {
-            color: #8890b0;
-            font-size: 1.1em;
-        }
-        
+        .header .subtitle { color: #8890b0; font-size: 1.1em; }
         .header .badge {
             display: inline-block;
             background: #e09020;
@@ -56,520 +44,6 @@
             font-weight: 700;
             font-size: 0.85em;
             margin-top: 12px;
-        }
-        
-        .match-card {
-            background: linear-gradient(145deg, #151a35 0%, #111530 100%);
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 24px;
-            border: 1px solid #2a2f4a;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .match-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-        }
-        
-        .match-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            gap: 20px;
-        }
-        
-        .match-time {
-            background: #1e2445;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 0.9em;
-            color: #a0a8c0;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        
-        .teams {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex: 1;
-        }
-        
-        .team {
-            font-size: 1.5em;
-            font-weight: 700;
-            color: #ffffff;
-            text-shadow: 0 0 20px rgba(255,255,255,0.1);
-        }
-        
-        .vs {
-            color: #5a6080;
-            font-size: 1em;
-            font-weight: 400;
-        }
-        
-        .prediction-badge {
-            padding: 8px 20px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.85em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .prediction-badge.HOME { background: #1a4a2a; color: #60f0a0; border: 1px solid #2a6a3a; }
-        .prediction-badge.AWAY { background: #4a1a2a; color: #f060a0; border: 1px solid #6a2a4a; }
-        .prediction-badge.DRAW { background: #3a3a0a; color: #f0f060; border: 1px solid #5a5a2a; }
-        
-        .confidence {
-            font-size: 0.8em;
-            font-weight: 600;
-            margin-left: 8px;
-            opacity: 0.8;
-        }
-        
-        .probabilities {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        
-        .prob-bar {
-            flex: 1;
-            text-align: center;
-        }
-        
-        .prob-bar .label {
-            font-size: 0.8em;
-            color: #8890b0;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-        
-        .prob-bar .value {
-            font-size: 1.8em;
-            font-weight: 800;
-            margin-bottom: 6px;
-        }
-        
-        .prob-bar.home .value { color: #60f0a0; }
-        .prob-bar.draw .value { color: #f0e060; }
-        .prob-bar.away .value { color: #f060a0; }
-        
-        .bar-track {
-            height: 8px;
-            background: #1e2445;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .bar-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.5s;
-        }
-        
-        .bar-fill.home { background: linear-gradient(90deg, #30a050, #60f0a0); }
-        .bar-fill.draw { background: linear-gradient(90deg, #909030, #f0e060); }
-        .bar-fill.away { background: linear-gradient(90deg, #a03050, #f060a0); }
-        
-        .stats-section {
-            margin-bottom: 16px;
-        }
-        
-        .stats-section h3 {
-            font-size: 0.85em;
-            font-weight: 700;
-            color: #e09020;
-            padding: 12px 0 6px;
-            border-bottom: 1px solid #2a2f4a;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 12px;
-        }
-        
-        .stats-two-col {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            gap: 0;
-            align-items: center;
-        }
-        
-        .stats-col-header {
-            padding: 8px 0;
-            font-weight: 700;
-            font-size: 1.1em;
-            text-align: center;
-            border-bottom: 2px solid #2a2f4a;
-        }
-        
-        .stats-col-header.home { color: #60f0a0; border-color: #1a4a2a; }
-        .stats-col-header.away { color: #f060a0; border-color: #4a1a2a; }
-        
-        .stat-row {
-            display: contents;
-        }
-        
-        .stat-value-home {
-            text-align: center;
-            font-weight: 600;
-            font-size: 1.1em;
-            color: #c0d0e0;
-            padding: 6px 0;
-        }
-        
-        .stat-name-center {
-            text-align: center;
-            color: #6a70a0;
-            font-size: 0.78em;
-            padding: 6px 12px;
-            min-width: 120px;
-        }
-        
-        .stat-value-away {
-            text-align: center;
-            font-weight: 600;
-            font-size: 1.1em;
-            color: #c0d0e0;
-            padding: 6px 0;
-        }
-        
-        .narrative {
-            background: #0d1030;
-            border-left: 3px solid #e09020;
-            padding: 14px 18px;
-            border-radius: 0 10px 10px 0;
-            color: #a0b0d0;
-            font-size: 0.9em;
-            line-height: 1.5;
-            margin-bottom: 16px;
-        }
-        
-        .matchup-narrative {
-            background: linear-gradient(135deg, #0d1030 0%, #111540 100%);
-            border: 1px solid #2a2f4a;
-            border-left: 4px solid #60a0f0;
-            padding: 16px 20px;
-            border-radius: 0 12px 12px 0;
-            margin-bottom: 16px;
-            font-size: 0.85em;
-            line-height: 1.8;
-            color: #b0c0e0;
-        }
-        
-        .matchup-narrative strong {
-            color: #80b0f0;
-        }
-        
-        .narrative-line {
-            padding: 3px 0;
-            padding-left: 6px;
-            border-bottom: 1px solid rgba(42,47,74,0.3);
-        }
-        
-        .narrative-line:last-child {
-            border-bottom: none;
-        }
-        
-        .model-breakdown {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        
-        .model-chip {
-            background: #1a1f3a;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 0.8em;
-            color: #8890b0;
-            border: 1px solid #2a2f4a;
-        }
-        
-        .model-chip span {
-            color: #e09020;
-            font-weight: 700;
-        }
-        
-        .model-legend-toggle {
-            background: none;
-            border: 1px solid #3a3f5a;
-            color: #6a70a0;
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-size: 0.75em;
-            cursor: pointer;
-            margin-left: 8px;
-        }
-        
-        .model-legend-toggle:hover {
-            color: #e09020;
-            border-color: #e09020;
-        }
-        
-        .model-legend {
-            display: none;
-            background: #0d1030;
-            border: 1px solid #2a2f4a;
-            border-radius: 10px;
-            padding: 14px 18px;
-            margin-top: 12px;
-            font-size: 0.8em;
-            color: #8890b0;
-            line-height: 1.6;
-        }
-        
-        .model-legend.show {
-            display: block;
-        }
-        
-        .model-legend strong {
-            color: #e0e0e0;
-        }
-        
-        .model-legend .legend-elo { color: #60f0a0; }
-        .model-legend .legend-stats { color: #f0c040; }
-        .model-legend .legend-poisson { color: #60a0f0; }
-        
-        .combinadas-section {
-            background: linear-gradient(145deg, #151a35 0%, #111530 100%);
-            border-radius: 16px;
-            padding: 24px 30px;
-            margin-bottom: 24px;
-            border: 1px solid #2a2f4a;
-        }
-        
-        .combinadas-section h2 {
-            font-size: 1.3em;
-            background: linear-gradient(135deg, #f0c040, #e09020);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .combi-row {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-        
-        .combi-card {
-            flex: 1;
-            background: #0f1430;
-            border-radius: 12px;
-            padding: 16px;
-            border: 1px solid #2a2f4a;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .combi-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-        }
-        
-        .combi-card.segura::before { background: linear-gradient(90deg, #30a050, #60f0a0); }
-        .combi-card.media::before { background: linear-gradient(90deg, #e09020, #f0c040); }
-        .combi-card.sonadora::before { background: linear-gradient(90deg, #c03060, #f060a0); }
-        
-        .combi-card h3 {
-            font-size: 1em;
-            margin-bottom: 4px;
-            text-align: center;
-        }
-        
-        .combi-card.segura h3 { color: #60f0a0; }
-        .combi-card.media h3 { color: #f0c040; }
-        .combi-card.sonadora h3 { color: #f060a0; }
-        
-        .combi-card .combi-tagline {
-            font-size: 0.72em;
-            color: #6a70a0;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-        
-        .combi-stats {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 12px;
-            font-size: 0.8em;
-        }
-        
-        .combi-stat {
-            text-align: center;
-        }
-        
-        .combi-stat .stat-num {
-            font-size: 1.4em;
-            font-weight: 800;
-        }
-        
-        .combi-card.segura .stat-num { color: #60f0a0; }
-        .combi-card.media .stat-num { color: #f0c040; }
-        .combi-card.sonadora .stat-num { color: #f060a0; }
-        
-        .combi-stat .stat-label {
-            color: #6a70a0;
-            font-size: 0.85em;
-            margin-top: 2px;
-        }
-        
-        .combi-legs {
-            font-size: 0.78em;
-            color: #a0b0d0;
-        }
-        
-        .combi-leg {
-            padding: 6px 0;
-            border-bottom: 1px solid #1a1f3a;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .combi-leg:last-child {
-            border-bottom: none;
-        }
-        
-        .combi-leg-num {
-            background: #1e2445;
-            color: #8890b0;
-            width: 22px; height: 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8em;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-        
-        .combi-payout {
-            text-align: center;
-            margin-top: 12px;
-            padding-top: 10px;
-            border-top: 1px solid #1a1f3a;
-            font-size: 0.75em;
-            color: #7880a0;
-        }
-        
-        .combi-payout strong {
-            color: #e0e0e0;
-            font-size: 1.15em;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 30px;
-            color: #5a6080;
-            font-size: 0.8em;
-        }
-        
-        .footer a {
-            color: #e09020;
-            text-decoration: none;
-        }
-        
-        .round-badge {
-            background: #e09020;
-            color: #0a0e27;
-            padding: 3px 12px;
-            border-radius: 10px;
-            font-size: 0.75em;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        
-        .key-stats {
-            font-size: 0.8em;
-            color: #7880a0;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-        
-        .odds-section {
-            background: #0d1030;
-            border-radius: 12px;
-            padding: 18px 20px;
-            margin-bottom: 20px;
-            border: 1px solid #2a2f4a;
-        }
-        
-        .odds-section h3 {
-            font-size: 0.8em;
-            font-weight: 700;
-            color: #f0c040;
-            margin-bottom: 14px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        .odds-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-        
-        .odds-label {
-            width: 90px;
-            font-size: 0.75em;
-            color: #6a70a0;
-            font-weight: 600;
-            padding: 6px 0;
-            flex-shrink: 0;
-        }
-        
-        .odds-cells {
-            display: flex;
-            gap: 8px;
-            flex: 1;
-        }
-        
-        .odds-cell {
-            flex: 1;
-            text-align: center;
-            background: #101530;
-            border-radius: 8px;
-            padding: 6px 4px;
-            border: 1px solid #1e2450;
-            font-size: 0.85em;
-        }
-        
-        .odds-cell .odd-value {
-            font-weight: 800;
-            font-size: 1.05em;
-        }
-        
-        .odds-cell .odd-edge {
-            font-size: 0.72em;
-            margin-top: 2px;
-            font-weight: 600;
-        }
-        
-        .odds-cell .odd-edge.value-strong { color: #60f0a0; }
-        .odds-cell .odd-edge.value-mild, .odds-cell .odd-edge.value-flat { color: #8890b0; }
-        .odds-cell .odd-edge.value-negative { color: #f06090; }
-        
-        .odds-cell .odd-implied {
-            font-size: 0.68em;
-            color: #5860a0;
-            margin-top: 1px;
-        }
-        
-        .odds-source {
-            font-size: 0.65em;
-            color: #4a5080;
-            text-align: right;
-            margin-top: 4px;
         }
         
         /* ─── PESTAÑAS ─── */
@@ -582,7 +56,6 @@
             padding: 4px;
             border: 1px solid #2a2f4a;
         }
-        
         .tab-btn {
             flex: 1;
             padding: 12px 20px;
@@ -596,25 +69,357 @@
             transition: all 0.25s;
             font-family: inherit;
         }
-        
-        .tab-btn:hover {
-            color: #a0a8c0;
-            background: #151a35;
-        }
-        
+        .tab-btn:hover { color: #a0a8c0; background: #151a35; }
         .tab-btn.active {
             background: linear-gradient(135deg, #1a2f50, #152040);
             color: #e0e0e0;
             box-shadow: 0 2px 12px rgba(0,0,0,0.3);
         }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
         
-        .tab-panel {
+        /* ─── MATCH CARD ─── */
+        .match-card {
+            background: linear-gradient(145deg, #151a35 0%, #111530 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 24px;
+            border: 1px solid #2a2f4a;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .match-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .match-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+        .match-time {
+            background: #1e2445;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #a0a8c0;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .teams {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex: 1;
+        }
+        .team {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+        .vs { color: #5a6080; font-size: 1em; font-weight: 400; }
+        .prediction-badge {
+            padding: 8px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .prediction-badge.HOME { background: #1a4a2a; color: #60f0a0; border: 1px solid #2a6a3a; }
+        .prediction-badge.AWAY { background: #4a1a2a; color: #f060a0; border: 1px solid #6a2a4a; }
+        .prediction-badge.DRAW { background: #3a3a0a; color: #f0f060; border: 1px solid #5a5a2a; }
+        .confidence {
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 8px;
+            opacity: 0.8;
+        }
+        
+        /* ─── BARRAS DE PROBABILIDAD ─── */
+        .probabilities { display: flex; gap: 12px; margin-bottom: 24px; }
+        .prob-bar { flex: 1; text-align: center; }
+        .prob-bar .label { font-size: 0.8em; color: #8890b0; margin-bottom: 6px; font-weight: 500; }
+        .prob-bar .value { font-size: 1.8em; font-weight: 800; margin-bottom: 6px; }
+        .prob-bar.home .value { color: #60f0a0; }
+        .prob-bar.draw .value { color: #f0e060; }
+        .prob-bar.away .value { color: #f060a0; }
+        .bar-track {
+            height: 8px;
+            background: #1e2445;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+        .bar-fill.home { background: linear-gradient(90deg, #30a050, #60f0a0); }
+        .bar-fill.draw { background: linear-gradient(90deg, #909030, #f0e060); }
+        .bar-fill.away { background: linear-gradient(90deg, #a03050, #f060a0); }
+        
+        /* ─── TABLA COMPARATIVA CUOTAS ─── */
+        .odds-section {
+            background: #0d1030;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            border: 1px solid #2a2f4a;
+        }
+        .odds-section h3 {
+            font-size: 0.78em;
+            font-weight: 700;
+            color: #f0c040;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .odds-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .odds-label {
+            width: 90px;
+            font-size: 0.72em;
+            color: #6a70a0;
+            font-weight: 600;
+            padding: 8px 0;
+            flex-shrink: 0;
+        }
+        .odds-cells { display: flex; gap: 8px; flex: 1; }
+        .odds-cell {
+            flex: 1;
+            text-align: center;
+            background: #101530;
+            border-radius: 8px;
+            padding: 8px 6px;
+            border: 1px solid #1e2450;
+        }
+        .odds-cell .odd-value { font-weight: 800; font-size: 1em; }
+        .odds-cell .odd-edge { font-size: 0.7em; margin-top: 1px; font-weight: 600; }
+        .odds-cell .odd-edge.value-strong { color: #60f0a0; }
+        .odds-cell .odd-edge.value-mild { color: #f0c040; }
+        .odds-cell .odd-edge.value-flat { color: #8890b0; }
+        .odds-cell .odd-edge.value-negative { color: #f06090; }
+        .odds-cell .odd-implied { font-size: 0.65em; color: #5860a0; margin-top: 1px; }
+        .odds-cell .odd-source-name { font-size: 0.6em; color: #4a5080; margin-top: 1px; }
+        .odds-source {
+            font-size: 0.62em;
+            color: #4a5080;
+            text-align: right;
+            margin-top: 6px;
+        }
+        
+        /* ─── ESTADÍSTICAS ─── */
+        .stats-section { margin-bottom: 16px; }
+        .stats-section h3 {
+            font-size: 0.85em;
+            font-weight: 700;
+            color: #e09020;
+            padding: 12px 0 6px;
+            border-bottom: 1px solid #2a2f4a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+        .stats-two-col {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 0;
+            align-items: center;
+        }
+        .stats-col-header {
+            padding: 8px 0;
+            font-weight: 700;
+            font-size: 1.1em;
+            text-align: center;
+            border-bottom: 2px solid #2a2f4a;
+        }
+        .stats-col-header.home { color: #60f0a0; border-color: #1a4a2a; }
+        .stats-col-header.away { color: #f060a0; border-color: #4a1a2a; }
+        .stat-value-home {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #c0d0e0;
+            padding: 6px 0;
+        }
+        .stat-name-center {
+            text-align: center;
+            color: #6a70a0;
+            font-size: 0.78em;
+            padding: 6px 12px;
+            min-width: 120px;
+        }
+        .stat-value-away {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #c0d0e0;
+            padding: 6px 0;
+        }
+        
+        /* ─── NARRATIVA ─── */
+        .narrative {
+            background: #0d1030;
+            border-left: 3px solid #e09020;
+            padding: 14px 18px;
+            border-radius: 0 10px 10px 0;
+            color: #a0b0d0;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .matchup-narrative {
+            background: linear-gradient(135deg, #0d1030 0%, #111540 100%);
+            border: 1px solid #2a2f4a;
+            border-left: 4px solid #60a0f0;
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 16px;
+            font-size: 0.85em;
+            line-height: 1.8;
+            color: #b0c0e0;
+        }
+        .matchup-narrative strong { color: #80b0f0; }
+        
+        /* ─── MODEL BREAKDOWN ─── */
+        .model-breakdown {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .model-chip {
+            background: #1a1f3a;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            color: #8890b0;
+            border: 1px solid #2a2f4a;
+        }
+        .model-chip span { color: #e09020; font-weight: 700; }
+        .model-legend-toggle {
+            background: none;
+            border: 1px solid #3a3f5a;
+            color: #6a70a0;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.75em;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        .model-legend-toggle:hover { color: #e09020; border-color: #e09020; }
+        .model-legend {
             display: none;
+            background: #0d1030;
+            border: 1px solid #2a2f4a;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 12px;
+            font-size: 0.8em;
+            color: #8890b0;
+            line-height: 1.6;
         }
+        .model-legend.show { display: block; }
+        .model-legend strong { color: #e0e0e0; }
+        .model-legend .legend-elo { color: #60f0a0; }
+        .model-legend .legend-stats { color: #f0c040; }
+        .model-legend .legend-poisson { color: #60a0f0; }
         
-        .tab-panel.active {
-            display: block;
+        /* ─── COMBINADAS ─── */
+        .combinadas-section {
+            background: linear-gradient(145deg, #151a35 0%, #111530 100%);
+            border-radius: 16px;
+            padding: 24px 30px;
+            margin-bottom: 24px;
+            border: 1px solid #2a2f4a;
         }
+        .combinadas-section h2 {
+            font-size: 1.3em;
+            background: linear-gradient(135deg, #f0c040, #e09020);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .combi-row { display: flex; gap: 16px; }
+        .combi-card {
+            flex: 1;
+            background: #0f1430;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #2a2f4a;
+            position: relative;
+            overflow: hidden;
+        }
+        .combi-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+        }
+        .combi-card.segura::before { background: linear-gradient(90deg, #30a050, #60f0a0); }
+        .combi-card.media::before { background: linear-gradient(90deg, #e09020, #f0c040); }
+        .combi-card.sonadora::before { background: linear-gradient(90deg, #c03060, #f060a0); }
+        .combi-card h3 { font-size: 1em; margin-bottom: 4px; text-align: center; }
+        .combi-card.segura h3 { color: #60f0a0; }
+        .combi-card.media h3 { color: #f0c040; }
+        .combi-card.sonadora h3 { color: #f060a0; }
+        .combi-card.volatil { border-color: #e74c3c; }
+        .combi-card.volatil::before { background: linear-gradient(90deg, #e74c3c, #f39c12); }
+        .combi-card.volatil h3 { color: #e74c3c; }
+        .combi-card .combi-tagline {
+            font-size: 0.72em;
+            color: #6a70a0;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .combi-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 12px;
+            font-size: 0.8em;
+        }
+        .combi-stat { text-align: center; }
+        .combi-stat .stat-num { font-size: 1.4em; font-weight: 800; }
+        .combi-card.segura .stat-num { color: #60f0a0; }
+        .combi-card.media .stat-num { color: #f0c040; }
+        .combi-card.sonadora .stat-num { color: #f060a0; }
+        .combi-card.volatil .stat-num { color: #e74c3c; }
+        .combi-stat .stat-label { color: #6a70a0; font-size: 0.85em; margin-top: 2px; }
+        .combi-legs { font-size: 0.78em; color: #a0b0d0; }
+        .combi-leg {
+            padding: 6px 0;
+            border-bottom: 1px solid #1a1f3a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .combi-leg:last-child { border-bottom: none; }
+        .combi-leg-num {
+            background: #1e2445;
+            color: #8890b0;
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .combi-payout {
+            text-align: center;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid #1a1f3a;
+            font-size: 0.75em;
+            color: #7880a0;
+        }
+        .combi-payout strong { color: #e0e0e0; font-size: 1.15em; }
         
         /* ─── VALUE BETS ─── */
         .value-bets-intro {
@@ -623,12 +428,7 @@
             margin-bottom: 20px;
             font-size: 0.9em;
         }
-        
-        .value-bets-grid {
-            display: grid;
-            gap: 16px;
-        }
-        
+        .value-bets-grid { display: grid; gap: 16px; }
         .value-bet-card {
             background: linear-gradient(145deg, #151a35 0%, #111530 100%);
             border-radius: 12px;
@@ -638,24 +438,18 @@
             position: relative;
             overflow: hidden;
         }
-        
-        .value-bet-card:hover {
-            transform: translateY(-2px);
-        }
-        
+        .value-bet-card:hover { transform: translateY(-2px); }
         .value-bet-card::before {
             content: '';
             position: absolute;
             left: 0; top: 0; bottom: 0;
             width: 4px;
         }
-        
         .value-bet-card.edge-strong::before { background: #60f0a0; }
         .value-bet-card.edge-mild::before { background: #f0c040; }
         .value-bet-card.edge-flat::before { background: #8890b0; }
         .value-bet-card.edge-negative::before { background: #f06090; }
         .value-bet-card.no-odds::before { background: #606070; }
-        
         .value-bet-header {
             display: flex;
             justify-content: space-between;
@@ -664,13 +458,7 @@
             flex-wrap: wrap;
             gap: 8px;
         }
-        
-        .value-bet-match {
-            font-weight: 700;
-            font-size: 1.05em;
-            color: #e0e0e0;
-        }
-        
+        .value-bet-match { font-weight: 700; font-size: 1.05em; color: #e0e0e0; }
         .value-bet-market {
             background: #1a1f3a;
             padding: 4px 12px;
@@ -679,14 +467,12 @@
             font-weight: 600;
             color: #e09020;
         }
-        
         .value-bet-body {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
             align-items: stretch;
         }
-        
         .value-bet-stat {
             flex: 1;
             min-width: 100px;
@@ -695,27 +481,10 @@
             padding: 10px 14px;
             text-align: center;
         }
-        
-        .value-bet-stat .stat-num {
-            font-size: 1.3em;
-            font-weight: 800;
-            color: #e0e0e0;
-        }
-        
-        .value-bet-stat .stat-label {
-            font-size: 0.7em;
-            color: #6a70a0;
-            margin-top: 3px;
-        }
-        
-        .value-bet-stat.highlight {
-            border: 1px solid #2a4a3a;
-        }
-        
-        .value-bet-stat.highlight .stat-num {
-            color: #60f0a0;
-        }
-        
+        .value-bet-stat .stat-num { font-size: 1.3em; font-weight: 800; color: #e0e0e0; }
+        .value-bet-stat .stat-label { font-size: 0.7em; color: #6a70a0; margin-top: 3px; }
+        .value-bet-stat.highlight { border: 1px solid #2a4a3a; }
+        .value-bet-stat.highlight .stat-num { color: #60f0a0; }
         .value-bet-verdict {
             flex: 1.5;
             min-width: 200px;
@@ -728,23 +497,13 @@
             align-items: center;
             gap: 6px;
         }
-        
-        .value-bet-verdict .edge-badge {
-            font-size: 1.6em;
-            font-weight: 800;
-        }
-        
-        .value-bet-verdict .edge-label {
-            font-size: 0.7em;
-            color: #6a70a0;
-        }
-        
+        .value-bet-verdict .edge-badge { font-size: 1.6em; font-weight: 800; }
+        .value-bet-verdict .edge-label { font-size: 0.7em; color: #6a70a0; }
         .edge-strong .edge-badge { color: #60f0a0; }
         .edge-mild .edge-badge { color: #f0c040; }
         .edge-flat .edge-badge { color: #8890b0; }
         .edge-negative .edge-badge { color: #f06090; }
         .no-odds .edge-badge { color: #9090b0; }
-        
         .value-bet-context {
             margin-top: 10px;
             padding-top: 10px;
@@ -755,13 +514,7 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-        
-        .value-bet-context span {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
+        .value-bet-context span { display: inline-flex; align-items: center; gap: 4px; }
         .no-value-bets {
             text-align: center;
             padding: 40px;
@@ -775,9 +528,7 @@
             padding: 20px;
             color: #a0a8c0;
             font-size: 1.1em;
-            margin-bottom: 20px;
         }
-        
         .comparison-match {
             background: #111636;
             border: 1px solid #2a2f4a;
@@ -785,7 +536,6 @@
             padding: 24px;
             margin-bottom: 24px;
         }
-        
         .comparison-match-header {
             display: flex;
             justify-content: space-between;
@@ -794,24 +544,9 @@
             padding-bottom: 12px;
             border-bottom: 1px solid #1a1f3a;
         }
-        
-        .comparison-match-name {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #f0c040;
-        }
-        
-        .comparison-avg-acc {
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-        
-        .comparison-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
+        .comparison-match-name { font-size: 1.2em; font-weight: bold; color: #f0c040; }
+        .comparison-avg-acc { font-size: 1.1em; font-weight: bold; }
+        .comparison-grid { display: flex; flex-direction: column; gap: 12px; }
         .comparison-row {
             display: flex;
             align-items: center;
@@ -821,13 +556,11 @@
             border-radius: 10px;
             flex-wrap: wrap;
         }
-        
         .comparison-stat-name {
             min-width: 140px;
             color: #c0c8e0;
             font-weight: 600;
         }
-        
         .comparison-values {
             display: flex;
             align-items: center;
@@ -835,19 +568,9 @@
             min-width: 300px;
             font-size: 0.92em;
         }
-        
-        .comp-pred {
-            color: #60a0f0;
-        }
-        
-        .comp-vs {
-            color: #5a6080;
-        }
-        
-        .comp-real {
-            color: #60f0a0;
-        }
-        
+        .comp-pred { color: #60a0f0; }
+        .comp-vs { color: #5a6080; }
+        .comp-real { color: #60f0a0; }
         .comp-diff {
             margin-left: 8px;
             padding: 2px 8px;
@@ -856,7 +579,6 @@
             background: #1a1f3a;
             color: #f0a060;
         }
-        
         .comparison-bar-track {
             flex: 1;
             min-width: 100px;
@@ -865,18 +587,36 @@
             border-radius: 4px;
             overflow: hidden;
         }
-        
-        .comparison-bar-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-        
+        .comparison-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
         .comparison-acc {
             font-weight: bold;
             min-width: 60px;
             text-align: right;
             font-size: 0.92em;
+        }
+        
+        /* ─── FOOTER ─── */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #5a6080;
+            font-size: 0.8em;
+        }
+        .footer a { color: #e09020; text-decoration: none; }
+        
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .match-header { flex-wrap: wrap; }
+            .teams { order: 3; width: 100%; }
+            .match-time, .prediction-badge { font-size: 0.75em; }
+            .prob-bar .value { font-size: 1.3em; }
+            .combi-row { flex-direction: column; }
+            .value-bet-body { flex-direction: column; }
+            .odds-row { flex-direction: column; gap: 4px; }
+            .odds-label { width: 100%; text-align: center; padding: 4px 0; }
+            .odds-cells { gap: 4px; }
+            .odds-cell { padding: 6px 4px; }
+            .odds-cell .odd-value { font-size: 0.85em; }
         }
     </style>
 </head>
@@ -884,8 +624,8 @@
     <div class="container">
         <div class="header">
             <h1>🏆 Mundial 2026 — Octavos de Final</h1>
-            <div class="subtitle">Predicciones basadas en 72 partidos · 48 equipos · Estadísticas reales de Sofascore</div>
-            <div class="badge">📅 30 de junio de 2026 · 3 partidos</div>
+            <div class="subtitle">Predicciones basadas en 72 partidos · 48 equipos · Estadísticas reales de Sofascore + sportdb.dev</div>
+            <div class="badge">📅 1 de julio de 2026 · 3 partidos</div>
         </div>
         
         <!-- ─── PESTAÑAS ─── -->
@@ -909,142 +649,117 @@
 
         <div class="match-card">
             <div class="match-header">
-                <div class="match-time">⏰ 17:00</div>
+                <div class="match-time">⏰ 12:00</div>
                 <div class="teams">
-                    <span class="team">Costa de Marfil</span>
+                    <span class="team">Inglaterra</span>
                     <span class="vs">vs</span>
-                    <span class="team">Norway</span>
+                    <span class="team">RD Congo</span>
                 </div>
                 <div>
-                    <span class="prediction-badge HOME">Gana Costa de Marfil<span class="confidence">MEDIA</span></span>
+                    <span class="prediction-badge HOME">Gana Inglaterra<span class="confidence">MEDIA</span></span>
                 </div>
             </div>
             
+            <!-- ─── DATOS DEL PARTIDO (sportdb.dev) ─── -->
+            <div style="text-align:center;margin-bottom:16px;font-size:0.82em;color:#6a70a0;">🏟️ Mercedes-Benz Stadium (Atlanta, GA) · 71 000 esp. · 🧑‍⚖️ Makhadmeh A.</div>
+
             <div class="probabilities">
                 <div class="prob-bar home">
-                    <div class="label">Costa de Marfil</div>
-                    <div class="value">47.4%</div>
-                    <div class="bar-track"><div class="bar-fill home" style="width:47.4%"></div></div>
+                    <div class="label">Inglaterra</div>
+                    <div class="value">52.4%</div>
+                    <div class="bar-track"><div class="bar-fill home" style="width:52.4%"></div></div>
                 </div>
                 <div class="prob-bar draw">
                     <div class="label">Empate</div>
-                    <div class="value">21.7%</div>
-                    <div class="bar-track"><div class="bar-fill draw" style="width:21.7%"></div></div>
+                    <div class="value">25.1%</div>
+                    <div class="bar-track"><div class="bar-fill draw" style="width:25.1%"></div></div>
                 </div>
                 <div class="prob-bar away">
-                    <div class="label">Norway</div>
-                    <div class="value">30.9%</div>
-                    <div class="bar-track"><div class="bar-fill away" style="width:30.9%"></div></div>
+                    <div class="label">RD Congo</div>
+                    <div class="value">22.6%</div>
+                    <div class="bar-track"><div class="bar-fill away" style="width:22.6%"></div></div>
                 </div>
             </div>
             
             <div class="odds-section">
-                <h3>💰 CUOTAS REALES vs PREDICCIÓN</h3>
+                <h3>💰 COMPARATIVA CUOTAS: Modelo vs bet365 vs Pinnacle</h3>
                 <div class="odds-row">
                     <div class="odds-label">Modelo</div>
                     <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">47.4%</div>
-                            <div class="odd-implied">Costa de Marfil</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">21.7%</div>
-                            <div class="odd-implied">Empate</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">30.9%</div>
-                            <div class="odd-implied">Norway</div>
-                        </div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#60f0a0">52.4%</div><div class="odd-implied">Inglaterra</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f0e060">25.1%</div><div class="odd-implied">Empate</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f060a0">22.6%</div><div class="odd-implied">RD Congo</div></div>
                     </div>
                 </div>
                 <div class="odds-row">
-                    <div class="odds-label" style="color:#e09020">bet365</div>
+                    <div class="odds-label" style="color:#00a650">bet365</div>
                     <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">3.56</div>
-                            <div class="odd-edge value-strong">🟢 +19.3%</div>
-                            <div class="odd-implied">impl. 28.1%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">3.52</div>
-                            <div class="odd-edge value-negative">🔴 -6.7%</div>
-                            <div class="odd-implied">impl. 28.4%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">2.17</div>
-                            <div class="odd-edge value-negative">🔴 -15.2%</div>
-                            <div class="odd-implied">impl. 46.1%</div>
-                        </div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#60f0a0">1.285</div><div class="odd-edge value-negative">🔴 -25.4%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f0e060">5.0</div><div class="odd-edge value-mild">🟡 +5.1%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f060a0">12.0</div><div class="odd-edge value-strong">🟢 +14.3%</div></div>
                     </div>
                 </div>
                 <div class="odds-row">
                     <div class="odds-label" style="color:#60a0f0">Pinnacle</div>
                     <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">3.66</div>
-                            <div class="odd-edge value-strong">🟢 +20.1%</div>
-                            <div class="odd-implied">impl. 27.3%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">3.47</div>
-                            <div class="odd-edge value-negative">🔴 -7.1%</div>
-                            <div class="odd-implied">impl. 28.8%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">2.17</div>
-                            <div class="odd-edge value-negative">🔴 -15.2%</div>
-                            <div class="odd-implied">impl. 46.1%</div>
-                        </div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#60f0a0">1.303</div><div class="odd-edge value-negative">🔴 -24.3%</div><div class="odd-implied">impl. 76.7%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f0e060">5.3</div><div class="odd-edge value-mild">🟡 +6.2%</div><div class="odd-implied">impl. 18.9%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f060a0">14.5</div><div class="odd-edge value-strong">🟢 +15.7%</div><div class="odd-implied">impl. 6.9%</div></div>
                     </div>
                 </div>
-                <div class="odds-source">📡 Datos de OddsPapi · Actualizado 2026-06-29</div>
+                <div class="odds-source">📡 OddsPapi · 2026-06-29</div>
             </div>
 
 
             <div class="stats-section">
                 <h3>📊 ESTADÍSTICAS CLAVE</h3>
                 <div class="stats-two-col">
-                    <div class="stats-col-header home">Costa de Marfil</div>
+                    <div class="stats-col-header home">Inglaterra</div>
                     <div></div>
-                    <div class="stats-col-header away">Norway</div>
+                    <div class="stats-col-header away">RD Congo</div>
                     
-                    <div class="stat-value-home">1.83</div>
+                    <div class="stat-value-home">1.5</div>
                     <div class="stat-name-center">Goles esperados</div>
-                    <div class="stat-value-away">1.67</div>
+                    <div class="stat-value-away">1.0</div>
                     
-                    <div class="stat-value-home">1526</div>
+                    <div class="stat-value-home">1545</div>
                     <div class="stat-name-center">Rating Elo</div>
-                    <div class="stat-value-away">1512</div>
+                    <div class="stat-value-away">1508</div>
                     
-                    <div class="stat-value-home">1.3 ⚽</div>
+                    <div class="stat-value-home">2.0 ⚽</div>
                     <div class="stat-name-center">Goles/partido</div>
-                    <div class="stat-value-away">2.7 ⚽</div>
+                    <div class="stat-value-away">1.3 ⚽</div>
                     
-                    <div class="stat-value-home">2W 0D 1L</div>
+                    <div class="stat-value-home">2W 1D 0L</div>
                     <div class="stat-name-center">Récord Mundial</div>
-                    <div class="stat-value-away">2W 0D 1L</div>
+                    <div class="stat-value-away">1W 1D 1L</div>
 
-                    <div class="stat-value-home">1.1</div>
+                    <div class="stat-value-home">1.6</div>
                     <div class="stat-name-center">xG (goles esperados)</div>
-                    <div class="stat-value-away">1.4</div>
-                    <div class="stat-value-home">0.9</div>
+                    <div class="stat-value-away">0.8</div>
+                    <div class="stat-value-home">1.5</div>
                     <div class="stat-name-center">ocasiones claras</div>
-                    <div class="stat-value-away">1.3</div>
-                    <div class="stat-value-home">0.9</div>
+                    <div class="stat-value-away">0.4</div>
+                    <div class="stat-value-home">1.7</div>
                     <div class="stat-name-center">tiros totales</div>
-                    <div class="stat-value-away">1.1</div>                </div>
+                    <div class="stat-value-away">0.8</div>                </div>
             </div>
             
-            <div class="narrative">📊 Elo ligeramente a favor de Costa de Marfil (+44) | Costa de Marfil marca 1.3 goles/partido y encaja 0.7 | Norway marca 2.7 goles/partido y encaja 2.3 | Norway domina en xG (goles esperados) (+20.1%) | Forma: Costa de Marfil [WLW] | Norway [LWW] | Momento favorable a Costa de Marfil</div>
+            <div class="narrative">📊 Elo favorece claramente a Inglaterra (+67) | Inglaterra marca 2.0 goles/partido y encaja 0.7 | RD Congo marca 1.3 goles/partido y encaja 1.0 | Inglaterra domina en xG (goles esperados) (+102.4%) | Forma: Inglaterra [DWW] | RD Congo [LWD]</div>
             
-
+<div class="matchup-narrative"><strong>🔬 Radiografía estadística del partido</strong><div class="narrative-line">🎯 Dominio claro de Inglaterra en tiros a puerta: <strong>6.7</strong> por partido frente a solo 2.3 de RD Congo. Se esperan ~9 en total.</div>
+<div class="narrative-line">🏳️ Dominio claro de Inglaterra en córners: <strong>8.0</strong> por partido frente a solo 3.3 de RD Congo. Se esperan ~11 en total.</div>
+<div class="narrative-line">🟨 RD Congo llega con <strong>1.7 tarjetas amarillas</strong> por partido vs 1.0 de Inglaterra. Se esperan ~3.</div>
+<div class="narrative-line">⚽ Dominio claro de Inglaterra en disparos totales: <strong>19.3</strong> por partido frente a solo 11.3 de RD Congo. Se esperan ~31 en total.</div>
+<div class="narrative-line">⚡ Equilibrio en faltas: Inglaterra 12.3 — RD Congo 10.7. Total esperado ~23.</div>
+</div>
             <div class="model-breakdown">
-                <div class="model-chip">Elo: <span>60.0% Costa de Marfil</span></div>
-                <div class="model-chip">Estadístico: <span>48.0% Costa de Marfil</span></div>
-                <div class="model-chip">Poisson: <span>42.3% Costa de Marfil</span></div>
+                <div class="model-chip">Elo: <span>62.9% Inglaterra</span></div>
+                <div class="model-chip">Estadístico: <span>55.3% Inglaterra</span></div>
+                <div class="model-chip">Poisson: <span>48.8% Inglaterra</span></div>
                 <button class="model-legend-toggle" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.textContent=='¿Qué es esto?'?'Ocultar':'¿Qué es esto?'">¿Qué es esto?</button>
                 <div class="model-legend">
-                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para Costa de Marfil. Luego el sistema los <strong>mezcla ponderadamente</strong> (25% Elo + 25% Stats + 25% Poisson + 25% forma) para dar la predicción final que ves arriba.<br><br>
+                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para Inglaterra. Luego el sistema los <strong>mezcla ponderadamente</strong> (25% Elo + 25% Stats + 25% Poisson + 25% forma) para dar la predicción final que ves arriba.<br><br>
                     <span class="legend-elo">● <strong>Elo:</strong></span> rating histórico basado en resultados y diferencia de goles. Mide la fuerza relativa "teórica" de cada selección.<br>
                     <span class="legend-stats">● <strong>Estadístico:</strong></span> compara TODAS las stats reales del torneo (xG, tiros, posesión, córners, duelos, pases...). El más "basado en datos duros".<br>
                     <span class="legend-poisson">● <strong>Poisson:</strong></span> modelo de goles esperados. Calcula la probabilidad de cada marcador posible según los goles que marcan y reciben ambos equipos. Suele ser el más conservador.
@@ -1056,145 +771,115 @@
             <div class="match-header">
                 <div class="match-time">⏰ 21:00</div>
                 <div class="teams">
-                    <span class="team">France</span>
+                    <span class="team">Bélgica</span>
                     <span class="vs">vs</span>
-                    <span class="team">Sweden</span>
+                    <span class="team">Senegal</span>
                 </div>
                 <div>
-                    <span class="prediction-badge HOME">Gana France<span class="confidence">ALTA</span></span>
+                    <span class="prediction-badge HOME">Gana Bélgica<span class="confidence">MEDIA</span></span>
                 </div>
             </div>
             
+            <!-- ─── DATOS DEL PARTIDO (sportdb.dev) ─── -->
+            <div style="text-align:center;margin-bottom:16px;font-size:0.82em;color:#6a70a0;">🏟️ Lumen Field (Seattle, WA) · 72 000 esp. · 🧑‍⚖️ Martinez S.</div>
+
             <div class="probabilities">
                 <div class="prob-bar home">
-                    <div class="label">France</div>
-                    <div class="value">58.2%</div>
-                    <div class="bar-track"><div class="bar-fill home" style="width:58.2%"></div></div>
+                    <div class="label">Bélgica</div>
+                    <div class="value">50.9%</div>
+                    <div class="bar-track"><div class="bar-fill home" style="width:50.9%"></div></div>
                 </div>
                 <div class="prob-bar draw">
                     <div class="label">Empate</div>
-                    <div class="value">21.5%</div>
-                    <div class="bar-track"><div class="bar-fill draw" style="width:21.5%"></div></div>
+                    <div class="value">24.1%</div>
+                    <div class="bar-track"><div class="bar-fill draw" style="width:24.1%"></div></div>
                 </div>
                 <div class="prob-bar away">
-                    <div class="label">Sweden</div>
-                    <div class="value">20.2%</div>
-                    <div class="bar-track"><div class="bar-fill away" style="width:20.2%"></div></div>
+                    <div class="label">Senegal</div>
+                    <div class="value">25.0%</div>
+                    <div class="bar-track"><div class="bar-fill away" style="width:25.0%"></div></div>
                 </div>
             </div>
             
             <div class="odds-section">
-                <h3>💰 CUOTAS REALES vs PREDICCIÓN</h3>
+                <h3>💰 COMPARATIVA CUOTAS: Modelo vs bet365 vs Pinnacle</h3>
                 <div class="odds-row">
                     <div class="odds-label">Modelo</div>
                     <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">58.2%</div>
-                            <div class="odd-implied">France</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">21.5%</div>
-                            <div class="odd-implied">Empate</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">20.2%</div>
-                            <div class="odd-implied">Sweden</div>
-                        </div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#60f0a0">50.9%</div><div class="odd-implied">Bélgica</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f0e060">24.1%</div><div class="odd-implied">Empate</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f060a0">25.0%</div><div class="odd-implied">Senegal</div></div>
                     </div>
                 </div>
                 <div class="odds-row">
-                    <div class="odds-label" style="color:#e09020">bet365</div>
+                    <div class="odds-label" style="color:#00a650">bet365</div>
                     <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">1.28</div>
-                            <div class="odd-edge value-negative">🔴 -19.9%</div>
-                            <div class="odd-implied">impl. 78.1%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">6.1</div>
-                            <div class="odd-edge value-mild">🟡 +5.1%</div>
-                            <div class="odd-implied">impl. 16.4%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">12.0</div>
-                            <div class="odd-edge value-strong">🟢 +11.9%</div>
-                            <div class="odd-implied">impl. 8.3%</div>
-                        </div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#60f0a0">2.2</div><div class="odd-edge value-mild">🟡 +5.4%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f0e060">3.2</div><div class="odd-edge value-negative">🔴 -7.1%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f060a0">3.7</div><div class="odd-edge value-negative">🔴 -2.0%</div></div>
                     </div>
                 </div>
                 <div class="odds-row">
                     <div class="odds-label" style="color:#60a0f0">Pinnacle</div>
                     <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">1.303</div>
-                            <div class="odd-edge value-negative">🔴 -18.5%</div>
-                            <div class="odd-implied">impl. 76.7%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">6.0</div>
-                            <div class="odd-edge value-mild">🟡 +4.8%</div>
-                            <div class="odd-implied">impl. 16.7%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">11.0</div>
-                            <div class="odd-edge value-strong">🟢 +11.1%</div>
-                            <div class="odd-implied">impl. 9.1%</div>
-                        </div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#60f0a0">2.21</div><div class="odd-edge value-mild">🟡 +5.7%</div><div class="odd-implied">impl. 45.2%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f0e060">3.33</div><div class="odd-edge value-negative">🔴 -5.9%</div><div class="odd-implied">impl. 30.0%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f060a0">3.7</div><div class="odd-edge value-negative">🔴 -2.0%</div><div class="odd-implied">impl. 27.0%</div></div>
                     </div>
                 </div>
-                <div class="odds-source">📡 Datos de OddsPapi · Actualizado 2026-06-29</div>
+                <div class="odds-source">📡 OddsPapi · 2026-06-29</div>
             </div>
 
 
             <div class="stats-section">
                 <h3>📊 ESTADÍSTICAS CLAVE</h3>
                 <div class="stats-two-col">
-                    <div class="stats-col-header home">France</div>
+                    <div class="stats-col-header home">Bélgica</div>
                     <div></div>
-                    <div class="stats-col-header away">Sweden</div>
+                    <div class="stats-col-header away">Senegal</div>
                     
-                    <div class="stat-value-home">2.83</div>
+                    <div class="stat-value-home">2.0</div>
                     <div class="stat-name-center">Goles esperados</div>
-                    <div class="stat-value-away">1.5</div>
+                    <div class="stat-value-away">1.67</div>
                     
-                    <div class="stat-value-home">1582</div>
+                    <div class="stat-value-home">1535</div>
                     <div class="stat-name-center">Rating Elo</div>
-                    <div class="stat-value-away">1499</div>
+                    <div class="stat-value-away">1500</div>
                     
-                    <div class="stat-value-home">3.3 ⚽</div>
+                    <div class="stat-value-home">2.0 ⚽</div>
                     <div class="stat-name-center">Goles/partido</div>
-                    <div class="stat-value-away">2.3 ⚽</div>
+                    <div class="stat-value-away">2.7 ⚽</div>
                     
-                    <div class="stat-value-home">3W 0D 0L</div>
+                    <div class="stat-value-home">1W 2D 0L</div>
                     <div class="stat-name-center">Récord Mundial</div>
-                    <div class="stat-value-away">1W 1D 1L</div>
+                    <div class="stat-value-away">1W 0D 2L</div>
 
-                    <div class="stat-value-home">1.2</div>
-                    <div class="stat-name-center">entradas último tercio</div>
-                    <div class="stat-value-away">0.8</div>
-                    <div class="stat-value-home">0.6</div>
-                    <div class="stat-name-center">paradas del portero</div>
-                    <div class="stat-value-away">0.9</div>
-                    <div class="stat-value-home">1.1</div>
-                    <div class="stat-name-center">tiros totales</div>
-                    <div class="stat-value-away">1.2</div>                </div>
+                    <div class="stat-value-home">0.0</div>
+                    <div class="stat-name-center">errores que terminan en gol</div>
+                    <div class="stat-value-away">0.5</div>
+                    <div class="stat-value-home">1.3</div>
+                    <div class="stat-name-center">xG (goles esperados)</div>
+                    <div class="stat-value-away">1.0</div>
+                    <div class="stat-value-home">0.9</div>
+                    <div class="stat-name-center">ocasiones claras</div>
+                    <div class="stat-value-away">1.1</div>                </div>
             </div>
             
-            <div class="narrative">📊 Elo favorece claramente a France (+112) | France marca 3.3 goles/partido y encaja 0.7 | Sweden marca 2.3 goles/partido y encaja 2.3 | France domina en entradas último tercio (+51.4%) | Forma: France [WWW] | Sweden [DLW]</div>
+            <div class="narrative">📊 Elo favorece claramente a Bélgica (+65) | Bélgica marca 2.0 goles/partido y encaja 0.7 | Senegal marca 2.7 goles/partido y encaja 2.0 | Senegal domina en errores que terminan en gol (+100.0%) | Forma: Bélgica [WDD] | Senegal [WLL]</div>
             
-<div class="matchup-narrative"><strong>🔬 Radiografía estadística del partido</strong><div class="narrative-line">🎯 Ambos equipos por encima de la media en tiros a puerta: 7.3 y 6.7. Partido con ~14 esperados.</div>
-<div class="narrative-line">🏳️ Ambos equipos por encima de la media en córners: 5.0 y 5.7. Partido con ~11 esperados.</div>
-<div class="narrative-line">🟨 Sweden llega con <strong>1.7 tarjetas amarillas</strong> por partido vs 0.5 de France. Se esperan ~2.</div>
-<div class="narrative-line">⚽ Ambos equipos por encima de la media en disparos totales: 16.0 y 13.3. Partido con ~29 esperados.</div>
-<div class="narrative-line">⚡ Equilibrio en faltas: France 8.0 — Sweden 11.0. Total esperado ~19.</div>
+<div class="matchup-narrative"><strong>🔬 Radiografía estadística del partido</strong><div class="narrative-line">🎯 Ambos equipos por encima de la media en tiros a puerta: 6.7 y 6.0. Partido con ~13 esperados.</div>
+<div class="narrative-line">🏳️ Senegal (6.7) supera a Bélgica (4.7) en córners. Se esperan ~11 en total.</div>
+<div class="narrative-line">🟨 Ojo a Senegal: promedia <strong>2.0 tarjetas amarillas</strong> (+46% sobre la media) y Bélgica permite 1.7. Se esperan ~3 en total.</div>
+<div class="narrative-line">⚽ Bélgica (24.3) supera a Senegal (16.7) en disparos totales. Se esperan ~41 en total.</div>
+<div class="narrative-line">⚡ Pocos faltas esperados: 9.7 y 8.0 por partido (ambos por debajo de la media de 11.2).</div>
 </div>
             <div class="model-breakdown">
-                <div class="model-chip">Elo: <span>68.0% France</span></div>
-                <div class="model-chip">Estadístico: <span>50.7% France</span></div>
-                <div class="model-chip">Poisson: <span>65.0% France</span></div>
+                <div class="model-chip">Elo: <span>62.6% Bélgica</span></div>
+                <div class="model-chip">Estadístico: <span>53.9% Bélgica</span></div>
+                <div class="model-chip">Poisson: <span>45.9% Bélgica</span></div>
                 <button class="model-legend-toggle" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.textContent=='¿Qué es esto?'?'Ocultar':'¿Qué es esto?'">¿Qué es esto?</button>
                 <div class="model-legend">
-                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para France. Luego el sistema los <strong>mezcla ponderadamente</strong> (25% Elo + 25% Stats + 25% Poisson + 25% forma) para dar la predicción final que ves arriba.<br><br>
+                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para Bélgica. Luego el sistema los <strong>mezcla ponderadamente</strong> (25% Elo + 25% Stats + 25% Poisson + 25% forma) para dar la predicción final que ves arriba.<br><br>
                     <span class="legend-elo">● <strong>Elo:</strong></span> rating histórico basado en resultados y diferencia de goles. Mide la fuerza relativa "teórica" de cada selección.<br>
                     <span class="legend-stats">● <strong>Estadístico:</strong></span> compara TODAS las stats reales del torneo (xG, tiros, posesión, córners, duelos, pases...). El más "basado en datos duros".<br>
                     <span class="legend-poisson">● <strong>Poisson:</strong></span> modelo de goles esperados. Calcula la probabilidad de cada marcador posible según los goles que marcan y reciben ambos equipos. Suele ser el más conservador.
@@ -1206,145 +891,115 @@
             <div class="match-header">
                 <div class="match-time">⏰ 01:00</div>
                 <div class="teams">
-                    <span class="team">Mexico</span>
+                    <span class="team">EE.UU.</span>
                     <span class="vs">vs</span>
-                    <span class="team">Ecuador</span>
+                    <span class="team">Bosnia</span>
                 </div>
                 <div>
-                    <span class="prediction-badge HOME">Gana Mexico<span class="confidence">ALTA</span></span>
+                    <span class="prediction-badge HOME">Gana EE.UU.<span class="confidence">MEDIA</span></span>
                 </div>
             </div>
             
+            <!-- ─── DATOS DEL PARTIDO (sportdb.dev) ─── -->
+            <div style="text-align:center;margin-bottom:16px;font-size:0.82em;color:#6a70a0;">🏟️ Levi's Stadium (Santa Clara, CA) · 75 000 esp. · 🧑‍⚖️ Claus R.</div>
+
             <div class="probabilities">
                 <div class="prob-bar home">
-                    <div class="label">Mexico</div>
-                    <div class="value">57.0%</div>
-                    <div class="bar-track"><div class="bar-fill home" style="width:57.0%"></div></div>
+                    <div class="label">EE.UU.</div>
+                    <div class="value">54.0%</div>
+                    <div class="bar-track"><div class="bar-fill home" style="width:54.0%"></div></div>
                 </div>
                 <div class="prob-bar draw">
                     <div class="label">Empate</div>
-                    <div class="value">24.5%</div>
-                    <div class="bar-track"><div class="bar-fill draw" style="width:24.5%"></div></div>
+                    <div class="value">22.4%</div>
+                    <div class="bar-track"><div class="bar-fill draw" style="width:22.4%"></div></div>
                 </div>
                 <div class="prob-bar away">
-                    <div class="label">Ecuador</div>
-                    <div class="value">18.6%</div>
-                    <div class="bar-track"><div class="bar-fill away" style="width:18.6%"></div></div>
+                    <div class="label">Bosnia</div>
+                    <div class="value">23.6%</div>
+                    <div class="bar-track"><div class="bar-fill away" style="width:23.6%"></div></div>
                 </div>
             </div>
             
             <div class="odds-section">
-                <h3>💰 CUOTAS REALES vs PREDICCIÓN</h3>
+                <h3>💰 COMPARATIVA CUOTAS: Modelo vs bet365 vs Pinnacle</h3>
                 <div class="odds-row">
                     <div class="odds-label">Modelo</div>
                     <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">57.0%</div>
-                            <div class="odd-implied">Mexico</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">24.5%</div>
-                            <div class="odd-implied">Empate</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">18.6%</div>
-                            <div class="odd-implied">Ecuador</div>
-                        </div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#60f0a0">54.0%</div><div class="odd-implied">EE.UU.</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f0e060">22.4%</div><div class="odd-implied">Empate</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f060a0">23.6%</div><div class="odd-implied">Bosnia</div></div>
                     </div>
                 </div>
                 <div class="odds-row">
-                    <div class="odds-label" style="color:#e09020">bet365</div>
+                    <div class="odds-label" style="color:#00a650">bet365</div>
                     <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">2.29</div>
-                            <div class="odd-edge value-strong">🟢 +13.3%</div>
-                            <div class="odd-implied">impl. 43.7%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">2.91</div>
-                            <div class="odd-edge value-negative">🔴 -9.9%</div>
-                            <div class="odd-implied">impl. 34.4%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">4.05</div>
-                            <div class="odd-edge value-negative">🔴 -6.1%</div>
-                            <div class="odd-implied">impl. 24.7%</div>
-                        </div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#60f0a0">1.38</div><div class="odd-edge value-negative">🔴 -18.5%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f0e060">5.0</div><div class="odd-edge value-flat">⚪ +2.4%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f060a0">7.5</div><div class="odd-edge value-strong">🟢 +10.3%</div></div>
                     </div>
                 </div>
                 <div class="odds-row">
                     <div class="odds-label" style="color:#60a0f0">Pinnacle</div>
                     <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">2.32</div>
-                            <div class="odd-edge value-strong">🟢 +13.9%</div>
-                            <div class="odd-implied">impl. 43.1%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">2.93</div>
-                            <div class="odd-edge value-negative">🔴 -9.6%</div>
-                            <div class="odd-implied">impl. 34.1%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">4.02</div>
-                            <div class="odd-edge value-negative">🔴 -6.3%</div>
-                            <div class="odd-implied">impl. 24.9%</div>
-                        </div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#60f0a0">1.416</div><div class="odd-edge value-negative">🔴 -16.6%</div><div class="odd-implied">impl. 70.6%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f0e060">4.8</div><div class="odd-edge value-flat">⚪ +1.6%</div><div class="odd-implied">impl. 20.8%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f060a0">9.0</div><div class="odd-edge value-strong">🟢 +12.5%</div><div class="odd-implied">impl. 11.1%</div></div>
                     </div>
                 </div>
-                <div class="odds-source">📡 Datos de OddsPapi · Actualizado 2026-06-29</div>
+                <div class="odds-source">📡 OddsPapi · 2026-06-29</div>
             </div>
 
 
             <div class="stats-section">
                 <h3>📊 ESTADÍSTICAS CLAVE</h3>
                 <div class="stats-two-col">
-                    <div class="stats-col-header home">Mexico</div>
+                    <div class="stats-col-header home">EE.UU.</div>
                     <div></div>
-                    <div class="stats-col-header away">Ecuador</div>
+                    <div class="stats-col-header away">Bosnia</div>
                     
-                    <div class="stat-value-home">1.33</div>
+                    <div class="stat-value-home">2.33</div>
                     <div class="stat-name-center">Goles esperados</div>
-                    <div class="stat-value-away">0.33</div>
+                    <div class="stat-value-away">1.5</div>
                     
-                    <div class="stat-value-home">1567</div>
+                    <div class="stat-value-home">1533</div>
                     <div class="stat-name-center">Rating Elo</div>
-                    <div class="stat-value-away">1501</div>
+                    <div class="stat-value-away">1494</div>
                     
-                    <div class="stat-value-home">2.0 ⚽</div>
+                    <div class="stat-value-home">2.7 ⚽</div>
                     <div class="stat-name-center">Goles/partido</div>
-                    <div class="stat-value-away">0.7 ⚽</div>
+                    <div class="stat-value-away">1.7 ⚽</div>
                     
-                    <div class="stat-value-home">3W 0D 0L</div>
+                    <div class="stat-value-home">2W 0D 1L</div>
                     <div class="stat-name-center">Récord Mundial</div>
                     <div class="stat-value-away">1W 1D 1L</div>
 
                     <div class="stat-value-home">1.3</div>
-                    <div class="stat-name-center">ocasiones claras</div>
-                    <div class="stat-value-away">0.8</div>
-                    <div class="stat-value-home">0.3</div>
-                    <div class="stat-name-center">córners</div>
-                    <div class="stat-value-away">1.1</div>
-                    <div class="stat-value-home">0.9</div>
                     <div class="stat-name-center">xG (goles esperados)</div>
-                    <div class="stat-value-away">1.1</div>                </div>
+                    <div class="stat-value-away">0.7</div>
+                    <div class="stat-value-home">1.2</div>
+                    <div class="stat-name-center">ocasiones claras</div>
+                    <div class="stat-value-away">0.3</div>
+                    <div class="stat-value-home">1.2</div>
+                    <div class="stat-name-center">posesión</div>
+                    <div class="stat-value-away">0.9</div>                </div>
             </div>
             
-            <div class="narrative">📊 Elo favorece claramente a Mexico (+97) | Mexico marca 2.0 goles/partido y encaja 0.0 | Ecuador marca 0.7 goles/partido y encaja 0.7 | Mexico domina en ocasiones claras (+50.0%) | Forma: Mexico [WWW] | Ecuador [WDL]</div>
+            <div class="narrative">📊 Elo favorece claramente a EE.UU. (+69) | EE.UU. marca 2.7 goles/partido y encaja 1.3 | Bosnia marca 1.7 goles/partido y encaja 2.0 | EE.UU. domina en xG (goles esperados) (+90.0%) | Forma: EE.UU. [LWW] | Bosnia [WLD] | Momento favorable a Bosnia</div>
             
-<div class="matchup-narrative"><strong>🔬 Radiografía estadística del partido</strong><div class="narrative-line">🎯 Ecuador (6.3) supera a Mexico (4.3) en tiros a puerta. Se esperan ~11 en total.</div>
-<div class="narrative-line">🏳️ Ecuador llega con <strong>5.7 córners</strong> por partido vs 1.3 de Mexico. Se esperan ~7.</div>
-<div class="narrative-line">🟨 Ecuador llega con <strong>1.7 tarjetas amarillas</strong> por partido vs 0.7 de Mexico. Se esperan ~2.</div>
-<div class="narrative-line">⚽ Equilibrio en disparos totales: Mexico 11.7 — Ecuador 15.3. Total esperado ~27.</div>
-<div class="narrative-line">⚡ Equilibrio en faltas: Mexico 11.3 — Ecuador 11.7. Total esperado ~23.</div>
+<div class="matchup-narrative"><strong>🔬 Radiografía estadística del partido</strong><div class="narrative-line">🎯 Equilibrio en tiros a puerta: EE.UU. 5.0 — Bosnia 3.7. Total esperado ~9.</div>
+<div class="narrative-line">🏳️ Se esperan <strong>~10 córners</strong>. EE.UU. genera <strong>6.3</strong> (+47% sobre la media) y Bosnia encaja 7.0 por partido.</div>
+<div class="narrative-line">🟨 Ambos equipos por encima de la media en tarjetas amarillas: 1.7 y 2.0. Partido con ~4 esperados.</div>
+<div class="narrative-line">⚽ Dominio claro de EE.UU. en disparos totales: <strong>14.7</strong> por partido frente a solo 9.0 de Bosnia. Se esperan ~24 en total.</div>
+<div class="narrative-line">⚡ Ambos equipos por encima de la media en faltas: 12.7 y 15.7. Partido con ~28 esperados.</div>
 </div>
             <div class="model-breakdown">
-                <div class="model-chip">Elo: <span>66.3% Mexico</span></div>
-                <div class="model-chip">Estadístico: <span>49.8% Mexico</span></div>
-                <div class="model-chip">Poisson: <span>62.6% Mexico</span></div>
+                <div class="model-chip">Elo: <span>63.1% EE.UU.</span></div>
+                <div class="model-chip">Estadístico: <span>54.0% EE.UU.</span></div>
+                <div class="model-chip">Poisson: <span>56.1% EE.UU.</span></div>
                 <button class="model-legend-toggle" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.textContent=='¿Qué es esto?'?'Ocultar':'¿Qué es esto?'">¿Qué es esto?</button>
                 <div class="model-legend">
-                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para Mexico. Luego el sistema los <strong>mezcla ponderadamente</strong> (25% Elo + 25% Stats + 25% Poisson + 25% forma) para dar la predicción final que ves arriba.<br><br>
+                    <strong>Desglose de modelos:</strong> cada chip muestra qué porcentaje de victoria predice cada modelo por separado para EE.UU.. Luego el sistema los <strong>mezcla ponderadamente</strong> (25% Elo + 25% Stats + 25% Poisson + 25% forma) para dar la predicción final que ves arriba.<br><br>
                     <span class="legend-elo">● <strong>Elo:</strong></span> rating histórico basado en resultados y diferencia de goles. Mide la fuerza relativa "teórica" de cada selección.<br>
                     <span class="legend-stats">● <strong>Estadístico:</strong></span> compara TODAS las stats reales del torneo (xG, tiros, posesión, córners, duelos, pases...). El más "basado en datos duros".<br>
                     <span class="legend-poisson">● <strong>Poisson:</strong></span> modelo de goles esperados. Calcula la probabilidad de cada marcador posible según los goles que marcan y reciben ambos equipos. Suele ser el más conservador.
@@ -1360,63 +1015,82 @@
             <div class="combi-row">
                 <div class="combi-card segura">
                     <h3>🟢 SEGURA</h3>
-                    <div class="combi-tagline">Over 1.5 x2 + BTTS No — todas con edge +5% o más</div>
+                    <div class="combi-tagline">Over 1.5 en los dos partidos con más gol + ambos marcan en Bélgica</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
-                            <div class="stat-num">65.7%</div>
+                            <div class="stat-num">52.9%</div>
                             <div class="stat-label">Probabilidad</div>
                         </div>
                         <div class="combi-stat">
-                            <div class="stat-num">2.23</div>
+                            <div class="stat-num">2.78</div>
                             <div class="stat-label">Cuota bet365</div>
                         </div>
                     </div>
                     <div class="combi-legs">
-                        <div class="combi-leg"><span class="combi-leg-num">1</span> Costa de Marfil vs Norway: Over 1.5 Goles (@1.28 · P=86% · edge +8.3%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">2</span> France vs Sweden: Over 1.5 Goles (@1.14 · P=93% · edge +5.3%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">3</span> Mexico vs Ecuador: BTTS No (No marcan ambos) (@1.53 · P=82% · edge +16.4%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">1</span> Bélgica vs Senegal: Over 1.5 Goles (@1.30 · P=88% · edge +11.2%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">2</span> EE.UU. vs Bosnia: Over 1.5 Goles (@1.22 · P=90% · edge +7.5%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">3</span> Bélgica vs Senegal: BTTS Sí (marcan ambos) (@1.75 · P=67% · edge +9.9%)</div>
                     </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~22€</strong> &nbsp; <span style="color:#2ecc71">EV +46.7% 🟢</span></div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~28€</strong> &nbsp; <span style="color:#2ecc71">EV +46.8% 🟢</span></div>
                 </div>
                 <div class="combi-card media">
                     <h3>🟠 MEDIA</h3>
-                    <div class="combi-tagline">Over 1.5 + BTTS Sí + Mexico gana — edges +8% a +19%</div>
+                    <div class="combi-tagline">2 patas limpias: Over 2.5 en los partidos con más xG total</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
-                            <div class="stat-num">34.6%</div>
+                            <div class="stat-num">52.2%</div>
                             <div class="stat-label">Probabilidad</div>
                         </div>
                         <div class="combi-stat">
-                            <div class="stat-num">5.13</div>
+                            <div class="stat-num">3.44</div>
                             <div class="stat-label">Cuota bet365</div>
                         </div>
                     </div>
                     <div class="combi-legs">
-                        <div class="combi-leg"><span class="combi-leg-num">1</span> Costa de Marfil vs Norway: Over 1.5 Goles (@1.28 · P=86% · edge +8.3%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">2</span> France vs Sweden: BTTS Sí (Marcan ambos) (@1.75 · P=70% · edge +13.0%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">3</span> Mexico vs Ecuador: Gana Mexico (@2.29 · P=57% · edge +13.3%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">1</span> Bélgica vs Senegal: Over 2.5 Goles (@2.00 · P=71% · edge +21.0%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">2</span> EE.UU. vs Bosnia: Over 2.5 Goles (@1.72 · P=74% · edge +15.5%)</div>
                     </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~51€</strong> &nbsp; <span style="color:#2ecc71">EV +77.2% 🟢</span></div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~34€</strong> &nbsp; <span style="color:#2ecc71">EV +79.6% 🟢</span></div>
                 </div>
                 <div class="combi-card sonadora">
                     <h3>🔴 SOÑADORA</h3>
-                    <div class="combi-tagline">Doble victoria + Over 3.5 France — edges todos +14% 🎯</div>
+                    <div class="combi-tagline">Gana Bélgica + Over 2.5 USA + ambos marcan en Inglaterra</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
                             <div class="stat-num">17.0%</div>
                             <div class="stat-label">Probabilidad</div>
                         </div>
                         <div class="combi-stat">
-                            <div class="stat-num">17.12</div>
+                            <div class="stat-num">9.91</div>
                             <div class="stat-label">Cuota bet365</div>
                         </div>
                     </div>
                     <div class="combi-legs">
-                        <div class="combi-leg"><span class="combi-leg-num">1</span> Costa de Marfil vs Norway: Gana Costa de Marfil (@3.56 · P=47% · edge +19.3%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">2</span> France vs Sweden: Over 3.5 Goles (@2.10 · P=63% · edge +15.2%)</div>
-                        <div class="combi-leg"><span class="combi-leg-num">3</span> Mexico vs Ecuador: Gana Mexico (@2.29 · P=57% · edge +13.3%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">1</span> Bélgica vs Senegal: Gana Bélgica (@2.20 · P=51% · edge +5.4%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">2</span> EE.UU. vs Bosnia: Over 2.5 Goles (@1.72 · P=74% · edge +15.5%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">3</span> Inglaterra vs RD Congo: BTTS Sí (marcan ambos) (@2.62 · P=45% · edge +7.2%)</div>
                     </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~171€</strong> &nbsp; <span style="color:#2ecc71">EV +190.6% 🟢</span></div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~99€</strong> &nbsp; <span style="color:#2ecc71">EV +68.4% 🟢</span></div>
+                </div>
+                <div class="combi-card volatil">
+                    <h3>🔥 VOLÁTIL</h3>
+                    <div class="combi-tagline">Córners Bélgica + Tarjetas USA + O3.5 Bélgica — 3 mercados distintos</div>
+                    <div class="combi-stats">
+                        <div class="combi-stat">
+                            <div class="stat-num">25.0%</div>
+                            <div class="stat-label">Probabilidad</div>
+                        </div>
+                        <div class="combi-stat">
+                            <div class="stat-num">11.21</div>
+                            <div class="stat-label">Cuota bet365</div>
+                        </div>
+                    </div>
+                    <div class="combi-legs">
+                        <div class="combi-leg"><span class="combi-leg-num">1</span> Bélgica vs Senegal: Córners Over 9.5 (@2.10 · P=70% · edge +22.5%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">2</span> EE.UU. vs Bosnia: Tarjetas Over 2.5 (@1.57 · P=72% · edge +7.8%)</div>
+                        <div class="combi-leg"><span class="combi-leg-num">3</span> Bélgica vs Senegal: Over 3.5 Goles (@3.40 · P=50% · edge +20.5%)</div>
+                    </div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~112€</strong> &nbsp; <span style="color:#e74c3c">EV +180.7% 🔥 ¡APUESTA DE VALOR!</span></div>
                 </div>
             </div>
         </div>
@@ -1425,130 +1099,43 @@
         <div id="tab-valuebets" class="tab-panel">
 <div class="value-bets-intro">🎯 Predicciones de eventos (córners, tarjetas, tiros...). Las que tienen cuota bet365 muestran edge; las marcadas 🔮 Pendiente salen sin cuota para que las revises manualmente</div>
 <div class="value-bets-grid">
-        <div class="value-bet-card edge-flat">
+        <div class="value-bet-card edge-strong">
             <div class="value-bet-header">
-                <span class="value-bet-match">⚽ Costa de Marfil vs Norway</span>
-                <span class="value-bet-market">🏳️ Córners Over 8.5</span>
+                <span class="value-bet-match">⚽ Bélgica vs Senegal</span>
+                <span class="value-bet-market">🏳️ Córners Over 9.5</span>
             </div>
             <div class="value-bet-body">
                 <div class="value-bet-stat highlight">
-                    <div class="stat-num">61.4%</div>
+                    <div class="stat-num">78.2%</div>
                     <div class="stat-label">Prob. modelo</div>
                 </div>
                 <div class="value-bet-stat">
-                    <div class="stat-num">1.66</div>
+                    <div class="stat-num">2.1</div>
                     <div class="stat-label">Cuota bet365</div>
                 </div>
                 <div class="value-bet-stat">
-                    <div class="stat-num">60.2%</div>
+                    <div class="stat-num">47.6%</div>
                     <div class="stat-label">Implícita</div>
                 </div>
-                <div class="value-bet-verdict edge-flat">
-                    <div class="edge-badge">⚪ +1.2%</div>
-                    <div class="edge-label">EDGE · EV +2.0%</div>
+                <div class="value-bet-verdict edge-strong">
+                    <div class="edge-badge">🟢 +30.6%</div>
+                    <div class="edge-label">EDGE · EV +64.2%</div>
                 </div>
             </div>
             <div class="value-bet-context">
-                <span>📊 Pred: 9.6 total (3.4 + 6.1)</span>
-                <span>📈 Media Costa de Marfil: 4.0 a favor / 5.7 en contra</span>
-                <span>📉 Media Norway: 4.7 a favor / 3.7 en contra</span>
+                <span>📊 Pred: 12.3 total (5.1 + 7.2)</span>
+                <span>📈 Media Bélgica: 4.7 a favor / 4.7 en contra</span>
+                <span>📉 Media Senegal: 6.7 a favor / 4.7 en contra</span>
             </div>
         </div>
-        <div class="value-bet-card edge-negative">
+        <div class="value-bet-card edge-strong">
             <div class="value-bet-header">
-                <span class="value-bet-match">⚽ Mexico vs Ecuador</span>
-                <span class="value-bet-market">🟨 Tarjetas Over 3.5</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">33.3%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">1.83</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">54.6%</div>
-                    <div class="stat-label">Implícita</div>
-                </div>
-                <div class="value-bet-verdict edge-negative">
-                    <div class="edge-badge">🔴 -21.4%</div>
-                    <div class="edge-label">EDGE · EV -39.1%</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: 2.9 total (1.4 + 1.5)</span>
-                <span>📈 Media Mexico: 0.7 a favor / 1.3 en contra</span>
-                <span>📉 Media Ecuador: 1.7 a favor / 3.0 en contra</span>
-            </div>
-        </div>
-        <div class="value-bet-card edge-negative">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ Costa de Marfil vs Norway</span>
+                <span class="value-bet-match">⚽ Bélgica vs Senegal</span>
                 <span class="value-bet-market">🟨 Tarjetas Over 2.5</span>
             </div>
             <div class="value-bet-body">
                 <div class="value-bet-stat highlight">
-                    <div class="stat-num">29.6%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">1.8</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">55.6%</div>
-                    <div class="stat-label">Implícita</div>
-                </div>
-                <div class="value-bet-verdict edge-negative">
-                    <div class="edge-badge">🔴 -25.9%</div>
-                    <div class="edge-label">EDGE · EV -46.7%</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: 1.9 total (1.4 + 0.5)</span>
-                <span>📈 Media Costa de Marfil: 2.0 a favor / 1.5 en contra</span>
-                <span>📉 Media Norway: 0.5 a favor / 1.0 en contra</span>
-            </div>
-        </div>
-        <div class="value-bet-card edge-negative">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ France vs Sweden</span>
-                <span class="value-bet-market">🟨 Tarjetas Over 2.5</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">16.2%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">1.83</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">54.6%</div>
-                    <div class="stat-label">Implícita</div>
-                </div>
-                <div class="value-bet-verdict edge-negative">
-                    <div class="edge-badge">🔴 -38.5%</div>
-                    <div class="edge-label">EDGE · EV -70.4%</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: 1.4 total (0.2 + 1.1)</span>
-                <span>📈 Media France: 0.5 a favor / 1.0 en contra</span>
-                <span>📉 Media Sweden: 1.7 a favor / 0.7 en contra</span>
-            </div>
-        </div>
-        <div class="value-bet-card edge-negative">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ Mexico vs Ecuador</span>
-                <span class="value-bet-market">🏳️ Córners Over 7.5</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">5.3%</div>
+                    <div class="stat-num">70.9%</div>
                     <div class="stat-label">Prob. modelo</div>
                 </div>
                 <div class="value-bet-stat">
@@ -1559,21 +1146,321 @@
                     <div class="stat-num">58.1%</div>
                     <div class="stat-label">Implícita</div>
                 </div>
-                <div class="value-bet-verdict edge-negative">
-                    <div class="edge-badge">🔴 -52.8%</div>
-                    <div class="edge-label">EDGE · EV -90.9%</div>
+                <div class="value-bet-verdict edge-strong">
+                    <div class="edge-badge">🟢 +12.8%</div>
+                    <div class="edge-label">EDGE · EV +22.0%</div>
                 </div>
             </div>
             <div class="value-bet-context">
-                <span>📊 Pred: 4.0 total (0.5 + 3.5)</span>
-                <span>📈 Media Mexico: 1.3 a favor / 2.7 en contra</span>
-                <span>📉 Media Ecuador: 5.7 a favor / 1.7 en contra</span>
+                <span>📊 Pred: 3.7 total (1.4 + 2.3)</span>
+                <span>📈 Media Bélgica: 1.0 a favor / 1.7 en contra</span>
+                <span>📉 Media Senegal: 2.0 a favor / 2.0 en contra</span>
             </div>
         </div>
         <div class="value-bet-card no-odds">
             <div class="value-bet-header">
-                <span class="value-bet-match">⚽ Costa de Marfil vs Norway</span>
+                <span class="value-bet-match">⚽ Inglaterra vs RD Congo</span>
+                <span class="value-bet-market">🏳️ Córners Over 7.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">82.0%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 10.5 total (8.7 + 1.8)</span>
+                <span>📈 Media Inglaterra: 8.0 a favor / 2.3 en contra</span>
+                <span>📉 Media RD Congo: 3.3 a favor / 4.7 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Inglaterra vs RD Congo</span>
+                <span class="value-bet-market">🟨 Tarjetas Over 2.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">64.5%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 3.3 total (1.6 + 1.7)</span>
+                <span>📈 Media Inglaterra: 1.0 a favor / 1.5 en contra</span>
+                <span>📉 Media RD Congo: 1.7 a favor / 2.3 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Inglaterra vs RD Congo</span>
                 <span class="value-bet-market">🎯 Tiros Totales Over 12.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">99.3%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 23.6 total (15.8 + 7.7)</span>
+                <span>📈 Media Inglaterra: 19.3 a favor / 8.3 en contra</span>
+                <span>📉 Media RD Congo: 11.3 a favor / 10.0 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Inglaterra vs RD Congo</span>
+                <span class="value-bet-market">🥅 Tiros Puerta Over 6.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">61.1%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 7.4 total (5.9 + 1.5)</span>
+                <span>📈 Media Inglaterra: 6.7 a favor / 2.7 en contra</span>
+                <span>📉 Media RD Congo: 2.3 a favor / 3.7 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Inglaterra vs RD Congo</span>
+                <span class="value-bet-market">⚡ Faltas Over 18.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">98.7%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 30.1 total (13.6 + 16.5)</span>
+                <span>📈 Media Inglaterra: 12.3 a favor / 17.3 en contra</span>
+                <span>📉 Media RD Congo: 10.7 a favor / 12.3 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Bélgica vs Senegal</span>
+                <span class="value-bet-market">🎯 Tiros Totales Over 12.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">100.0%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 32.2 total (19.9 + 12.3)</span>
+                <span>📈 Media Bélgica: 24.3 a favor / 9.0 en contra</span>
+                <span>📉 Media Senegal: 16.7 a favor / 10.0 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Bélgica vs Senegal</span>
+                <span class="value-bet-market">🥅 Tiros Puerta Over 6.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">96.5%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 12.5 total (8.6 + 3.9)</span>
+                <span>📈 Media Bélgica: 6.7 a favor / 2.7 en contra</span>
+                <span>📉 Media Senegal: 6.0 a favor / 5.3 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Bélgica vs Senegal</span>
+                <span class="value-bet-market">⚡ Faltas Over 18.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">29.3%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 16.4 total (8.3 + 8.1)</span>
+                <span>📈 Media Bélgica: 9.7 a favor / 11.3 en contra</span>
+                <span>📉 Media Senegal: 8.0 a favor / 9.7 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ EE.UU. vs Bosnia</span>
+                <span class="value-bet-market">🏳️ Córners Over 7.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">92.9%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 12.5 total (10.3 + 2.2)</span>
+                <span>📈 Media EE.UU.: 6.3 a favor / 2.3 en contra</span>
+                <span>📉 Media Bosnia: 4.0 a favor / 7.0 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ EE.UU. vs Bosnia</span>
+                <span class="value-bet-market">🟨 Tarjetas Over 2.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">92.1%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 5.7 total (1.5 + 4.1)</span>
+                <span>📈 Media EE.UU.: 1.7 a favor / 3.0 en contra</span>
+                <span>📉 Media Bosnia: 2.0 a favor / 1.3 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ EE.UU. vs Bosnia</span>
+                <span class="value-bet-market">🎯 Tiros Totales Over 12.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">95.5%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 19.7 total (14.0 + 5.7)</span>
+                <span>📈 Media EE.UU.: 14.7 a favor / 7.7 en contra</span>
+                <span>📉 Media Bosnia: 9.0 a favor / 11.7 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ EE.UU. vs Bosnia</span>
+                <span class="value-bet-market">🥅 Tiros Puerta Over 6.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">60.9%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">—</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-verdict no-odds">
+                    <div class="edge-badge">🔮 Pendiente</div>
+                    <div class="edge-label">Sin cuota — revisar manualmente</div>
+                </div>
+            </div>
+            <div class="value-bet-context">
+                <span>📊 Pred: 7.4 total (5.6 + 1.8)</span>
+                <span>📈 Media EE.UU.: 5.0 a favor / 2.0 en contra</span>
+                <span>📉 Media Bosnia: 3.7 a favor / 4.7 en contra</span>
+            </div>
+        </div>
+        <div class="value-bet-card no-odds">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ EE.UU. vs Bosnia</span>
+                <span class="value-bet-market">⚡ Faltas Over 18.5</span>
             </div>
             <div class="value-bet-body">
                 <div class="value-bet-stat highlight">
@@ -1590,234 +1477,9 @@
                 </div>
             </div>
             <div class="value-bet-context">
-                <span>📊 Pred: 25.1 total (12.7 + 12.4)</span>
-                <span>📈 Media Costa de Marfil: 10.3 a favor / 13.0 en contra</span>
-                <span>📉 Media Norway: 11.7 a favor / 15.0 en contra</span>
-            </div>
-        </div>
-        <div class="value-bet-card no-odds">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ Costa de Marfil vs Norway</span>
-                <span class="value-bet-market">🥅 Tiros Puerta Over 6.5</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">64.7%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">—</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-verdict no-odds">
-                    <div class="edge-badge">🔮 Pendiente</div>
-                    <div class="edge-label">Sin cuota — revisar manualmente</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: 7.7 total (3.4 + 4.3)</span>
-                <span>📈 Media Costa de Marfil: 3.0 a favor / 3.3 en contra</span>
-                <span>📉 Media Norway: 5.3 a favor / 4.7 en contra</span>
-            </div>
-        </div>
-        <div class="value-bet-card no-odds">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ Costa de Marfil vs Norway</span>
-                <span class="value-bet-market">⚡ Faltas Over 18.5</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">29.5%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">—</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-verdict no-odds">
-                    <div class="edge-badge">🔮 Pendiente</div>
-                    <div class="edge-label">Sin cuota — revisar manualmente</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: 16.4 total (6.4 + 10.1)</span>
-                <span>📈 Media Costa de Marfil: 7.7 a favor / 9.7 en contra</span>
-                <span>📉 Media Norway: 11.7 a favor / 9.3 en contra</span>
-            </div>
-        </div>
-        <div class="value-bet-card no-odds">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ France vs Sweden</span>
-                <span class="value-bet-market">🏳️ Córners Over 7.5</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">35.8%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">—</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-verdict no-odds">
-                    <div class="edge-badge">🔮 Pendiente</div>
-                    <div class="edge-label">Sin cuota — revisar manualmente</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: 6.7 total (2.3 + 4.4)</span>
-                <span>📈 Media France: 5.0 a favor / 3.3 en contra</span>
-                <span>📉 Media Sweden: 5.7 a favor / 2.0 en contra</span>
-            </div>
-        </div>
-        <div class="value-bet-card no-odds">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ France vs Sweden</span>
-                <span class="value-bet-market">🎯 Tiros Totales Over 12.5</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">89.9%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">—</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-verdict no-odds">
-                    <div class="edge-badge">🔮 Pendiente</div>
-                    <div class="edge-label">Sin cuota — revisar manualmente</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: 17.8 total (10.5 + 7.3)</span>
-                <span>📈 Media France: 16.0 a favor / 6.7 en contra</span>
-                <span>📉 Media Sweden: 13.3 a favor / 8.0 en contra</span>
-            </div>
-        </div>
-        <div class="value-bet-card no-odds">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ France vs Sweden</span>
-                <span class="value-bet-market">🥅 Tiros Puerta Over 6.5</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">88.9%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">—</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-verdict no-odds">
-                    <div class="edge-badge">🔮 Pendiente</div>
-                    <div class="edge-label">Sin cuota — revisar manualmente</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: 10.3 total (7.1 + 3.2)</span>
-                <span>📈 Media France: 7.3 a favor / 2.0 en contra</span>
-                <span>📉 Media Sweden: 6.7 a favor / 4.0 en contra</span>
-            </div>
-        </div>
-        <div class="value-bet-card no-odds">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ France vs Sweden</span>
-                <span class="value-bet-market">⚡ Faltas Over 18.5</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">25.7%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">—</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-verdict no-odds">
-                    <div class="edge-badge">🔮 Pendiente</div>
-                    <div class="edge-label">Sin cuota — revisar manualmente</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: 16.0 total (8.8 + 7.2)</span>
-                <span>📈 Media France: 8.0 a favor / 7.3 en contra</span>
-                <span>📉 Media Sweden: 11.0 a favor / 12.3 en contra</span>
-            </div>
-        </div>
-        <div class="value-bet-card no-odds">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ Mexico vs Ecuador</span>
-                <span class="value-bet-market">🎯 Tiros Totales Over 12.5</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">98.4%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">—</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-verdict no-odds">
-                    <div class="edge-badge">🔮 Pendiente</div>
-                    <div class="edge-label">Sin cuota — revisar manualmente</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: 21.9 total (11.5 + 10.5)</span>
-                <span>📈 Media Mexico: 11.7 a favor / 8.3 en contra</span>
-                <span>📉 Media Ecuador: 15.3 a favor / 12.0 en contra</span>
-            </div>
-        </div>
-        <div class="value-bet-card no-odds">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ Mexico vs Ecuador</span>
-                <span class="value-bet-market">🥅 Tiros Puerta Over 6.5</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">40.0%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">—</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-verdict no-odds">
-                    <div class="edge-badge">🔮 Pendiente</div>
-                    <div class="edge-label">Sin cuota — revisar manualmente</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: 6.0 total (3.5 + 2.5)</span>
-                <span>📈 Media Mexico: 4.3 a favor / 1.7 en contra</span>
-                <span>📉 Media Ecuador: 6.3 a favor / 3.3 en contra</span>
-            </div>
-        </div>
-        <div class="value-bet-card no-odds">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ Mexico vs Ecuador</span>
-                <span class="value-bet-market">⚡ Faltas Over 18.5</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">57.4%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">—</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-verdict no-odds">
-                    <div class="edge-badge">🔮 Pendiente</div>
-                    <div class="edge-label">Sin cuota — revisar manualmente</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: 19.5 total (10.1 + 9.4)</span>
-                <span>📈 Media Mexico: 11.3 a favor / 9.0 en contra</span>
-                <span>📉 Media Ecuador: 11.7 a favor / 10.0 en contra</span>
+                <span>📊 Pred: 33.1 total (11.7 + 21.4)</span>
+                <span>📈 Media EE.UU.: 12.7 a favor / 15.3 en contra</span>
+                <span>📉 Media Bosnia: 15.7 a favor / 10.3 en contra</span>
             </div>
         </div>
 </div>
@@ -1834,7 +1496,7 @@
         <div class="footer">
             ⚡ Sistema de predicción basado en modelo compuesto (Elo + Estadísticas + Goles esperados)<br>
             Datos de Sofascore · 72 partidos analizados · 48 selecciones · 48 con estadísticas completas<br>
-            <small>Generado el 30 de junio de 2026 · Solo con fines informativos</small>
+            <small>Generado el 1 de julio de 2026 · Solo con fines informativos</small>
         </div>
     </div>
 </body>
