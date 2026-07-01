@@ -137,17 +137,19 @@ def build_value_bets(matches_data, odds_cache):
     team_stats = compute_team_averages(matches_data)
     value_bets = []
 
-    # Partidos de hoy
+    # Partidos de hoy (1 julio 2026)
     today_matches = [
-        ("Côte d'Ivoire", "Norway"),
-        ("France", "Sweden"),
-        ("Mexico", "Ecuador"),
+        ("England", "DR Congo"),
+        ("Belgium", "Senegal"),
+        ("USA", "Bosnia & Herzegovina"),
     ]
 
     for home_team, away_team in today_matches:
-        # Alias para nombres de equipo (Côte d'Ivoire -> Ivory Coast en caché)
+        # Alias para nombres de equipo (distintas fuentes)
         cache_aliases = {
             "côte d'ivoire": "ivory coast",
+            "dr congo": "congo dr",
+            "bosnia & herzegovina": "bosnia and herzegovina",
         }
         
         # Buscar cuotas en caché

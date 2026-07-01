@@ -18,4 +18,10 @@ data/worldcup/*
 
 # API keys y caché (NUNCA subir)
 .oddspapi_key
+.sportdb_key
 data/odds_cache.json
+
+# Caché temporal de APIs deportivas
+data/sportdb_*.json
+data/today_match_ids.json
+data/today_analysis.json

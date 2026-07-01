@@ -23,7 +23,7 @@ DISPLAY_NAMES = {
     "USA": "EE.UU.",
     "Czechia": "República Checa",
     "Netherlands": "Países Bajos",
-    "DR Congo": "Rep. Dem. Congo",
+    "DR Congo": "RD Congo",
     "Bosnia & Herzegovina": "Bosnia",
     "Senegal": "Senegal",
     "Belgium": "Bélgica",
@@ -50,18 +50,21 @@ def get_match_odds(cache, home_team, away_team):
     aliases = {
         "côte d'ivoire": "ivory coast",
         "south korea": "korea republic",
-        "usa": "united states",
         "dr congo": "congo dr",
         "bosnia & herzegovina": "bosnia and herzegovina",
     }
-    home_lower = aliases.get(home_team.lower().strip(), home_team.lower().strip())
-    away_lower = aliases.get(away_team.lower().strip(), away_team.lower().strip())
+    home_raw = home_team.lower().strip()
+    away_raw = away_team.lower().strip()
+    home_variants = {home_raw, aliases.get(home_raw, home_raw)}
+    away_variants = {away_raw, aliases.get(away_raw, away_raw)}
 
     for fid, info in cache.items():
         ch = info.get("home", "").lower().strip()
         ca = info.get("away", "").lower().strip()
-        if (ch == home_lower or home_lower in ch or ch in home_lower) and \
-           (ca == away_lower or away_lower in ca or ca in away_lower):
+        # Intentar con todas las variantes (alias + original)
+        h_match = any(ch == v or v in ch or ch in v for v in home_variants)
+        a_match = any(ca == v or v in ca or ca in v for v in away_variants)
+        if h_match and a_match:
             odds = info.get("odds") or {}
             # Formato nuevo: {bet365: {1x2: {home,draw,away}, cornerKicks: {...}}}
             # Formato viejo: {bet365: {home,draw,away}}
@@ -117,8 +120,8 @@ def poisson_prob(lam, k):
     return (lam ** k) * math.exp(-lam) / math.factorial(k)
 
 def over_prob(lam, goals):
-    """P(X > goals) = 1 - sum_{i=0}^{goals} P(X=i)"""
-    return round(1 - sum(poisson_prob(lam, i) for i in range(goals + 1)), 4)
+    """P(X > goals) = 1 - sum_{i=0}^{floor(goals)} P(X=i)"""
+    return round(1 - sum(poisson_prob(lam, i) for i in range(int(goals) + 1)), 4)
 
 def btts_prob(xg_home, xg_away):
     """Probabilidad de ambos marcan (con correlación negativa ajustada)"""
@@ -160,44 +163,45 @@ def build_combinadas(predictions, odds_cache):
     b = [m_.get('b365', {}) for m_ in m]  # bet365 for each match
     # m[0]=England-Congo, m[1]=Belgium-Senegal, m[2]=USA-Bosnia
 
-    # ─── 🟢 SEGURA: O1.5 Belgium + O1.5 USA + BTTS Sí England ───
-    # Cuota ~4.16 | Prob 38.7% | EV +61.0% | Todas las patas edge > 7%
+    # ─── 🟢 SEGURA: O1.5 Belgium + O1.5 USA + BTTS Belgium ───
+    # Cuota ~2.78 | Prob ~55% | 2 patas con prob >70% + 1 con >70%
+    # Riesgo bajo: dos over 1.5 (casi seguros) + BTTS Belgium (partido con muchos goles)
     cuota_seg = [
-        b[1].get('over_15') or 1.3,    # Belgium Over 1.5 (edge +11.2%)
-        b[2].get('over_15') or 1.22,   # USA Over 1.5 (edge +7.5%)
-        b[0].get('btts_yes') or 2.62,  # England BTTS Sí (edge +10.9%)
+        b[1].get('over_15') or 1.30,    # Belgium Over 1.5 (P=88.1%, edge +11.2%)
+        b[2].get('over_15') or 1.22,    # USA Over 1.5 (P=89.5%, edge +7.5%)
+        b[1].get('btts_yes') or 1.75,   # Belgium BTTS Sí (P=70.2%, edge +13.1%)
     ]
-    p_seg = m[1]['ov15'] * m[2]['ov15'] * m[0]['btts']
+    p_seg = m[1]['ov15'] * m[2]['ov15'] * m[1]['btts']
     cuota_seg_total = cuota_seg[0] * cuota_seg[1] * cuota_seg[2]
 
     edges_seg = [
         round((m[1]['ov15'] - 1 / cuota_seg[0]) * 100, 1),
         round((m[2]['ov15'] - 1 / cuota_seg[1]) * 100, 1),
-        round((m[0]['btts'] - 1 / cuota_seg[2]) * 100, 1),
+        round((m[1]['btts'] - 1 / cuota_seg[2]) * 100, 1),
     ]
 
-    # ─── 🟠 MEDIA: O2.5 Belgium + O1.5 USA + BTTS Sí England ───
-    # Cuota ~6.39 | Prob 31.1% | EV +98.8% | Edges +7% a +20%
+    # ─── 🟠 MEDIA: O2.5 Belgium + O2.5 USA ───
+    # Cuota ~3.44 | Prob ~52% | Solo 2 patas, riesgo medio
+    # Ambos partidos con muchas ocasiones: Belgium contra Senegal (xG 2.0+1.67) y USA-Bosnia (xG 2.33+1.5)
     cuota_med = [
-        b[1].get('over_25') or 2.0,    # Belgium Over 2.5 (edge +20.9%)
-        b[2].get('over_15') or 1.22,   # USA Over 1.5 (edge +7.5%)
-        b[0].get('btts_yes') or 2.62,  # England BTTS Sí (edge +10.9%)
+        b[1].get('over_25') or 2.0,     # Belgium Over 2.5 (P=70.9%, edge +20.9%)
+        b[2].get('over_25') or 1.72,    # USA Over 2.5 (P=73.5%, edge +15.5%)
     ]
-    p_med = m[1]['ov25'] * m[2]['ov15'] * m[0]['btts']
-    cuota_med_total = cuota_med[0] * cuota_med[1] * cuota_med[2]
+    p_med = m[1]['ov25'] * m[2]['ov25']
+    cuota_med_total = cuota_med[0] * cuota_med[1]
 
     edges_med = [
         round((m[1]['ov25'] - 1 / cuota_med[0]) * 100, 1),
-        round((m[2]['ov15'] - 1 / cuota_med[1]) * 100, 1),
-        round((m[0]['btts'] - 1 / cuota_med[2]) * 100, 1),
+        round((m[2]['ov25'] - 1 / cuota_med[1]) * 100, 1),
     ]
 
     # ─── 🔴 SOÑADORA: Gana Belgium + O2.5 USA + BTTS Sí England ───
-    # Cuota ~9.91 | Prob 18.4% | EV +82.3% | Edges +5% a +18%
+    # Cuota ~9.91 | Prob ~18% | Edge grande si acierta
+    # Bélgica parte favorita (51% vs Senegal) + USA Over 2.5 sólido + England BTTS (RD Congo defiende mal)
     cuota_son = [
-        b[1].get('home') or 2.2,       # Belgium Gana (edge +5.4%)
-        b[2].get('over_25') or 1.72,   # USA Over 2.5 (edge +15.5%)
-        b[0].get('btts_yes') or 2.62,  # England BTTS Sí (edge +10.9%)
+        b[1].get('home') or 2.20,       # Belgium Gana (P=50.9%, edge +5.4%)
+        b[2].get('over_25') or 1.72,    # USA Over 2.5 (P=73.5%, edge +15.5%)
+        b[0].get('btts_yes') or 2.62,   # England BTTS Sí (P=49.1%, edge +10.9%)
     ]
     p_son = (m[1]['prob']['home'] / 100) * m[2]['ov25'] * m[0]['btts']
     cuota_son_total = cuota_son[0] * cuota_son[1] * cuota_son[2]
@@ -208,22 +212,52 @@ def build_combinadas(predictions, odds_cache):
         round((m[0]['btts'] - 1 / cuota_son[2]) * 100, 1),
     ]
 
+    # ─── 🔥 VOLÁTIL: Córners O9.5 Belgium + Tarjetas O2.5 USA + O3.5 Belgium ───
+    # Cuota ~11.21 | Prob ~25% | 3 MERCADOS DISTINTOS: córners + tarjetas + goles gordos
+    # Belgium genera 4.7 córners, Senegal permite 6.7 → ~11.4 total (P=70.1% >9.5)
+    # USA-Bosnia: 1.7+2.0=3.7 tarjetas media (P=71.5% >2.5, edge +7.8%)
+    # Belgium O3.5: xG 3.67 (P=50.0%, edge +20.5%)
+    b_corners = b[1].get('cornerKicks', {})
+    b_yellow_usa = b[2].get('yellowCards', {})
+    cuota_vol = [
+        b_corners.get('over_9.5') or 2.10,   # Belgium Córners O9.5 @2.10
+        b_yellow_usa.get('over_2.5') or 1.57, # USA-Bosnia Tarjetas O2.5 @1.57
+        b[1].get('over_35') or 3.40,          # Belgium O3.5 @3.40
+    ]
+    # Córners esperados: Belgium 4.7 + Senegal 6.7 = 11.4
+    exp_corners_bel = 11.4
+    p_corners_bel = over_prob(exp_corners_bel, 9.5)
+    # Tarjetas esperadas: USA 1.7 + Bosnia 2.0 = 3.7
+    exp_yellow_usa = 3.7
+    p_yellow_usa = over_prob(exp_yellow_usa, 2.5)
+    p_ov35_bel = m[1]['ov35']
+    p_vol = p_corners_bel * p_yellow_usa * p_ov35_bel
+    cuota_vol_total = cuota_vol[0] * cuota_vol[1] * cuota_vol[2]
+
+    # Edges: usamos Poisson para estimar probs de corners y tarjetas
+    edges_vol = [
+        round((p_corners_bel - 1 / cuota_vol[0]) * 100, 1),
+        round((p_yellow_usa - 1 / cuota_vol[1]) * 100, 1),
+        round((m[1]['ov35'] - 1 / cuota_vol[2]) * 100, 1),
+    ]
+
     return {
         'segura': {
             'prob': p_seg, 'cuota': cuota_seg_total,
             'legs': [
                 {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 1.5 Goles", 'cuota': cuota_seg[0], 'prob': m[1]['ov15'], 'edge': edges_seg[0]},
                 {'text': f"{m[2]['home']} vs {m[2]['away']}: Over 1.5 Goles", 'cuota': cuota_seg[1], 'prob': m[2]['ov15'], 'edge': edges_seg[1]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: BTTS Sí (marcan ambos)", 'cuota': cuota_seg[2], 'prob': m[0]['btts'], 'edge': edges_seg[2]},
-            ]
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: BTTS Sí (marcan ambos)", 'cuota': cuota_seg[2], 'prob': m[1]['btts'], 'edge': edges_seg[2]},
+            ],
+            'desc': 'Over 1.5 en los dos partidos con más gol + ambos marcan en Bélgica'
         },
         'media': {
             'prob': p_med, 'cuota': cuota_med_total,
             'legs': [
                 {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 2.5 Goles", 'cuota': cuota_med[0], 'prob': m[1]['ov25'], 'edge': edges_med[0]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: Over 1.5 Goles", 'cuota': cuota_med[1], 'prob': m[2]['ov15'], 'edge': edges_med[1]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: BTTS Sí (marcan ambos)", 'cuota': cuota_med[2], 'prob': m[0]['btts'], 'edge': edges_med[2]},
-            ]
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: Over 2.5 Goles", 'cuota': cuota_med[1], 'prob': m[2]['ov25'], 'edge': edges_med[1]},
+            ],
+            'desc': '2 patas limpias: Over 2.5 en los partidos con más xG total'
         },
         'sonadora': {
             'prob': p_son, 'cuota': cuota_son_total,
@@ -231,9 +265,127 @@ def build_combinadas(predictions, odds_cache):
                 {'text': f"{m[1]['home']} vs {m[1]['away']}: Gana {m[1]['home']}", 'cuota': cuota_son[0], 'prob': m[1]['prob']['home'] / 100, 'edge': edges_son[0]},
                 {'text': f"{m[2]['home']} vs {m[2]['away']}: Over 2.5 Goles", 'cuota': cuota_son[1], 'prob': m[2]['ov25'], 'edge': edges_son[1]},
                 {'text': f"{m[0]['home']} vs {m[0]['away']}: BTTS Sí (marcan ambos)", 'cuota': cuota_son[2], 'prob': m[0]['btts'], 'edge': edges_son[2]},
-            ]
+            ],
+            'desc': 'Gana Bélgica + Over 2.5 USA + ambos marcan en Inglaterra'
+        },
+        'volatil': {
+            'prob': p_vol, 'cuota': cuota_vol_total,
+            'legs': [
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Córners Over 9.5", 'cuota': cuota_vol[0], 'prob': round(p_corners_bel, 3), 'edge': edges_vol[0]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: Tarjetas Over 2.5", 'cuota': cuota_vol[1], 'prob': round(p_yellow_usa, 3), 'edge': edges_vol[1]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Over 3.5 Goles", 'cuota': cuota_vol[2], 'prob': m[1]['ov35'], 'edge': edges_vol[2]},
+            ],
+            'desc': 'Córners Bélgica + Tarjetas USA + O3.5 Bélgica — 3 mercados distintos'
         }
     }
+
+# ─── Integración sportdb.dev ──────────────────────────────────────────
+
+def load_sportdb_details():
+    """Carga los datos de sportdb.dev de los 3 partidos guardados localmente"""
+    data_dir = Path(__file__).parent / "data"
+    files = {
+        "England": "sportdb_England_vs_DRCongo.json",
+        "Belgium": "sportdb_Belgium_vs_Senegal.json",
+        "USA": "sportdb_USA_vs_Bosnia.json",
+    }
+    result = {}
+    for team_key, fname in files.items():
+        fpath = data_dir / fname
+        if not fpath.exists():
+            continue
+        with open(fpath) as f:
+            raw = json.load(f)
+        d = raw.get("details", {})
+        result[team_key] = {
+            "home": {
+                "id": d.get("homeId"),
+                "name": d.get("homeName"),
+                "slug": d.get("homeSlug"),
+                "logo": d.get("homeLogo"),
+            },
+            "away": {
+                "id": d.get("awayId"),
+                "name": d.get("awayName"),
+                "slug": d.get("awaySlug"),
+                "logo": d.get("awayLogo"),
+            },
+            "referee": d.get("referee"),
+            "venue": d.get("venue"),
+            "venue_city": d.get("venueCity"),
+            "capacity": d.get("capacity"),
+        }
+    return result
+
+
+def get_sportdb_odds(match_key):
+    """Extrae las cuotas bet365 (bookmakerId=16) de sportdb para un partido"""
+    data_dir = Path(__file__).parent / "data"
+    files = {
+        "England": "sportdb_England_vs_DRCongo.json",
+        "Belgium": "sportdb_Belgium_vs_Senegal.json",
+        "USA": "sportdb_USA_vs_Bosnia.json",
+    }
+    fname = files.get(match_key)
+    if not fname:
+        return {}
+    fpath = data_dir / fname
+    if not fpath.exists():
+        return {}
+    with open(fpath) as f:
+        raw = json.load(f)
+    
+    odds_list = raw.get("odds", [])
+    bet365_odds = [o for o in odds_list if o.get("bookmakerId") == 16]
+    
+    result = {}
+    for o in bet365_odds:
+        bt = o["bettingType"]
+        scope = o["bettingScope"]
+        if scope != "FULL_TIME":
+            continue
+        values = []
+        for od in o.get("odds", []):
+            val = od.get("value")
+            if val:
+                sel = od.get("selection", "")
+                hcap = od.get("handicap")
+                sel_key = sel or ""
+                if hcap and isinstance(hcap, dict) and hcap.get("value"):
+                    sel_key = f"{hcap['value']}_{sel}"
+                values.append({"selection": sel_key, "value": float(val)})
+        
+        if bt == "HOME_DRAW_AWAY":
+            parts = values
+            if len(parts) >= 3:
+                result["sportdb_home"] = parts[0]["value"]
+                result["sportdb_draw"] = parts[2]["value"]
+                result["sportdb_away"] = parts[1]["value"]
+        elif bt == "OVER_UNDER":
+            for v in values:
+                sel = v["selection"]
+                if "0.5_OVER" in sel or sel == "OVER" and v["value"] <= 1.1:
+                    result["sportdb_ou_05"] = v["value"]
+                elif "1.5_OVER" in sel:
+                    result["sportdb_ou_15"] = v["value"]
+                elif "2.5_OVER" in sel:
+                    result["sportdb_ou_25"] = v["value"]
+                elif "3.5_OVER" in sel:
+                    result["sportdb_ou_35"] = v["value"]
+        elif bt == "BOTH_TEAMS_TO_SCORE":
+            for v in values:
+                if v["selection"] == "":
+                    if v["value"] > 2.0:
+                        result["sportdb_btts_yes"] = v["value"]
+                    else:
+                        result["sportdb_btts_no"] = v["value"]
+        elif bt == "DOUBLE_CHANCE":
+            result["sportdb_dc"] = values[0]["value"] if values else None
+        elif bt == "ASIAN_HANDICAP":
+            result["sportdb_asian_h"] = values[0]["value"] if values else None
+    
+    return result
+
 
 def _build_value_bets_html():
     """Genera el HTML de la sección Value Bets"""
@@ -352,6 +504,9 @@ def generate_web():
     # Cargar cuotas reales
     odds_cache = load_odds_cache()
     
+    # Cargar datos de sportdb.dev
+    sportdb_details = load_sportdb_details()
+    
     # Partidos de hoy 1 julio
     matches_today = [
         ("England", "DR Congo", "12:00"),
@@ -367,6 +522,13 @@ def generate_web():
         b365, pinnacle = get_match_odds(odds_cache, home, away)
         r['odds_b365'] = b365
         r['odds_pinnacle'] = pinnacle
+        
+        # Datos sportdb.dev
+        match_key = home
+        sd = sportdb_details.get(match_key, {})
+        r['sportdb'] = sd
+        r['sportdb_odds'] = get_sportdb_odds(match_key)
+        
         predictions.append(r)
     
     # Generar combinadas con cuotas reales
@@ -398,13 +560,9 @@ def generate_web():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mundial 2026 — Predicciones 30 Junio</title>
+    <title>Mundial 2026 — Predicciones 1 Julio</title>
     <style>
-        * {{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }}
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         
         body {{
             background: #0a0e27;
@@ -414,11 +572,9 @@ def generate_web():
             padding: 20px;
         }}
         
-        .container {{
-            max-width: 1100px;
-            margin: 0 auto;
-        }}
+        .container {{ max-width: 1100px; margin: 0 auto; }}
         
+        /* ─── HEADER ─── */
         .header {{
             text-align: center;
             padding: 40px 20px 30px;
@@ -427,7 +583,6 @@ def generate_web():
             margin-bottom: 30px;
             border: 1px solid #2a2f4a;
         }}
-        
         .header h1 {{
             font-size: 2.4em;
             background: linear-gradient(135deg, #f0c040, #e09020);
@@ -436,12 +591,7 @@ def generate_web():
             background-clip: text;
             margin-bottom: 10px;
         }}
-        
-        .header .subtitle {{
-            color: #8890b0;
-            font-size: 1.1em;
-        }}
-        
+        .header .subtitle {{ color: #8890b0; font-size: 1.1em; }}
         .header .badge {{
             display: inline-block;
             background: #e09020;
@@ -451,520 +601,6 @@ def generate_web():
             font-weight: 700;
             font-size: 0.85em;
             margin-top: 12px;
-        }}
-        
-        .match-card {{
-            background: linear-gradient(145deg, #151a35 0%, #111530 100%);
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 24px;
-            border: 1px solid #2a2f4a;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }}
-        
-        .match-card:hover {{
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-        }}
-        
-        .match-header {{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            gap: 20px;
-        }}
-        
-        .match-time {{
-            background: #1e2445;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 0.9em;
-            color: #a0a8c0;
-            font-weight: 600;
-            white-space: nowrap;
-        }}
-        
-        .teams {{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex: 1;
-        }}
-        
-        .team {{
-            font-size: 1.5em;
-            font-weight: 700;
-            color: #ffffff;
-            text-shadow: 0 0 20px rgba(255,255,255,0.1);
-        }}
-        
-        .vs {{
-            color: #5a6080;
-            font-size: 1em;
-            font-weight: 400;
-        }}
-        
-        .prediction-badge {{
-            padding: 8px 20px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.85em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }}
-        
-        .prediction-badge.HOME {{ background: #1a4a2a; color: #60f0a0; border: 1px solid #2a6a3a; }}
-        .prediction-badge.AWAY {{ background: #4a1a2a; color: #f060a0; border: 1px solid #6a2a4a; }}
-        .prediction-badge.DRAW {{ background: #3a3a0a; color: #f0f060; border: 1px solid #5a5a2a; }}
-        
-        .confidence {{
-            font-size: 0.8em;
-            font-weight: 600;
-            margin-left: 8px;
-            opacity: 0.8;
-        }}
-        
-        .probabilities {{
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-        }}
-        
-        .prob-bar {{
-            flex: 1;
-            text-align: center;
-        }}
-        
-        .prob-bar .label {{
-            font-size: 0.8em;
-            color: #8890b0;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }}
-        
-        .prob-bar .value {{
-            font-size: 1.8em;
-            font-weight: 800;
-            margin-bottom: 6px;
-        }}
-        
-        .prob-bar.home .value {{ color: #60f0a0; }}
-        .prob-bar.draw .value {{ color: #f0e060; }}
-        .prob-bar.away .value {{ color: #f060a0; }}
-        
-        .bar-track {{
-            height: 8px;
-            background: #1e2445;
-            border-radius: 4px;
-            overflow: hidden;
-        }}
-        
-        .bar-fill {{
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.5s;
-        }}
-        
-        .bar-fill.home {{ background: linear-gradient(90deg, #30a050, #60f0a0); }}
-        .bar-fill.draw {{ background: linear-gradient(90deg, #909030, #f0e060); }}
-        .bar-fill.away {{ background: linear-gradient(90deg, #a03050, #f060a0); }}
-        
-        .stats-section {{
-            margin-bottom: 16px;
-        }}
-        
-        .stats-section h3 {{
-            font-size: 0.85em;
-            font-weight: 700;
-            color: #e09020;
-            padding: 12px 0 6px;
-            border-bottom: 1px solid #2a2f4a;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 12px;
-        }}
-        
-        .stats-two-col {{
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            gap: 0;
-            align-items: center;
-        }}
-        
-        .stats-col-header {{
-            padding: 8px 0;
-            font-weight: 700;
-            font-size: 1.1em;
-            text-align: center;
-            border-bottom: 2px solid #2a2f4a;
-        }}
-        
-        .stats-col-header.home {{ color: #60f0a0; border-color: #1a4a2a; }}
-        .stats-col-header.away {{ color: #f060a0; border-color: #4a1a2a; }}
-        
-        .stat-row {{
-            display: contents;
-        }}
-        
-        .stat-value-home {{
-            text-align: center;
-            font-weight: 600;
-            font-size: 1.1em;
-            color: #c0d0e0;
-            padding: 6px 0;
-        }}
-        
-        .stat-name-center {{
-            text-align: center;
-            color: #6a70a0;
-            font-size: 0.78em;
-            padding: 6px 12px;
-            min-width: 120px;
-        }}
-        
-        .stat-value-away {{
-            text-align: center;
-            font-weight: 600;
-            font-size: 1.1em;
-            color: #c0d0e0;
-            padding: 6px 0;
-        }}
-        
-        .narrative {{
-            background: #0d1030;
-            border-left: 3px solid #e09020;
-            padding: 14px 18px;
-            border-radius: 0 10px 10px 0;
-            color: #a0b0d0;
-            font-size: 0.9em;
-            line-height: 1.5;
-            margin-bottom: 16px;
-        }}
-        
-        .matchup-narrative {{
-            background: linear-gradient(135deg, #0d1030 0%, #111540 100%);
-            border: 1px solid #2a2f4a;
-            border-left: 4px solid #60a0f0;
-            padding: 16px 20px;
-            border-radius: 0 12px 12px 0;
-            margin-bottom: 16px;
-            font-size: 0.85em;
-            line-height: 1.8;
-            color: #b0c0e0;
-        }}
-        
-        .matchup-narrative strong {{
-            color: #80b0f0;
-        }}
-        
-        .narrative-line {{
-            padding: 3px 0;
-            padding-left: 6px;
-            border-bottom: 1px solid rgba(42,47,74,0.3);
-        }}
-        
-        .narrative-line:last-child {{
-            border-bottom: none;
-        }}
-        
-        .model-breakdown {{
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            align-items: center;
-        }}
-        
-        .model-chip {{
-            background: #1a1f3a;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 0.8em;
-            color: #8890b0;
-            border: 1px solid #2a2f4a;
-        }}
-        
-        .model-chip span {{
-            color: #e09020;
-            font-weight: 700;
-        }}
-        
-        .model-legend-toggle {{
-            background: none;
-            border: 1px solid #3a3f5a;
-            color: #6a70a0;
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-size: 0.75em;
-            cursor: pointer;
-            margin-left: 8px;
-        }}
-        
-        .model-legend-toggle:hover {{
-            color: #e09020;
-            border-color: #e09020;
-        }}
-        
-        .model-legend {{
-            display: none;
-            background: #0d1030;
-            border: 1px solid #2a2f4a;
-            border-radius: 10px;
-            padding: 14px 18px;
-            margin-top: 12px;
-            font-size: 0.8em;
-            color: #8890b0;
-            line-height: 1.6;
-        }}
-        
-        .model-legend.show {{
-            display: block;
-        }}
-        
-        .model-legend strong {{
-            color: #e0e0e0;
-        }}
-        
-        .model-legend .legend-elo {{ color: #60f0a0; }}
-        .model-legend .legend-stats {{ color: #f0c040; }}
-        .model-legend .legend-poisson {{ color: #60a0f0; }}
-        
-        .combinadas-section {{
-            background: linear-gradient(145deg, #151a35 0%, #111530 100%);
-            border-radius: 16px;
-            padding: 24px 30px;
-            margin-bottom: 24px;
-            border: 1px solid #2a2f4a;
-        }}
-        
-        .combinadas-section h2 {{
-            font-size: 1.3em;
-            background: linear-gradient(135deg, #f0c040, #e09020);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-            text-align: center;
-        }}
-        
-        .combi-row {{
-            display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
-        }}
-        
-        .combi-card {{
-            flex: 1;
-            background: #0f1430;
-            border-radius: 12px;
-            padding: 16px;
-            border: 1px solid #2a2f4a;
-            position: relative;
-            overflow: hidden;
-        }}
-        
-        .combi-card::before {{
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-        }}
-        
-        .combi-card.segura::before {{ background: linear-gradient(90deg, #30a050, #60f0a0); }}
-        .combi-card.media::before {{ background: linear-gradient(90deg, #e09020, #f0c040); }}
-        .combi-card.sonadora::before {{ background: linear-gradient(90deg, #c03060, #f060a0); }}
-        
-        .combi-card h3 {{
-            font-size: 1em;
-            margin-bottom: 4px;
-            text-align: center;
-        }}
-        
-        .combi-card.segura h3 {{ color: #60f0a0; }}
-        .combi-card.media h3 {{ color: #f0c040; }}
-        .combi-card.sonadora h3 {{ color: #f060a0; }}
-        
-        .combi-card .combi-tagline {{
-            font-size: 0.72em;
-            color: #6a70a0;
-            text-align: center;
-            margin-bottom: 12px;
-        }}
-        
-        .combi-stats {{
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 12px;
-            font-size: 0.8em;
-        }}
-        
-        .combi-stat {{
-            text-align: center;
-        }}
-        
-        .combi-stat .stat-num {{
-            font-size: 1.4em;
-            font-weight: 800;
-        }}
-        
-        .combi-card.segura .stat-num {{ color: #60f0a0; }}
-        .combi-card.media .stat-num {{ color: #f0c040; }}
-        .combi-card.sonadora .stat-num {{ color: #f060a0; }}
-        
-        .combi-stat .stat-label {{
-            color: #6a70a0;
-            font-size: 0.85em;
-            margin-top: 2px;
-        }}
-        
-        .combi-legs {{
-            font-size: 0.78em;
-            color: #a0b0d0;
-        }}
-        
-        .combi-leg {{
-            padding: 6px 0;
-            border-bottom: 1px solid #1a1f3a;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }}
-        
-        .combi-leg:last-child {{
-            border-bottom: none;
-        }}
-        
-        .combi-leg-num {{
-            background: #1e2445;
-            color: #8890b0;
-            width: 22px; height: 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8em;
-            font-weight: 700;
-            flex-shrink: 0;
-        }}
-        
-        .combi-payout {{
-            text-align: center;
-            margin-top: 12px;
-            padding-top: 10px;
-            border-top: 1px solid #1a1f3a;
-            font-size: 0.75em;
-            color: #7880a0;
-        }}
-        
-        .combi-payout strong {{
-            color: #e0e0e0;
-            font-size: 1.15em;
-        }}
-        
-        .footer {{
-            text-align: center;
-            padding: 30px;
-            color: #5a6080;
-            font-size: 0.8em;
-        }}
-        
-        .footer a {{
-            color: #e09020;
-            text-decoration: none;
-        }}
-        
-        .round-badge {{
-            background: #e09020;
-            color: #0a0e27;
-            padding: 3px 12px;
-            border-radius: 10px;
-            font-size: 0.75em;
-            font-weight: 700;
-            text-transform: uppercase;
-        }}
-        
-        .key-stats {{
-            font-size: 0.8em;
-            color: #7880a0;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }}
-        
-        .odds-section {{
-            background: #0d1030;
-            border-radius: 12px;
-            padding: 18px 20px;
-            margin-bottom: 20px;
-            border: 1px solid #2a2f4a;
-        }}
-        
-        .odds-section h3 {{
-            font-size: 0.8em;
-            font-weight: 700;
-            color: #f0c040;
-            margin-bottom: 14px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }}
-        
-        .odds-row {{
-            display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
-        }}
-        
-        .odds-label {{
-            width: 90px;
-            font-size: 0.75em;
-            color: #6a70a0;
-            font-weight: 600;
-            padding: 6px 0;
-            flex-shrink: 0;
-        }}
-        
-        .odds-cells {{
-            display: flex;
-            gap: 8px;
-            flex: 1;
-        }}
-        
-        .odds-cell {{
-            flex: 1;
-            text-align: center;
-            background: #101530;
-            border-radius: 8px;
-            padding: 6px 4px;
-            border: 1px solid #1e2450;
-            font-size: 0.85em;
-        }}
-        
-        .odds-cell .odd-value {{
-            font-weight: 800;
-            font-size: 1.05em;
-        }}
-        
-        .odds-cell .odd-edge {{
-            font-size: 0.72em;
-            margin-top: 2px;
-            font-weight: 600;
-        }}
-        
-        .odds-cell .odd-edge.value-strong {{ color: #60f0a0; }}
-        .odds-cell .odd-edge.value-mild, .odds-cell .odd-edge.value-flat {{ color: #8890b0; }}
-        .odds-cell .odd-edge.value-negative {{ color: #f06090; }}
-        
-        .odds-cell .odd-implied {{
-            font-size: 0.68em;
-            color: #5860a0;
-            margin-top: 1px;
-        }}
-        
-        .odds-source {{
-            font-size: 0.65em;
-            color: #4a5080;
-            text-align: right;
-            margin-top: 4px;
         }}
         
         /* ─── PESTAÑAS ─── */
@@ -977,7 +613,6 @@ def generate_web():
             padding: 4px;
             border: 1px solid #2a2f4a;
         }}
-        
         .tab-btn {{
             flex: 1;
             padding: 12px 20px;
@@ -991,25 +626,357 @@ def generate_web():
             transition: all 0.25s;
             font-family: inherit;
         }}
-        
-        .tab-btn:hover {{
-            color: #a0a8c0;
-            background: #151a35;
-        }}
-        
+        .tab-btn:hover {{ color: #a0a8c0; background: #151a35; }}
         .tab-btn.active {{
             background: linear-gradient(135deg, #1a2f50, #152040);
             color: #e0e0e0;
             box-shadow: 0 2px 12px rgba(0,0,0,0.3);
         }}
+        .tab-panel {{ display: none; }}
+        .tab-panel.active {{ display: block; }}
         
-        .tab-panel {{
+        /* ─── MATCH CARD ─── */
+        .match-card {{
+            background: linear-gradient(145deg, #151a35 0%, #111530 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 24px;
+            border: 1px solid #2a2f4a;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }}
+        .match-card:hover {{
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }}
+        .match-header {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 20px;
+        }}
+        .match-time {{
+            background: #1e2445;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #a0a8c0;
+            font-weight: 600;
+            white-space: nowrap;
+        }}
+        .teams {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex: 1;
+        }}
+        .team {{
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }}
+        .vs {{ color: #5a6080; font-size: 1em; font-weight: 400; }}
+        .prediction-badge {{
+            padding: 8px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }}
+        .prediction-badge.HOME {{ background: #1a4a2a; color: #60f0a0; border: 1px solid #2a6a3a; }}
+        .prediction-badge.AWAY {{ background: #4a1a2a; color: #f060a0; border: 1px solid #6a2a4a; }}
+        .prediction-badge.DRAW {{ background: #3a3a0a; color: #f0f060; border: 1px solid #5a5a2a; }}
+        .confidence {{
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 8px;
+            opacity: 0.8;
+        }}
+        
+        /* ─── BARRAS DE PROBABILIDAD ─── */
+        .probabilities {{ display: flex; gap: 12px; margin-bottom: 24px; }}
+        .prob-bar {{ flex: 1; text-align: center; }}
+        .prob-bar .label {{ font-size: 0.8em; color: #8890b0; margin-bottom: 6px; font-weight: 500; }}
+        .prob-bar .value {{ font-size: 1.8em; font-weight: 800; margin-bottom: 6px; }}
+        .prob-bar.home .value {{ color: #60f0a0; }}
+        .prob-bar.draw .value {{ color: #f0e060; }}
+        .prob-bar.away .value {{ color: #f060a0; }}
+        .bar-track {{
+            height: 8px;
+            background: #1e2445;
+            border-radius: 4px;
+            overflow: hidden;
+        }}
+        .bar-fill {{ height: 100%; border-radius: 4px; transition: width 0.5s; }}
+        .bar-fill.home {{ background: linear-gradient(90deg, #30a050, #60f0a0); }}
+        .bar-fill.draw {{ background: linear-gradient(90deg, #909030, #f0e060); }}
+        .bar-fill.away {{ background: linear-gradient(90deg, #a03050, #f060a0); }}
+        
+        /* ─── TABLA COMPARATIVA CUOTAS ─── */
+        .odds-section {{
+            background: #0d1030;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            border: 1px solid #2a2f4a;
+        }}
+        .odds-section h3 {{
+            font-size: 0.78em;
+            font-weight: 700;
+            color: #f0c040;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }}
+        .odds-row {{
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }}
+        .odds-label {{
+            width: 90px;
+            font-size: 0.72em;
+            color: #6a70a0;
+            font-weight: 600;
+            padding: 8px 0;
+            flex-shrink: 0;
+        }}
+        .odds-cells {{ display: flex; gap: 8px; flex: 1; }}
+        .odds-cell {{
+            flex: 1;
+            text-align: center;
+            background: #101530;
+            border-radius: 8px;
+            padding: 8px 6px;
+            border: 1px solid #1e2450;
+        }}
+        .odds-cell .odd-value {{ font-weight: 800; font-size: 1em; }}
+        .odds-cell .odd-edge {{ font-size: 0.7em; margin-top: 1px; font-weight: 600; }}
+        .odds-cell .odd-edge.value-strong {{ color: #60f0a0; }}
+        .odds-cell .odd-edge.value-mild {{ color: #f0c040; }}
+        .odds-cell .odd-edge.value-flat {{ color: #8890b0; }}
+        .odds-cell .odd-edge.value-negative {{ color: #f06090; }}
+        .odds-cell .odd-implied {{ font-size: 0.65em; color: #5860a0; margin-top: 1px; }}
+        .odds-cell .odd-source-name {{ font-size: 0.6em; color: #4a5080; margin-top: 1px; }}
+        .odds-source {{
+            font-size: 0.62em;
+            color: #4a5080;
+            text-align: right;
+            margin-top: 6px;
+        }}
+        
+        /* ─── ESTADÍSTICAS ─── */
+        .stats-section {{ margin-bottom: 16px; }}
+        .stats-section h3 {{
+            font-size: 0.85em;
+            font-weight: 700;
+            color: #e09020;
+            padding: 12px 0 6px;
+            border-bottom: 1px solid #2a2f4a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }}
+        .stats-two-col {{
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 0;
+            align-items: center;
+        }}
+        .stats-col-header {{
+            padding: 8px 0;
+            font-weight: 700;
+            font-size: 1.1em;
+            text-align: center;
+            border-bottom: 2px solid #2a2f4a;
+        }}
+        .stats-col-header.home {{ color: #60f0a0; border-color: #1a4a2a; }}
+        .stats-col-header.away {{ color: #f060a0; border-color: #4a1a2a; }}
+        .stat-value-home {{
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #c0d0e0;
+            padding: 6px 0;
+        }}
+        .stat-name-center {{
+            text-align: center;
+            color: #6a70a0;
+            font-size: 0.78em;
+            padding: 6px 12px;
+            min-width: 120px;
+        }}
+        .stat-value-away {{
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #c0d0e0;
+            padding: 6px 0;
+        }}
+        
+        /* ─── NARRATIVA ─── */
+        .narrative {{
+            background: #0d1030;
+            border-left: 3px solid #e09020;
+            padding: 14px 18px;
+            border-radius: 0 10px 10px 0;
+            color: #a0b0d0;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }}
+        .matchup-narrative {{
+            background: linear-gradient(135deg, #0d1030 0%, #111540 100%);
+            border: 1px solid #2a2f4a;
+            border-left: 4px solid #60a0f0;
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 16px;
+            font-size: 0.85em;
+            line-height: 1.8;
+            color: #b0c0e0;
+        }}
+        .matchup-narrative strong {{ color: #80b0f0; }}
+        
+        /* ─── MODEL BREAKDOWN ─── */
+        .model-breakdown {{
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }}
+        .model-chip {{
+            background: #1a1f3a;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            color: #8890b0;
+            border: 1px solid #2a2f4a;
+        }}
+        .model-chip span {{ color: #e09020; font-weight: 700; }}
+        .model-legend-toggle {{
+            background: none;
+            border: 1px solid #3a3f5a;
+            color: #6a70a0;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.75em;
+            cursor: pointer;
+            margin-left: 8px;
+        }}
+        .model-legend-toggle:hover {{ color: #e09020; border-color: #e09020; }}
+        .model-legend {{
             display: none;
+            background: #0d1030;
+            border: 1px solid #2a2f4a;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 12px;
+            font-size: 0.8em;
+            color: #8890b0;
+            line-height: 1.6;
         }}
+        .model-legend.show {{ display: block; }}
+        .model-legend strong {{ color: #e0e0e0; }}
+        .model-legend .legend-elo {{ color: #60f0a0; }}
+        .model-legend .legend-stats {{ color: #f0c040; }}
+        .model-legend .legend-poisson {{ color: #60a0f0; }}
         
-        .tab-panel.active {{
-            display: block;
+        /* ─── COMBINADAS ─── */
+        .combinadas-section {{
+            background: linear-gradient(145deg, #151a35 0%, #111530 100%);
+            border-radius: 16px;
+            padding: 24px 30px;
+            margin-bottom: 24px;
+            border: 1px solid #2a2f4a;
         }}
+        .combinadas-section h2 {{
+            font-size: 1.3em;
+            background: linear-gradient(135deg, #f0c040, #e09020);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-align: center;
+        }}
+        .combi-row {{ display: flex; gap: 16px; }}
+        .combi-card {{
+            flex: 1;
+            background: #0f1430;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #2a2f4a;
+            position: relative;
+            overflow: hidden;
+        }}
+        .combi-card::before {{
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+        }}
+        .combi-card.segura::before {{ background: linear-gradient(90deg, #30a050, #60f0a0); }}
+        .combi-card.media::before {{ background: linear-gradient(90deg, #e09020, #f0c040); }}
+        .combi-card.sonadora::before {{ background: linear-gradient(90deg, #c03060, #f060a0); }}
+        .combi-card h3 {{ font-size: 1em; margin-bottom: 4px; text-align: center; }}
+        .combi-card.segura h3 {{ color: #60f0a0; }}
+        .combi-card.media h3 {{ color: #f0c040; }}
+        .combi-card.sonadora h3 {{ color: #f060a0; }}
+        .combi-card.volatil {{ border-color: #e74c3c; }}
+        .combi-card.volatil::before {{ background: linear-gradient(90deg, #e74c3c, #f39c12); }}
+        .combi-card.volatil h3 {{ color: #e74c3c; }}
+        .combi-card .combi-tagline {{
+            font-size: 0.72em;
+            color: #6a70a0;
+            text-align: center;
+            margin-bottom: 12px;
+        }}
+        .combi-stats {{
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 12px;
+            font-size: 0.8em;
+        }}
+        .combi-stat {{ text-align: center; }}
+        .combi-stat .stat-num {{ font-size: 1.4em; font-weight: 800; }}
+        .combi-card.segura .stat-num {{ color: #60f0a0; }}
+        .combi-card.media .stat-num {{ color: #f0c040; }}
+        .combi-card.sonadora .stat-num {{ color: #f060a0; }}
+        .combi-card.volatil .stat-num {{ color: #e74c3c; }}
+        .combi-stat .stat-label {{ color: #6a70a0; font-size: 0.85em; margin-top: 2px; }}
+        .combi-legs {{ font-size: 0.78em; color: #a0b0d0; }}
+        .combi-leg {{
+            padding: 6px 0;
+            border-bottom: 1px solid #1a1f3a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+        .combi-leg:last-child {{ border-bottom: none; }}
+        .combi-leg-num {{
+            background: #1e2445;
+            color: #8890b0;
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: 700;
+            flex-shrink: 0;
+        }}
+        .combi-payout {{
+            text-align: center;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid #1a1f3a;
+            font-size: 0.75em;
+            color: #7880a0;
+        }}
+        .combi-payout strong {{ color: #e0e0e0; font-size: 1.15em; }}
         
         /* ─── VALUE BETS ─── */
         .value-bets-intro {{
@@ -1018,12 +985,7 @@ def generate_web():
             margin-bottom: 20px;
             font-size: 0.9em;
         }}
-        
-        .value-bets-grid {{
-            display: grid;
-            gap: 16px;
-        }}
-        
+        .value-bets-grid {{ display: grid; gap: 16px; }}
         .value-bet-card {{
             background: linear-gradient(145deg, #151a35 0%, #111530 100%);
             border-radius: 12px;
@@ -1033,24 +995,18 @@ def generate_web():
             position: relative;
             overflow: hidden;
         }}
-        
-        .value-bet-card:hover {{
-            transform: translateY(-2px);
-        }}
-        
+        .value-bet-card:hover {{ transform: translateY(-2px); }}
         .value-bet-card::before {{
             content: '';
             position: absolute;
             left: 0; top: 0; bottom: 0;
             width: 4px;
         }}
-        
         .value-bet-card.edge-strong::before {{ background: #60f0a0; }}
         .value-bet-card.edge-mild::before {{ background: #f0c040; }}
         .value-bet-card.edge-flat::before {{ background: #8890b0; }}
         .value-bet-card.edge-negative::before {{ background: #f06090; }}
         .value-bet-card.no-odds::before {{ background: #606070; }}
-        
         .value-bet-header {{
             display: flex;
             justify-content: space-between;
@@ -1059,13 +1015,7 @@ def generate_web():
             flex-wrap: wrap;
             gap: 8px;
         }}
-        
-        .value-bet-match {{
-            font-weight: 700;
-            font-size: 1.05em;
-            color: #e0e0e0;
-        }}
-        
+        .value-bet-match {{ font-weight: 700; font-size: 1.05em; color: #e0e0e0; }}
         .value-bet-market {{
             background: #1a1f3a;
             padding: 4px 12px;
@@ -1074,14 +1024,12 @@ def generate_web():
             font-weight: 600;
             color: #e09020;
         }}
-        
         .value-bet-body {{
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
             align-items: stretch;
         }}
-        
         .value-bet-stat {{
             flex: 1;
             min-width: 100px;
@@ -1090,27 +1038,10 @@ def generate_web():
             padding: 10px 14px;
             text-align: center;
         }}
-        
-        .value-bet-stat .stat-num {{
-            font-size: 1.3em;
-            font-weight: 800;
-            color: #e0e0e0;
-        }}
-        
-        .value-bet-stat .stat-label {{
-            font-size: 0.7em;
-            color: #6a70a0;
-            margin-top: 3px;
-        }}
-        
-        .value-bet-stat.highlight {{
-            border: 1px solid #2a4a3a;
-        }}
-        
-        .value-bet-stat.highlight .stat-num {{
-            color: #60f0a0;
-        }}
-        
+        .value-bet-stat .stat-num {{ font-size: 1.3em; font-weight: 800; color: #e0e0e0; }}
+        .value-bet-stat .stat-label {{ font-size: 0.7em; color: #6a70a0; margin-top: 3px; }}
+        .value-bet-stat.highlight {{ border: 1px solid #2a4a3a; }}
+        .value-bet-stat.highlight .stat-num {{ color: #60f0a0; }}
         .value-bet-verdict {{
             flex: 1.5;
             min-width: 200px;
@@ -1123,23 +1054,13 @@ def generate_web():
             align-items: center;
             gap: 6px;
         }}
-        
-        .value-bet-verdict .edge-badge {{
-            font-size: 1.6em;
-            font-weight: 800;
-        }}
-        
-        .value-bet-verdict .edge-label {{
-            font-size: 0.7em;
-            color: #6a70a0;
-        }}
-        
+        .value-bet-verdict .edge-badge {{ font-size: 1.6em; font-weight: 800; }}
+        .value-bet-verdict .edge-label {{ font-size: 0.7em; color: #6a70a0; }}
         .edge-strong .edge-badge {{ color: #60f0a0; }}
         .edge-mild .edge-badge {{ color: #f0c040; }}
         .edge-flat .edge-badge {{ color: #8890b0; }}
         .edge-negative .edge-badge {{ color: #f06090; }}
         .no-odds .edge-badge {{ color: #9090b0; }}
-        
         .value-bet-context {{
             margin-top: 10px;
             padding-top: 10px;
@@ -1150,13 +1071,7 @@ def generate_web():
             flex-wrap: wrap;
             gap: 12px;
         }}
-        
-        .value-bet-context span {{
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }}
-        
+        .value-bet-context span {{ display: inline-flex; align-items: center; gap: 4px; }}
         .no-value-bets {{
             text-align: center;
             padding: 40px;
@@ -1170,9 +1085,7 @@ def generate_web():
             padding: 20px;
             color: #a0a8c0;
             font-size: 1.1em;
-            margin-bottom: 20px;
         }}
-        
         .comparison-match {{
             background: #111636;
             border: 1px solid #2a2f4a;
@@ -1180,7 +1093,6 @@ def generate_web():
             padding: 24px;
             margin-bottom: 24px;
         }}
-        
         .comparison-match-header {{
             display: flex;
             justify-content: space-between;
@@ -1189,24 +1101,9 @@ def generate_web():
             padding-bottom: 12px;
             border-bottom: 1px solid #1a1f3a;
         }}
-        
-        .comparison-match-name {{
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #f0c040;
-        }}
-        
-        .comparison-avg-acc {{
-            font-size: 1.1em;
-            font-weight: bold;
-        }}
-        
-        .comparison-grid {{
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }}
-        
+        .comparison-match-name {{ font-size: 1.2em; font-weight: bold; color: #f0c040; }}
+        .comparison-avg-acc {{ font-size: 1.1em; font-weight: bold; }}
+        .comparison-grid {{ display: flex; flex-direction: column; gap: 12px; }}
         .comparison-row {{
             display: flex;
             align-items: center;
@@ -1216,13 +1113,11 @@ def generate_web():
             border-radius: 10px;
             flex-wrap: wrap;
         }}
-        
         .comparison-stat-name {{
             min-width: 140px;
             color: #c0c8e0;
             font-weight: 600;
         }}
-        
         .comparison-values {{
             display: flex;
             align-items: center;
@@ -1230,19 +1125,9 @@ def generate_web():
             min-width: 300px;
             font-size: 0.92em;
         }}
-        
-        .comp-pred {{
-            color: #60a0f0;
-        }}
-        
-        .comp-vs {{
-            color: #5a6080;
-        }}
-        
-        .comp-real {{
-            color: #60f0a0;
-        }}
-        
+        .comp-pred {{ color: #60a0f0; }}
+        .comp-vs {{ color: #5a6080; }}
+        .comp-real {{ color: #60f0a0; }}
         .comp-diff {{
             margin-left: 8px;
             padding: 2px 8px;
@@ -1251,7 +1136,6 @@ def generate_web():
             background: #1a1f3a;
             color: #f0a060;
         }}
-        
         .comparison-bar-track {{
             flex: 1;
             min-width: 100px;
@@ -1260,18 +1144,36 @@ def generate_web():
             border-radius: 4px;
             overflow: hidden;
         }}
-        
-        .comparison-bar-fill {{
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }}
-        
+        .comparison-bar-fill {{ height: 100%; border-radius: 4px; transition: width 0.5s ease; }}
         .comparison-acc {{
             font-weight: bold;
             min-width: 60px;
             text-align: right;
             font-size: 0.92em;
+        }}
+        
+        /* ─── FOOTER ─── */
+        .footer {{
+            text-align: center;
+            padding: 30px;
+            color: #5a6080;
+            font-size: 0.8em;
+        }}
+        .footer a {{ color: #e09020; text-decoration: none; }}
+        
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {{
+            .match-header {{ flex-wrap: wrap; }}
+            .teams {{ order: 3; width: 100%; }}
+            .match-time, .prediction-badge {{ font-size: 0.75em; }}
+            .prob-bar .value {{ font-size: 1.3em; }}
+            .combi-row {{ flex-direction: column; }}
+            .value-bet-body {{ flex-direction: column; }}
+            .odds-row {{ flex-direction: column; gap: 4px; }}
+            .odds-label {{ width: 100%; text-align: center; padding: 4px 0; }}
+            .odds-cells {{ gap: 4px; }}
+            .odds-cell {{ padding: 6px 4px; }}
+            .odds-cell .odd-value {{ font-size: 0.85em; }}
         }}
     </style>
 </head>
@@ -1279,8 +1181,8 @@ def generate_web():
     <div class="container">
         <div class="header">
             <h1>🏆 Mundial 2026 — Octavos de Final</h1>
-            <div class="subtitle">Predicciones basadas en 72 partidos · 48 equipos · Estadísticas reales de Sofascore</div>
-            <div class="badge">📅 30 de junio de 2026 · 3 partidos</div>
+            <div class="subtitle">Predicciones basadas en 72 partidos · 48 equipos · Estadísticas reales de Sofascore + sportdb.dev</div>
+            <div class="badge">📅 1 de julio de 2026 · 3 partidos</div>
         </div>
         
         <!-- ─── PESTAÑAS ─── -->
@@ -1334,6 +1236,20 @@ def generate_web():
                 </div>
             </div>
             
+            <!-- ─── DATOS DEL PARTIDO (sportdb.dev) ─── -->
+"""         
+        sd = r.get('sportdb', {})
+        if sd.get('venue'):
+            venue_parts = [sd['venue']]
+            if sd.get('venue_city'):
+                venue_parts.append(f"({sd['venue_city']})")
+            if sd.get('capacity'):
+                venue_parts.append(f"· {sd['capacity']} esp.")
+            venue_str = ' '.join(venue_parts)
+            ref = sd.get('referee') or ''
+            html += f'            <div style="text-align:center;margin-bottom:16px;font-size:0.82em;color:#6a70a0;">🏟️ {venue_str}{" · 🧑‍⚖️ " + ref if ref else ""}</div>\n'
+        
+        html += f"""
             <div class="probabilities">
                 <div class="prob-bar home">
                     <div class="label">{display_name(r['home_team'])}</div>
@@ -1358,102 +1274,71 @@ def generate_web():
         b365 = r.get('odds_b365') or {}
         pinn = r.get('odds_pinnacle') or {}
         
-        if b365 or pinn:
+        # ─── COMPARATIVA UNIFICADA: Modelo vs OddsPapi vs sportdb.dev ───
+        so = r.get('sportdb_odds', {})
+        tiene_sportdb = so.get('sportdb_home', 0) > 0
+        
+        if b365 or pinn or tiene_sportdb:
             html += """            <div class="odds-section">
-                <h3>💰 CUOTAS REALES vs PREDICCIÓN</h3>
-                <div class="odds-row">
+                <h3>💰 COMPARATIVA CUOTAS: Modelo vs bet365 vs Pinnacle</h3>
+"""
+            # ── Fila 1: Modelo (%)
+            html += f"""                <div class="odds-row">
                     <div class="odds-label">Modelo</div>
                     <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">""" + str(p['home']) + """%</div>
-                            <div class="odd-implied">""" + display_name(r['home_team']) + """</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">""" + str(p['draw']) + """%</div>
-                            <div class="odd-implied">Empate</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">""" + str(p['away']) + """%</div>
-                            <div class="odd-implied">""" + display_name(r['away_team']) + """</div>
-                        </div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#60f0a0">{p['home']}%</div><div class="odd-implied">{display_name(r['home_team'])}</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f0e060">{p['draw']}%</div><div class="odd-implied">Empate</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f060a0">{p['away']}%</div><div class="odd-implied">{display_name(r['away_team'])}</div></div>
                     </div>
                 </div>
 """
-        
-        # bet365 row
-        if b365:
-            h_odd = b365.get('home', 0)
-            d_odd = b365.get('draw', 0)
-            a_odd = b365.get('away', 0)
-            he = value_edge(p['home'], h_odd)
-            de = value_edge(p['draw'], d_odd)
-            ae = value_edge(p['away'], a_odd)
-            hs, hc = value_signal(he)
-            ds, dc = value_signal(de)
-            as_, ac = value_signal(ae)
-            
-            html += f"""                <div class="odds-row">
-                    <div class="odds-label" style="color:#e09020">bet365</div>
+            # ── Fila 2: bet365 (solo OddsPapi) ──
+            if b365:
+                h_odd = b365.get('home', 0)
+                d_odd = b365.get('draw', 0)
+                a_odd = b365.get('away', 0)
+                he = value_edge(p['home'], h_odd)
+                de = value_edge(p['draw'], d_odd)
+                ae = value_edge(p['away'], a_odd)
+                hs, hc = value_signal(he)
+                ds, dc = value_signal(de)
+                as_, ac = value_signal(ae)
+                html += f"""                <div class="odds-row">
+                    <div class="odds-label" style="color:#00a650">bet365</div>
                     <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">{h_odd}</div>
-                            <div class="odd-edge {hc}">{hs} {he:+}%</div>
-                            <div class="odd-implied">impl. {implied_prob(h_odd)}%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">{d_odd}</div>
-                            <div class="odd-edge {dc}">{ds} {de:+}%</div>
-                            <div class="odd-implied">impl. {implied_prob(d_odd)}%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">{a_odd}</div>
-                            <div class="odd-edge {ac}">{as_} {ae:+}%</div>
-                            <div class="odd-implied">impl. {implied_prob(a_odd)}%</div>
-                        </div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#60f0a0">{h_odd}</div><div class="odd-edge {hc}">{hs} {he:+}%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f0e060">{d_odd}</div><div class="odd-edge {dc}">{ds} {de:+}%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f060a0">{a_odd}</div><div class="odd-edge {ac}">{as_} {ae:+}%</div></div>
                     </div>
                 </div>
 """
-        
-        # Pinnacle row
-        if pinn:
-            ph_odd = pinn.get('home', 0)
-            pd_odd = pinn.get('draw', 0)
-            pa_odd = pinn.get('away', 0)
-            phe = value_edge(p['home'], ph_odd)
-            pde = value_edge(p['draw'], pd_odd)
-            pae = value_edge(p['away'], pa_odd)
-            phs, phc = value_signal(phe)
-            pds, pdc = value_signal(pde)
-            pas_, pac = value_signal(pae)
-            
-            html += f"""                <div class="odds-row">
+            # ── Fila 3: Pinnacle ──
+            if pinn:
+                ph_odd = pinn.get('home', 0)
+                pd_odd = pinn.get('draw', 0)
+                pa_odd = pinn.get('away', 0)
+                phe = value_edge(p['home'], ph_odd)
+                pde = value_edge(p['draw'], pd_odd)
+                pae = value_edge(p['away'], pa_odd)
+                phs, phc = value_signal(phe)
+                pds, pdc = value_signal(pde)
+                pas_, pac = value_signal(pae)
+                html += f"""                <div class="odds-row">
                     <div class="odds-label" style="color:#60a0f0">Pinnacle</div>
                     <div class="odds-cells">
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#60f0a0">{ph_odd}</div>
-                            <div class="odd-edge {phc}">{phs} {phe:+}%</div>
-                            <div class="odd-implied">impl. {implied_prob(ph_odd)}%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f0e060">{pd_odd}</div>
-                            <div class="odd-edge {pdc}">{pds} {pde:+}%</div>
-                            <div class="odd-implied">impl. {implied_prob(pd_odd)}%</div>
-                        </div>
-                        <div class="odds-cell">
-                            <div class="odd-value" style="color:#f060a0">{pa_odd}</div>
-                            <div class="odd-edge {pac}">{pas_} {pae:+}%</div>
-                            <div class="odd-implied">impl. {implied_prob(pa_odd)}%</div>
-                        </div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#60f0a0">{ph_odd}</div><div class="odd-edge {phc}">{phs} {phe:+}%</div><div class="odd-implied">impl. {implied_prob(ph_odd)}%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f0e060">{pd_odd}</div><div class="odd-edge {pdc}">{pds} {pde:+}%</div><div class="odd-implied">impl. {implied_prob(pd_odd)}%</div></div>
+                        <div class="odds-cell"><div class="odd-value" style="color:#f060a0">{pa_odd}</div><div class="odd-edge {pac}">{pas_} {pae:+}%</div><div class="odd-implied">impl. {implied_prob(pa_odd)}%</div></div>
                     </div>
                 </div>
 """
-        
-        if b365:
-            html += '                <div class="odds-source">📡 Datos de OddsPapi · Actualizado ' + \
-                     (odds_cache.get(list(odds_cache.keys())[0], {}).get('updated', 'hoy') 
-                      if odds_cache else 'hoy') + '</div>\n'
-        
-        html += '            </div>\n\n'
+            
+            if b365:
+                html += '                <div class="odds-source">📡 OddsPapi · ' + \
+                         (odds_cache.get(list(odds_cache.keys())[0], {}).get('updated', 'hoy') 
+                          if odds_cache else 'hoy') + '</div>\n'
+            
+            html += '            </div>\n\n'
         
         html += f"""
             <div class="stats-section">
@@ -1497,7 +1382,10 @@ def generate_web():
         # Aplicar traducción de nombres al narrative
         for orig, disp in DISPLAY_NAMES.items():
             html = html.replace(orig, disp)
-        html += build_matchup_narrative(display_name(r['home_team']), display_name(r['away_team']), team_stats_narrative)
+        mm_narrative = build_matchup_narrative(r['home_team'], r['away_team'], team_stats_narrative)
+        for orig, disp in DISPLAY_NAMES.items():
+            mm_narrative = mm_narrative.replace(orig, disp)
+        html += mm_narrative
         html += f"""
             <div class="model-breakdown">
                 <div class="model-chip">Elo: <span>{r['model_breakdown']['elo']}% {display_name(r['home_team'])}</span></div>
@@ -1523,7 +1411,7 @@ def generate_web():
             <div class="combi-row">
                 <div class="combi-card segura">
                     <h3>🟢 SEGURA</h3>
-                    <div class="combi-tagline">Over 1.5 x2 + BTTS Sí England — todas con edge +7% o más</div>
+                    <div class="combi-tagline">{combinadas['segura']['desc']}</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
                             <div class="stat-num">{combinadas['segura']['prob']*100:.1f}%</div>
@@ -1546,7 +1434,7 @@ def generate_web():
                 </div>
                 <div class="combi-card media">
                     <h3>🟠 MEDIA</h3>
-                    <div class="combi-tagline">O2.5 Belgium + O1.5 USA + BTTS Sí England — edges +7% a +21%</div>
+                    <div class="combi-tagline">{combinadas['media']['desc']}</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
                             <div class="stat-num">{combinadas['media']['prob']*100:.1f}%</div>
@@ -1569,7 +1457,7 @@ def generate_web():
                 </div>
                 <div class="combi-card sonadora">
                     <h3>🔴 SOÑADORA</h3>
-                    <div class="combi-tagline">Gana Belgium + O2.5 USA + BTTS Sí England — edges +5% a +16%</div>
+                    <div class="combi-tagline">{combinadas['sonadora']['desc']}</div>
                     <div class="combi-stats">
                         <div class="combi-stat">
                             <div class="stat-num">{combinadas['sonadora']['prob']*100:.1f}%</div>
@@ -1589,6 +1477,29 @@ def generate_web():
     ev_son = combinadas['sonadora']['prob'] * combinadas['sonadora']['cuota'] * 100
     html += f"""                    </div>
                     <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~{10*combinadas['sonadora']['cuota']:.0f}€</strong> &nbsp; <span style="color:#2ecc71">EV +{ev_son-100:.1f}% 🟢</span></div>
+                </div>
+                <div class="combi-card volatil">
+                    <h3>🔥 VOLÁTIL</h3>
+                    <div class="combi-tagline">{combinadas['volatil']['desc']}</div>
+                    <div class="combi-stats">
+                        <div class="combi-stat">
+                            <div class="stat-num">{combinadas['volatil']['prob']*100:.1f}%</div>
+                            <div class="stat-label">Probabilidad</div>
+                        </div>
+                        <div class="combi-stat">
+                            <div class="stat-num">{combinadas['volatil']['cuota']:.2f}</div>
+                            <div class="stat-label">Cuota bet365</div>
+                        </div>
+                    </div>
+                    <div class="combi-legs">
+"""
+    for i, leg in enumerate(combinadas['volatil']['legs'], 1):
+        edge_sign = '+' if leg['edge'] >= 0 else ''
+        html += f'                        <div class="combi-leg"><span class="combi-leg-num">{i}</span> {leg["text"]} (@{leg["cuota"]:.2f} · P={leg["prob"]*100:.0f}% · edge {edge_sign}{leg["edge"]:.1f}%)</div>\n'
+    
+    ev_vol = combinadas['volatil']['prob'] * combinadas['volatil']['cuota'] * 100
+    html += f"""                    </div>
+                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~{10*combinadas['volatil']['cuota']:.0f}€</strong> &nbsp; <span style="color:#e74c3c">EV +{ev_vol-100:.1f}% 🔥 ¡APUESTA DE VALOR!</span></div>
                 </div>
             </div>
         </div>
