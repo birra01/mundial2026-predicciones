@@ -1,0 +1,470 @@
+[
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 3.25 goles",
+    "prob": 0.7077352669565491,
+    "cuota": 3.55,
+    "edge": 42.60451261114787,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 3.0 goles",
+    "prob": 0.7077352669565491,
+    "cuota": 3.3,
+    "edge": 40.470496392624604,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 2.25 goles",
+    "prob": 0.8800864906951626,
+    "cuota": 1.95,
+    "edge": 36.72659778746498,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 4.0 goles",
+    "prob": 0.4974667739954405,
+    "cuota": 7.0,
+    "edge": 35.46096311382976,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 4.25 goles",
+    "prob": 0.4974667739954405,
+    "cuota": 7.0,
+    "edge": 35.46096311382976,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 2.75 goles",
+    "prob": 0.7077352669565491,
+    "cuota": 2.5,
+    "edge": 30.77352669565491,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 3.75 goles",
+    "prob": 0.4974667739954405,
+    "cuota": 5.0,
+    "edge": 29.746677399544048,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 2.0 goles",
+    "prob": 0.8800864906951626,
+    "cuota": 1.63,
+    "edge": 26.658955817982523,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 2.5 goles",
+    "prob": 0.7077352669565491,
+    "cuota": 2.2,
+    "edge": 25.318981241109455,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 3.5 goles",
+    "prob": 0.4974667739954405,
+    "cuota": 4.0,
+    "edge": 24.746677399544048,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 3.25 goles",
+    "prob": 0.6304333316038996,
+    "cuota": 2.38,
+    "edge": 21.02652643770088,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 1.75 goles",
+    "prob": 0.8800864906951626,
+    "cuota": 1.48,
+    "edge": 20.4410815019487,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 4.25 goles",
+    "prob": 0.40859235606667754,
+    "cuota": 4.5,
+    "edge": 18.63701338444553,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 4.5 goles",
+    "prob": 0.305071102936026,
+    "cuota": 8.0,
+    "edge": 18.0071102936026,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 2.25 goles",
+    "prob": 0.8352096167151815,
+    "cuota": 1.5,
+    "edge": 16.85429500485148,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 1.25 goles",
+    "prob": 0.9742674872736401,
+    "cuota": 1.24,
+    "edge": 16.781587437041438,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 4.0 goles",
+    "prob": 0.40859235606667754,
+    "cuota": 4.15,
+    "edge": 16.76285006449908,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 3.0 goles",
+    "prob": 0.6304333316038996,
+    "cuota": 2.1,
+    "edge": 15.424285541342336,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 1.5 goles",
+    "prob": 0.8800864906951626,
+    "cuota": 1.36,
+    "edge": 14.479237304810383,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "1X2",
+    "pick": "Gana Austria",
+    "prob": 0.218,
+    "cuota": 11.0,
+    "edge": 12.709090909090909,
+    "book": "bet365"
+  },
+  {
+    "match": "Portugal vs Croatia",
+    "market": "O/U",
+    "pick": "Over 3.25 goles",
+    "prob": 0.5376667485693943,
+    "cuota": 2.42,
+    "edge": 12.444360807352652,
+    "book": "bet365"
+  },
+  {
+    "match": "Portugal vs Croatia",
+    "market": "O/U",
+    "pick": "Over 2.25 goles",
+    "prob": 0.7739807704460148,
+    "cuota": 1.53,
+    "edge": 12.038599920418477,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 3.75 goles",
+    "prob": 0.40859235606667754,
+    "cuota": 3.3,
+    "edge": 10.556205303637448,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 5.5 goles",
+    "prob": 0.1642374717205347,
+    "cuota": 17.0,
+    "edge": 10.541394230877,
+    "book": "bet365"
+  },
+  {
+    "match": "Portugal vs Croatia",
+    "market": "O/U",
+    "pick": "Over 4.25 goles",
+    "prob": 0.3147438545991157,
+    "cuota": 4.65,
+    "edge": 9.96900911582555,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 2.75 goles",
+    "prob": 0.6304333316038996,
+    "cuota": 1.88,
+    "edge": 9.851843798687824,
+    "book": "bet365"
+  },
+  {
+    "match": "Portugal vs Croatia",
+    "market": "O/U",
+    "pick": "Over 3.0 goles",
+    "prob": 0.5376667485693943,
+    "cuota": 2.2,
+    "edge": 8.312129402393978,
+    "book": "bet365"
+  },
+  {
+    "match": "Portugal vs Croatia",
+    "market": "O/U",
+    "pick": "Over 4.0 goles",
+    "prob": 0.3147438545991157,
+    "cuota": 4.25,
+    "edge": 7.944973695205686,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 1.25 goles",
+    "prob": 0.961225792168278,
+    "cuota": 1.13,
+    "edge": 7.627003995588851,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 1.0 goles",
+    "prob": 0.9742674872736401,
+    "cuota": 1.11,
+    "edge": 7.336658637273928,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 4.75 goles",
+    "prob": 0.22834656344268467,
+    "cuota": 6.25,
+    "edge": 6.834656344268467,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 2.0 goles",
+    "prob": 0.8352096167151815,
+    "cuota": 1.3,
+    "edge": 6.597884748441231,
+    "book": "bet365"
+  },
+  {
+    "match": "Portugal vs Croatia",
+    "market": "O/U",
+    "pick": "Over 1.25 goles",
+    "prob": 0.9409871463305521,
+    "cuota": 1.14,
+    "edge": 6.379416387441168,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "1X2",
+    "pick": "Gana Switzerland",
+    "prob": 0.555,
+    "cuota": 2.0,
+    "edge": 5.5,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 1.0 goles",
+    "prob": 0.961225792168278,
+    "cuota": 1.1,
+    "edge": 5.213488307736895,
+    "book": "bet365"
+  },
+  {
+    "match": "Portugal vs Croatia",
+    "market": "1X2",
+    "pick": "Gana Croatia",
+    "prob": 0.252,
+    "cuota": 5.0,
+    "edge": 5.199999999999999,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 6.5 goles",
+    "prob": 0.07832895667908502,
+    "cuota": 34.0,
+    "edge": 4.891719197320266,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 0.5 goles",
+    "prob": 0.9742674872736401,
+    "cuota": 1.08,
+    "edge": 4.834156134771433,
+    "book": "bet365"
+  },
+  {
+    "match": "Portugal vs Croatia",
+    "market": "O/U",
+    "pick": "Over 0.75 goles",
+    "prob": 0.9409871463305521,
+    "cuota": 1.12,
+    "edge": 4.813000347340932,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 3.5 goles",
+    "prob": 0.40859235606667754,
+    "cuota": 2.75,
+    "edge": 4.495599243031386,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 1.75 goles",
+    "prob": 0.8352096167151815,
+    "cuota": 1.25,
+    "edge": 3.520961671518151,
+    "book": "bet365"
+  },
+  {
+    "match": "Portugal vs Croatia",
+    "market": "O/U",
+    "pick": "Over 1.0 goles",
+    "prob": 0.9409871463305521,
+    "cuota": 1.1,
+    "edge": 3.189623723964303,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 2.5 goles",
+    "prob": 0.6304333316038996,
+    "cuota": 1.67,
+    "edge": 3.163093639431871,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "1X2",
+    "pick": "Gana Draw",
+    "prob": 0.222,
+    "cuota": 5.25,
+    "edge": 3.152380952380952,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 4.5 goles",
+    "prob": 0.22834656344268467,
+    "cuota": 5.0,
+    "edge": 2.834656344268467,
+    "book": "bet365"
+  },
+  {
+    "match": "Portugal vs Croatia",
+    "market": "O/U",
+    "pick": "Over 2.75 goles",
+    "prob": 0.5376667485693943,
+    "cuota": 1.95,
+    "edge": 2.484623574888147,
+    "book": "bet365"
+  },
+  {
+    "match": "Portugal vs Croatia",
+    "market": "O/U",
+    "pick": "Over 2.0 goles",
+    "prob": 0.7739807704460148,
+    "cuota": 1.33,
+    "edge": 2.2101071197894555,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 1.5 goles",
+    "prob": 0.8352096167151815,
+    "cuota": 1.22,
+    "edge": 1.5537485567640488,
+    "book": "bet365"
+  },
+  {
+    "match": "Switzerland vs Algeria",
+    "market": "O/U",
+    "pick": "Over 7.5 goles",
+    "prob": 0.03341107595741266,
+    "cuota": 51.0,
+    "edge": 1.380323282015776,
+    "book": "bet365"
+  },
+  {
+    "match": "Portugal vs Croatia",
+    "market": "O/U",
+    "pick": "Over 3.75 goles",
+    "prob": 0.3147438545991157,
+    "cuota": 3.3,
+    "edge": 1.1713551568812655,
+    "book": "bet365"
+  },
+  {
+    "match": "Spain vs Austria",
+    "market": "O/U",
+    "pick": "Over 5.5 goles",
+    "prob": 0.11118679823708932,
+    "cuota": 10.0,
+    "edge": 1.1186798237089324,
+    "book": "bet365"
+  },
+  {
+    "match": "Portugal vs Croatia",
+    "market": "O/U",
+    "pick": "Over 4.75 goles",
+    "prob": 0.15702590711514364,
+    "cuota": 6.6,
+    "edge": 0.5510755599992123,
+    "book": "bet365"
+  }
+]

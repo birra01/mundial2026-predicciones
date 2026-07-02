@@ -1,0 +1,94 @@
+{
+  "segura": [
+    {
+      "match": "Spain vs Austria",
+      "pick": "BTTS Sí",
+      "cuota": 2.2,
+      "prob": 0.5654955420984153,
+      "edge": 11.095008755296078
+    },
+    {
+      "match": "Portugal vs Croatia",
+      "pick": "Over 1.5 goles",
+      "cuota": 1.36,
+      "prob": 0.7739807704460148,
+      "edge": 3.8686652798955947
+    },
+    {
+      "match": "Switzerland vs Algeria",
+      "pick": "Over 1.5 goles",
+      "cuota": 1.36,
+      "prob": 0.8800864906951626,
+      "edge": 14.479237304810383
+    }
+  ],
+  "media": [
+    {
+      "match": "Spain vs Austria",
+      "pick": "Over 2.5 goles",
+      "cuota": 1.8,
+      "prob": 0.6304333316038996,
+      "edge": 7.487777604834399
+    },
+    {
+      "match": "Portugal vs Croatia",
+      "pick": "Over 1.5 goles",
+      "cuota": 1.36,
+      "prob": 0.7739807704460148,
+      "edge": 3.8686652798955947
+    },
+    {
+      "match": "Switzerland vs Algeria",
+      "pick": "Over 3.5 goles",
+      "cuota": 4.0,
+      "prob": 0.4974667739954405,
+      "edge": 24.746677399544048
+    }
+  ],
+  "sonadora": [
+    {
+      "match": "Spain vs Austria",
+      "pick": "Over 1.5 goles",
+      "cuota": 1.28,
+      "prob": 0.8352096167151815,
+      "edge": 5.395961671518151
+    },
+    {
+      "match": "Portugal vs Croatia",
+      "pick": "Over 2.5 goles",
+      "cuota": 2.1,
+      "prob": 0.5376667485693943,
+      "edge": 6.147627237891811
+    },
+    {
+      "match": "Switzerland vs Algeria",
+      "pick": "Over 4.5 goles",
+      "cuota": 8.0,
+      "prob": 0.305071102936026,
+      "edge": 18.0071102936026
+    }
+  ],
+  "volatil": [
+    {
+      "match": "Spain vs Austria",
+      "pick": "Over 3.5 goles",
+      "cuota": 3.2,
+      "prob": 0.40859235606667754,
+      "edge": 9.609235606667752
+    },
+    {
+      "match": "Portugal vs Croatia",
+      "pick": "Over 2.5 goles",
+      "cuota": 2.1,
+      "prob": 0.5376667485693943,
+      "edge": 6.147627237891811
+    },
+    {
+      "match": "Switzerland vs Algeria",
+      "pick": "Over 4.5 goles",
+      "cuota": 8.0,
+      "prob": 0.305071102936026,
+      "edge": 18.0071102936026
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "VOLATIL": {
+    "patas": [
+      {
+        "match": "Spain vs Austria",
+        "pick": "Gana Austria",
+        "cuota": 11.0,
+        "prob": 0.218,
+        "edge": 12.709090909090909
+      },
+      {
+        "match": "Portugal vs Croatia",
+        "pick": "Over 4.25 goles",
+        "cuota": 4.65,
+        "prob": 0.3147438545991157,
+        "edge": 9.96900911582555
+      },
+      {
+        "match": "Switzerland vs Algeria",
+        "pick": "Over 4.0 goles",
+        "cuota": 7.0,
+        "prob": 0.4974667739954405,
+        "edge": 35.46096311382976
+      }
+    ],
+    "prob": 0.03413326497614403,
+    "cuota": 358.05000000000007,
+    "ev": 12.221415524708373
+  }
+}
