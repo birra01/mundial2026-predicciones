@@ -274,9 +274,9 @@ def load_sportdb_details():
     """Carga los datos de sportdb.dev de los 3 partidos guardados localmente"""
     data_dir = Path(__file__).parent / "data"
     files = {
-        "England": "sportdb_England_vs_DRCongo.json",
-        "Belgium": "sportdb_Belgium_vs_Senegal.json",
-        "USA": "sportdb_USA_vs_Bosnia.json",
+        "Spain": "sportdb_Spain_vs_Austria.json",
+        "Portugal": "sportdb_Portugal_vs_Croatia.json",
+        "Switzerland": "sportdb_Switzerland_vs_Algeria.json",
     }
     result = {}
     for team_key, fname in files.items():
@@ -311,9 +311,9 @@ def get_sportdb_odds(match_key):
     """Extrae las cuotas bet365 (bookmakerId=16) de sportdb para un partido"""
     data_dir = Path(__file__).parent / "data"
     files = {
-        "England": "sportdb_England_vs_DRCongo.json",
-        "Belgium": "sportdb_Belgium_vs_Senegal.json",
-        "USA": "sportdb_USA_vs_Bosnia.json",
+        "Spain": "sportdb_Spain_vs_Austria.json",
+        "Portugal": "sportdb_Portugal_vs_Croatia.json",
+        "Switzerland": "sportdb_Switzerland_vs_Algeria.json",
     }
     fname = files.get(match_key)
     if not fname:
