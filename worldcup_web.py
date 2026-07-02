@@ -416,64 +416,57 @@ def get_sportdb_odds(match_key):
 
 
 def _build_value_bets_html():
-    """Genera el HTML de la sección Value Bets"""
-    # Cargar datos SOLO una vez
-    matches_data = load_all_matches()
-    odds_cache = load_odds_cache()
-    value_bets, team_stats = build_value_bets(matches_data, odds_cache)
-    
-    if not value_bets:
-        return '<div class="no-value-bets">🔍 No se encontraron value bets para los próximos partidos.<br><small>Las cuotas de bet365 no cubren suficientes mercados de córners/bookings aún.</small></div>'
-    
-    # ─── VALUE BETS DE GOLES, BTTS, 1X2 (cargados de data/vbs_bug_fixed.json) ───
-    # Estos vienen del análisis exhaustivo de 5 mercados cruzando motor + cuotas
+    """Genera el HTML de la sección Value Bets - SOLO análisis exhaustivo (5 mercados)"""
+    # Cargar el JSON del análisis exhaustivo (ya corregido con avg_stats_raw)
     all_vbs_path = Path(__file__).parent / "data" / "vbs_bug_fixed.json"
     extra_vbs = []
     if all_vbs_path.exists():
         with open(all_vbs_path) as f:
             extra_vbs = json.load(f)
-    
+
+    if not extra_vbs:
+        return '<div class="no-value-bets">🔍 No se encontraron value bets para los próximos partidos.<br><small>Genera primero el análisis exhaustivo con value_bets.py</small></div>'
+
     html = '<div class="value-bets-intro">🎯 Predicciones de eventos (goles, córners, tarjetas, tiros, BTTS, 1X2). Edge = diferencia entre la probabilidad del modelo y la implícita de la cuota. 🟢 EV+ es value bet real.</div>\n'
-    
-    # ─── Sección 1: VALUE BETS DE GOLES/BTTS/1X2 (análisis exhaustivo) ───
-    if extra_vbs:
-        html += '<h3 class="vb-section-title">📊 Value Bets — Análisis Exhaustivo (5 mercados)</h3>\n'
-        html += '<div class="value-bets-grid">\n'
-        # Ordenar por edge
-        extra_vbs_sorted = sorted(extra_vbs, key=lambda x: -x['edge'])
-        for vb in extra_vbs_sorted:
-            market = vb['market']
-            match = vb['match']
-            pick = vb['pick']
-            cuota = vb['cuota']
-            prob = vb['prob']
-            edge = vb['edge']
-            
-            # Icono por mercado
-            market_icons = {
-                'Goles': '⚽',
-                'BTTS': '🥅',
-                'Córners': '🏳️',
-                'Tarjetas': '🟨',
-                '1X2': '🏆',
-            }
-            icon = market_icons.get(market, '📊')
-            
-            # Clase por edge
-            if edge >= 15:
-                edge_class = 'edge-strong'
-                edge_icon = '🔥'
-            elif edge >= 5:
-                edge_class = 'edge-mild'
-                edge_icon = '🟢'
-            else:
-                edge_class = 'edge-flat'
-                edge_icon = '🟡'
-            
-            ev = prob * cuota * 100  # EV%
-            edge_sign = '+' if edge >= 0 else ''
-            
-            html += f'''        <div class="value-bet-card {edge_class}">
+
+    # ─── ÚNICA SECCIÓN: VALUE BETS EXHAUSTIVOS (5 mercados) ───
+    html += '<h3 class="vb-section-title">📊 Value Bets — Análisis Exhaustivo (5 mercados)</h3>\n'
+    html += '<div class="value-bets-grid">\n'
+    # Ordenar por edge descendente
+    extra_vbs_sorted = sorted(extra_vbs, key=lambda x: -x['edge'])
+    for vb in extra_vbs_sorted:
+        market = vb['market']
+        match = vb['match']
+        pick = vb['pick']
+        cuota = vb['cuota']
+        prob = vb['prob']
+        edge = vb['edge']
+
+        # Icono por mercado
+        market_icons = {
+            'Goles': '⚽',
+            'BTTS': '🥅',
+            'Córners': '🏳️',
+            'Tarjetas': '🟨',
+            '1X2': '🏆',
+        }
+        icon = market_icons.get(market, '📊')
+
+        # Clase por edge
+        if edge >= 15:
+            edge_class = 'edge-strong'
+            edge_icon = '🔥'
+        elif edge >= 5:
+            edge_class = 'edge-mild'
+            edge_icon = '🟢'
+        else:
+            edge_class = 'edge-flat'
+            edge_icon = '🟡'
+
+        ev = prob * cuota * 100  # EV%
+        edge_sign = '+' if edge >= 0 else ''
+
+        html += f'''        <div class="value-bet-card {edge_class}">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ {match}</span>
                 <span class="value-bet-market">{icon} {market} — {pick}</span>
@@ -498,98 +491,6 @@ def _build_value_bets_html():
             </div>
         </div>
 '''
-        html += '</div>\n'
-    
-    # ─── Sección 2: VALUE BETS DE CÓRNERS/TARJETAS/TIROS (motor de predicciones) ───
-    html += '<h3 class="vb-section-title">🎯 Córners, Tarjetas, Tiros — Predicción del Motor</h3>\n'
-    html += '<div class="value-bets-grid">\n'
-    
-    for vb in value_bets:
-        # Traducir nombres a español para display
-        vb_home = display_name(vb['home'])
-        vb_away = display_name(vb['away'])
-        vb_match = f"{vb_home} vs {vb_away}"
-        
-        # ¿Tiene cuota? → render con edge. Sin cuota → solo predicción.
-        if vb['odd'] is None:
-            # Entrada sin cuota: mostrar predicción para que Kevin la evalúe luego
-            html += f'''        <div class="value-bet-card no-odds">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ {vb_match}</span>
-                <span class="value-bet-market">{vb['icon']} {vb['label']} Over {vb['line']:.1f}</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">{vb['prob_over']:.1f}%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">—</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-verdict no-odds">
-                    <div class="edge-badge">🔮 Pendiente</div>
-                    <div class="edge-label">Sin cuota — revisar manualmente</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: {vb['total_pred']:.1f} total ({vb['pred_home']:.1f} + {vb['pred_away']:.1f})</span>
-                <span>📈 Media {vb_home}: {vb['team_h_for']:.1f} a favor / {vb['team_h_against']:.1f} en contra</span>
-                <span>📉 Media {vb_away}: {vb['team_a_for']:.1f} a favor / {vb['team_a_against']:.1f} en contra</span>
-            </div>
-        </div>
-'''
-            continue
-        
-        # Entrada con cuota → render normal con edge
-        # Determinar clase de edge
-        if vb['edge_pct'] >= 5:
-            edge_class = 'edge-strong'
-            edge_icon = '🟢'
-        elif vb['edge_pct'] >= 2:
-            edge_class = 'edge-mild'
-            edge_icon = '🟡'
-        elif vb['edge_pct'] >= 0:
-            edge_class = 'edge-flat'
-            edge_icon = '⚪'
-        else:
-            edge_class = 'edge-negative'
-            edge_icon = '🔴'
-        
-        edge_sign = '+' if vb['edge_pct'] >= 0 else ''
-        ev_sign = '+' if vb['ev_pct'] >= 0 else ''
-        
-        html += f'''        <div class="value-bet-card {edge_class}">
-            <div class="value-bet-header">
-                <span class="value-bet-match">⚽ {vb_match}</span>
-                <span class="value-bet-market">{vb['icon']} {vb['label']} Over {vb['line']:.1f}</span>
-            </div>
-            <div class="value-bet-body">
-                <div class="value-bet-stat highlight">
-                    <div class="stat-num">{vb['prob_over']:.1f}%</div>
-                    <div class="stat-label">Prob. modelo</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">{vb['odd']}</div>
-                    <div class="stat-label">Cuota bet365</div>
-                </div>
-                <div class="value-bet-stat">
-                    <div class="stat-num">{vb['implied_pct']:.1f}%</div>
-                    <div class="stat-label">Implícita</div>
-                </div>
-                <div class="value-bet-verdict {edge_class}">
-                    <div class="edge-badge">{edge_icon} {edge_sign}{vb['edge_pct']:.1f}%</div>
-                    <div class="edge-label">EDGE · EV {ev_sign}{vb['ev_pct']:.1f}%</div>
-                </div>
-            </div>
-            <div class="value-bet-context">
-                <span>📊 Pred: {vb['total_pred']:.1f} total ({vb['pred_home']:.1f} + {vb['pred_away']:.1f})</span>
-                <span>📈 Media {vb_home}: {vb['team_h_for']:.1f} a favor / {vb['team_h_against']:.1f} en contra</span>
-                <span>📉 Media {vb_away}: {vb['team_a_for']:.1f} a favor / {vb['team_a_against']:.1f} en contra</span>
-            </div>
-        </div>
-'''
-    
     html += '</div>\n'
     return html
 

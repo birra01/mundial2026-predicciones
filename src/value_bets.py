@@ -78,10 +78,11 @@ def compute_team_averages(matches):
 
 
 def adjusted_prediction(team_stats, home_team, away_team, stat_key):
-    """Predice eventos esperados para un partido con ajuste por rival.
-    Fórmula: (media_a_favor_A * media_en_contra_B) / media_liga_en_contra
-    
-    Esto ajusta: si B permite MÁS córners que la media de la liga, A tendrá más córners.
+    """Predice eventos esperados para un partido.
+
+    Para stats de FUERZA (goles, xG, posesión, pases): usa ratio ajustado por rival.
+    Para stats ABSOLUTAS (córners, tarjetas, faltas, tiros): usa promedio simple,
+    no ratio ajustado. Esas stats no dependen de la fuerza del rival.
     """
     ht = team_stats.get(home_team, {})
     at = team_stats.get(away_team, {})
@@ -94,12 +95,19 @@ def adjusted_prediction(team_stats, home_team, away_team, stat_key):
     if h_fav + a_con < 0.5 or a_fav + h_con < 0.5:
         return 0, 0
 
-    # Media de la liga para este stat (lo que todos los equipos permiten)
+    # FIX: Stats absolutas (córners, tarjetas, faltas) no se ajustan por rival
+    # porque no representan fuerza del equipo, son eventos absolutos.
+    ABSOLUTE_STATS = ['cornerKicks', 'yellowCards', 'redCards', 'fouls',
+                      'fouledFinalThird', 'throwIns', 'totalShotsOnGoal',
+                      'shotsOnTarget', 'shotsOnGoal', 'shotsOffGoal']
+    if stat_key in ABSOLUTE_STATS:
+        return round(h_fav, 2), round(a_fav, 2)
+
+    # Stats de fuerza: ajustar por lo que permite el rival
     all_against = [t['against'].get(stat_key, 0) for t in team_stats.values()]
     all_against = [x for x in all_against if x > 0]
     league_against = sum(all_against) / len(all_against) if all_against else 1
 
-    # Predicción: media del equipo × ratio del rival vs liga
     ratio_a = a_con / league_against if league_against > 0 else 1
     ratio_b = h_con / league_against if league_against > 0 else 1
 
