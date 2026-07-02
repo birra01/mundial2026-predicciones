@@ -1,0 +1,106 @@
+{
+  "segura": [
+    {
+      "match": "Spain vs Austria",
+      "market": "Córners",
+      "pick": "Over 9.5",
+      "cuota": 2.1,
+      "prob": 0.9222505886023251,
+      "edge": 44.60601124118489
+    },
+    {
+      "match": "Portugal vs Croatia",
+      "market": "Córners",
+      "pick": "Over 8.5",
+      "cuota": 1.9,
+      "prob": 0.7653647012390811,
+      "edge": 23.904891176539678
+    },
+    {
+      "match": "Switzerland vs Algeria",
+      "market": "Goles",
+      "pick": "Over 1.5",
+      "cuota": 1.36,
+      "prob": 0.8800864906951626,
+      "edge": 14.479237304810383
+    }
+  ],
+  "media": [
+    {
+      "match": "Spain vs Austria",
+      "market": "Córners",
+      "pick": "Over 9.5",
+      "cuota": 2.1,
+      "prob": 0.9222505886023251,
+      "edge": 44.60601124118489
+    },
+    {
+      "match": "Portugal vs Croatia",
+      "market": "Tarjetas",
+      "pick": "Over 3.5",
+      "cuota": 2.2,
+      "prob": 0.6441138227807577,
+      "edge": 18.95683682353031
+    },
+    {
+      "match": "Switzerland vs Algeria",
+      "market": "Córners",
+      "pick": "Over 9.5",
+      "cuota": 2.1,
+      "prob": 0.7589950730128329,
+      "edge": 28.280459682235673
+    }
+  ],
+  "sonadora": [
+    {
+      "match": "Spain vs Austria",
+      "market": "Córners",
+      "pick": "Over 9.5",
+      "cuota": 2.1,
+      "prob": 0.9222505886023251,
+      "edge": 44.60601124118489
+    },
+    {
+      "match": "Portugal vs Croatia",
+      "market": "Tarjetas",
+      "pick": "Over 3.5",
+      "cuota": 2.2,
+      "prob": 0.6441138227807577,
+      "edge": 18.95683682353031
+    },
+    {
+      "match": "Switzerland vs Algeria",
+      "market": "Goles",
+      "pick": "Over 3.5",
+      "cuota": 4.0,
+      "prob": 0.4974667739954405,
+      "edge": 24.746677399544048
+    }
+  ],
+  "volatil": [
+    {
+      "match": "Spain vs Austria",
+      "market": "Córners",
+      "pick": "Over 9.5",
+      "cuota": 2.1,
+      "prob": 0.9222505886023251,
+      "edge": 44.60601124118489
+    },
+    {
+      "match": "Portugal vs Croatia",
+      "market": "Tarjetas",
+      "pick": "Over 3.5",
+      "cuota": 2.2,
+      "prob": 0.6441138227807577,
+      "edge": 18.95683682353031
+    },
+    {
+      "match": "Switzerland vs Algeria",
+      "market": "Goles",
+      "pick": "Over 4.5",
+      "cuota": 8.0,
+      "prob": 0.305071102936026,
+      "edge": 18.0071102936026
+    }
+  ]
+}
