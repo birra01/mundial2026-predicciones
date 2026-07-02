@@ -1318,7 +1318,7 @@ def generate_web():
         <div class="header">
             <h1>🏆 Mundial 2026 — Octavos de Final</h1>
             <div class="subtitle">Predicciones basadas en 72 partidos · 48 equipos · Estadísticas reales de Sofascore + sportdb.dev</div>
-            <div class="badge">📅 1 de julio de 2026 · 3 partidos</div>
+            <div class="badge">📅 2 de julio de 2026 · 3 partidos</div>
         </div>
         
         <!-- ─── PESTAÑAS ─── -->
