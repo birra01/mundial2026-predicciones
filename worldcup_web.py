@@ -1512,6 +1512,9 @@ def generate_web():
         <div id="tab-comparativa" class="tab-panel">
             <div class="comparison-section">
                 <h2>📈 COMPARATIVA: PREDICCIONES vs REALIDAD</h2>
+                <div style="background: linear-gradient(135deg, #3a2f1a 0%, #2a2010 100%); border: 1px solid #f0c040; border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; color: #f0c040; font-weight: 600;">
+                    ⚠️ COMPARATIVA DE LOS 3 PARTIDOS PASADOS (1 julio 2026): England 2-1 DR Congo, Belgium 3-2 Senegal (AET), USA 2-0 Bosnia & Herzegovina — Round of 32 ya disputados.
+                </div>
                 """ + comparison_html + """
             </div>
         </div><!-- /tab-comparativa -->
