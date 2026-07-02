@@ -137,11 +137,11 @@ def build_value_bets(matches_data, odds_cache):
     team_stats = compute_team_averages(matches_data)
     value_bets = []
 
-    # Partidos de hoy (1 julio 2026)
+    # Partidos de hoy (2 julio 2026)
     today_matches = [
-        ("England", "DR Congo"),
-        ("Belgium", "Senegal"),
-        ("USA", "Bosnia & Herzegovina"),
+        ("Spain", "Austria"),
+        ("Portugal", "Croatia"),
+        ("Switzerland", "Algeria"),
     ]
 
     for home_team, away_team in today_matches:
@@ -150,6 +150,7 @@ def build_value_bets(matches_data, odds_cache):
             "côte d'ivoire": "ivory coast",
             "dr congo": "congo dr",
             "bosnia & herzegovina": "bosnia and herzegovina",
+            "bosnia and herzegovina": "bosnia & herzegovina",
         }
         
         # Buscar cuotas en caché
