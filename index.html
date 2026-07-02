@@ -428,6 +428,14 @@
             margin-bottom: 20px;
             font-size: 0.9em;
         }
+        .vb-section-title {
+            color: #f0c040;
+            font-size: 1.3em;
+            font-weight: 700;
+            margin: 28px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #2a2f4a;
+        }
         .value-bets-grid { display: grid; gap: 16px; }
         .value-bet-card {
             background: linear-gradient(145deg, #151a35 0%, #111530 100%);
@@ -1098,7 +1106,587 @@
         </div><!-- /tab-combinadas -->
         
         <div id="tab-valuebets" class="tab-panel">
-<div class="value-bets-intro">🎯 Predicciones de eventos (córners, tarjetas, tiros...). Las que tienen cuota bet365 muestran edge; las marcadas 🔮 Pendiente salen sin cuota para que las revises manualmente</div>
+<div class="value-bets-intro">🎯 Predicciones de eventos (goles, córners, tarjetas, tiros, BTTS, 1X2). Edge = diferencia entre la probabilidad del modelo y la implícita de la cuota. 🟢 EV+ es value bet real.</div>
+<h3 class="vb-section-title">📊 Value Bets — Análisis Exhaustivo (5 mercados)</h3>
+<div class="value-bets-grid">
+        <div class="value-bet-card edge-strong">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Portugal vs Croatia</span>
+                <span class="value-bet-market">🏳️ Córners — Under 8.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">88%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.80</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">55.6%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-strong">
+                    <div class="edge-badge">🔥 +32.4%</div>
+                    <div class="edge-label">EDGE · EV +58%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-strong">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Switzerland vs Algeria</span>
+                <span class="value-bet-market">🟨 Tarjetas — Under 3.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">95%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.57</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">63.7%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-strong">
+                    <div class="edge-badge">🔥 +31.7%</div>
+                    <div class="edge-label">EDGE · EV +50%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-strong">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs Austria</span>
+                <span class="value-bet-market">🟨 Tarjetas — Under 3.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">89%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.72</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">58.1%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-strong">
+                    <div class="edge-badge">🔥 +30.4%</div>
+                    <div class="edge-label">EDGE · EV +52%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-strong">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Switzerland vs Algeria</span>
+                <span class="value-bet-market">⚽ Goles — Over 3.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">50%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">4.00</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">25.0%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-strong">
+                    <div class="edge-badge">🔥 +24.7%</div>
+                    <div class="edge-label">EDGE · EV +99%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-strong">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Portugal vs Croatia</span>
+                <span class="value-bet-market">🟨 Tarjetas — Under 3.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">86%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.61</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">62.1%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-strong">
+                    <div class="edge-badge">🔥 +23.6%</div>
+                    <div class="edge-label">EDGE · EV +38%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-strong">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Switzerland vs Algeria</span>
+                <span class="value-bet-market">⚽ Goles — Over 2.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">71%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">2.10</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">47.6%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-strong">
+                    <div class="edge-badge">🔥 +23.2%</div>
+                    <div class="edge-label">EDGE · EV +49%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-strong">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs Austria</span>
+                <span class="value-bet-market">🟨 Tarjetas — Under 2.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">72%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">2.00</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">50.0%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-strong">
+                    <div class="edge-badge">🔥 +22.2%</div>
+                    <div class="edge-label">EDGE · EV +44%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-strong">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Switzerland vs Algeria</span>
+                <span class="value-bet-market">⚽ Goles — Over 4.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">31%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">8.00</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">12.5%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-strong">
+                    <div class="edge-badge">🔥 +18.0%</div>
+                    <div class="edge-label">EDGE · EV +144%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-mild">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Switzerland vs Algeria</span>
+                <span class="value-bet-market">⚽ Goles — Over 1.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">88%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.36</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">73.5%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-mild">
+                    <div class="edge-badge">🟢 +14.5%</div>
+                    <div class="edge-label">EDGE · EV +20%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-mild">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Switzerland vs Algeria</span>
+                <span class="value-bet-market">🥅 BTTS — Sí</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">66%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.90</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">52.6%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-mild">
+                    <div class="edge-badge">🟢 +13.8%</div>
+                    <div class="edge-label">EDGE · EV +26%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-mild">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs Austria</span>
+                <span class="value-bet-market">🥅 BTTS — Sí</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">57%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">2.20</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">45.5%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-mild">
+                    <div class="edge-badge">🟢 +11.1%</div>
+                    <div class="edge-label">EDGE · EV +24%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-mild">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Switzerland vs Algeria</span>
+                <span class="value-bet-market">🏳️ Córners — Over 9.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">58%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">2.10</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">47.6%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-mild">
+                    <div class="edge-badge">🟢 +10.7%</div>
+                    <div class="edge-label">EDGE · EV +22%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-mild">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs Austria</span>
+                <span class="value-bet-market">🏆 1X2 — Gana Austria</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">22%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">8.50</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">11.8%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-mild">
+                    <div class="edge-badge">🟢 +10.0%</div>
+                    <div class="edge-label">EDGE · EV +85%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-mild">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs Austria</span>
+                <span class="value-bet-market">⚽ Goles — Over 3.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">41%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">3.20</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">31.2%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-mild">
+                    <div class="edge-badge">🟢 +9.6%</div>
+                    <div class="edge-label">EDGE · EV +31%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-mild">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs Austria</span>
+                <span class="value-bet-market">⚽ Goles — Over 2.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">63%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.80</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">55.6%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-mild">
+                    <div class="edge-badge">🟢 +7.5%</div>
+                    <div class="edge-label">EDGE · EV +13%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-mild">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Switzerland vs Algeria</span>
+                <span class="value-bet-market">🏆 1X2 — Gana Switzerland</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">56%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">2.05</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">48.8%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-mild">
+                    <div class="edge-badge">🟢 +6.7%</div>
+                    <div class="edge-label">EDGE · EV +14%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-mild">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Portugal vs Croatia</span>
+                <span class="value-bet-market">⚽ Goles — Over 2.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">54%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">2.10</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">47.6%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-mild">
+                    <div class="edge-badge">🟢 +6.1%</div>
+                    <div class="edge-label">EDGE · EV +13%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-mild">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs Austria</span>
+                <span class="value-bet-market">⚽ Goles — Over 1.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">84%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.28</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">78.1%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-mild">
+                    <div class="edge-badge">🟢 +5.4%</div>
+                    <div class="edge-label">EDGE · EV +7%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-mild">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Portugal vs Croatia</span>
+                <span class="value-bet-market">🏆 1X2 — Gana Croatia</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">25%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">5.00</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">20.0%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-mild">
+                    <div class="edge-badge">🟢 +5.2%</div>
+                    <div class="edge-label">EDGE · EV +26%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-flat">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Portugal vs Croatia</span>
+                <span class="value-bet-market">⚽ Goles — Over 3.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">31%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">3.75</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">26.7%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-flat">
+                    <div class="edge-badge">🟡 +4.8%</div>
+                    <div class="edge-label">EDGE · EV +18%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-flat">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs Austria</span>
+                <span class="value-bet-market">⚽ Goles — Over 4.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">23%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">5.50</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">18.2%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-flat">
+                    <div class="edge-badge">🟡 +4.7%</div>
+                    <div class="edge-label">EDGE · EV +26%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-flat">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Portugal vs Croatia</span>
+                <span class="value-bet-market">⚽ Goles — Over 1.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">77%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.36</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">73.5%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-flat">
+                    <div class="edge-badge">🟡 +3.9%</div>
+                    <div class="edge-label">EDGE · EV +5%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-flat">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Portugal vs Croatia</span>
+                <span class="value-bet-market">⚽ Goles — Over 4.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">16%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">8.00</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">12.5%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-flat">
+                    <div class="edge-badge">🟡 +3.2%</div>
+                    <div class="edge-label">EDGE · EV +26%</div>
+                </div>
+            </div>
+        </div>
+        <div class="value-bet-card edge-flat">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Portugal vs Croatia</span>
+                <span class="value-bet-market">🥅 BTTS — Sí</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">53%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.95</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">51.3%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-flat">
+                    <div class="edge-badge">🟡 +1.8%</div>
+                    <div class="edge-label">EDGE · EV +3%</div>
+                </div>
+            </div>
+        </div>
+</div>
+<h3 class="vb-section-title">🎯 Córners, Tarjetas, Tiros — Predicción del Motor</h3>
 <div class="value-bets-grid">
         <div class="value-bet-card edge-strong">
             <div class="value-bet-header">

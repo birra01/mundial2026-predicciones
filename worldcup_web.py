@@ -425,7 +425,83 @@ def _build_value_bets_html():
     if not value_bets:
         return '<div class="no-value-bets">🔍 No se encontraron value bets para los próximos partidos.<br><small>Las cuotas de bet365 no cubren suficientes mercados de córners/bookings aún.</small></div>'
     
-    html = '<div class="value-bets-intro">🎯 Predicciones de eventos (córners, tarjetas, tiros...). Las que tienen cuota bet365 muestran edge; las marcadas 🔮 Pendiente salen sin cuota para que las revises manualmente</div>\n'
+    # ─── VALUE BETS DE GOLES, BTTS, 1X2 (cargados de data/vbs_bug_fixed.json) ───
+    # Estos vienen del análisis exhaustivo de 5 mercados cruzando motor + cuotas
+    all_vbs_path = Path(__file__).parent / "data" / "vbs_bug_fixed.json"
+    extra_vbs = []
+    if all_vbs_path.exists():
+        with open(all_vbs_path) as f:
+            extra_vbs = json.load(f)
+    
+    html = '<div class="value-bets-intro">🎯 Predicciones de eventos (goles, córners, tarjetas, tiros, BTTS, 1X2). Edge = diferencia entre la probabilidad del modelo y la implícita de la cuota. 🟢 EV+ es value bet real.</div>\n'
+    
+    # ─── Sección 1: VALUE BETS DE GOLES/BTTS/1X2 (análisis exhaustivo) ───
+    if extra_vbs:
+        html += '<h3 class="vb-section-title">📊 Value Bets — Análisis Exhaustivo (5 mercados)</h3>\n'
+        html += '<div class="value-bets-grid">\n'
+        # Ordenar por edge
+        extra_vbs_sorted = sorted(extra_vbs, key=lambda x: -x['edge'])
+        for vb in extra_vbs_sorted:
+            market = vb['market']
+            match = vb['match']
+            pick = vb['pick']
+            cuota = vb['cuota']
+            prob = vb['prob']
+            edge = vb['edge']
+            
+            # Icono por mercado
+            market_icons = {
+                'Goles': '⚽',
+                'BTTS': '🥅',
+                'Córners': '🏳️',
+                'Tarjetas': '🟨',
+                '1X2': '🏆',
+            }
+            icon = market_icons.get(market, '📊')
+            
+            # Clase por edge
+            if edge >= 15:
+                edge_class = 'edge-strong'
+                edge_icon = '🔥'
+            elif edge >= 5:
+                edge_class = 'edge-mild'
+                edge_icon = '🟢'
+            else:
+                edge_class = 'edge-flat'
+                edge_icon = '🟡'
+            
+            ev = prob * cuota * 100  # EV%
+            edge_sign = '+' if edge >= 0 else ''
+            
+            html += f'''        <div class="value-bet-card {edge_class}">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ {match}</span>
+                <span class="value-bet-market">{icon} {market} — {pick}</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">{prob*100:.0f}%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">{cuota:.2f}</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">{100/cuota:.1f}%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict {edge_class}">
+                    <div class="edge-badge">{edge_icon} {edge_sign}{edge:.1f}%</div>
+                    <div class="edge-label">EDGE · EV {edge_sign}{(ev-100):.0f}%</div>
+                </div>
+            </div>
+        </div>
+'''
+        html += '</div>\n'
+    
+    # ─── Sección 2: VALUE BETS DE CÓRNERS/TARJETAS/TIROS (motor de predicciones) ───
+    html += '<h3 class="vb-section-title">🎯 Córners, Tarjetas, Tiros — Predicción del Motor</h3>\n'
     html += '<div class="value-bets-grid">\n'
     
     for vb in value_bets:
@@ -1036,6 +1112,14 @@ def generate_web():
             color: #8890b0;
             margin-bottom: 20px;
             font-size: 0.9em;
+        }}
+        .vb-section-title {{
+            color: #f0c040;
+            font-size: 1.3em;
+            font-weight: 700;
+            margin: 28px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #2a2f4a;
         }}
         .value-bets-grid {{ display: grid; gap: 16px; }}
         .value-bet-card {{
