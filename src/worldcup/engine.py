@@ -189,6 +189,14 @@ class WorldCupEngine:
             avg_adj = {}
             for key, ratios in adjusted.items():
                 avg_adj[key] = sum(ratios) / len(ratios) if ratios else 1.0
+            # FIX: Para mercados absolutos (córners, tarjetas, faltas) usar el RAW,
+            # no el ratio ajustado por rival. Esos stats no representan fuerza del equipo.
+            ABSOLUTE_STATS = ['cornerKicks', 'yellowCards', 'redCards', 'fouls',
+                              'fouledFinalThird', 'throwIns', 'totalShotsOnGoal',
+                              'shotsOnTarget', 'shotsOnGoal', 'shotsOffGoal']
+            for k in ABSOLUTE_STATS:
+                if k in avg_adj:
+                    avg_adj[k] = ts.get('avg_stats_raw', {}).get(k, avg_adj[k])
 
             ts['avg_stats'] = avg_adj               # ← ESTO ES LO QUE USA EL MODELO AHORA
             ts['avg_gf_adj'] = sum(adjusted_gf) / len(adjusted_gf) if adjusted_gf else ts['avg_goals_for']

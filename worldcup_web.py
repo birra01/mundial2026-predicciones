@@ -220,90 +220,90 @@ def build_combinadas(predictions, odds_cache):
     b = [m_.get('b365', {}) for m_ in m]  # bet365 for each match
     # m[0]=Spain-Austria, m[1]=Portugal-Croatia, m[2]=Switzerland-Algeria
 
-    # ─── 🟢 SEGURA: 2 Córners + 1 Goles ───
-    # Córners España O9.5 (P=92%, edge +44.6%) + Córners Portugal O8.5 (P=77%, edge +23.9%) + Goles Suiza O1.5 (P=88%, edge +14.5%)
+    # ─── 🟢 SEGURA: Tarjetas España + Córners Portugal + Goles Suiza ───
+    # Motor corregido (avg_stats_raw para córners/tarjetas, no ratios ajustados)
+    # Tarjetas España U3.5 (P=89%, edge +30.4%) + Córners Portugal U8.5 (P=88%, edge +32.4%) + Goles Suiza O1.5 (P=88%, edge +14.5%)
     cuota_seg = [
-        2.10,  # Spain Córners Over 9.5
-        1.90,  # Portugal Córners Over 8.5
-        b[2].get('over_15') or 1.36,  # Switzerland Goles Over 1.5
+        b[0].get('yellowCards', {}).get('under_3.5') or 1.72,  # Spain Tarjetas Under 3.5
+        b[1].get('cornerKicks', {}).get('under_8.5') or 1.80,   # Portugal Córners Under 8.5
+        b[2].get('over_15') or 1.36,                              # Switzerland Goles Over 1.5
     ]
-    p_seg = 0.92 * 0.77 * m[2]['ov15']
+    # Las probs de córners/tarjetas se calculan con motor corregido
+    p_seg = 0.89 * 0.88 * m[2]['ov15']  # 0.89 = P(Tarjetas España <3.5), 0.88 = P(Córners Portugal <8.5)
     cuota_seg_total = cuota_seg[0] * cuota_seg[1] * cuota_seg[2]
 
-    edges_seg = [44.6, 23.9, round((m[2]['ov15'] - 1 / cuota_seg[2]) * 100, 1)]
+    edges_seg = [30.4, 32.4, round((m[2]['ov15'] - 1 / cuota_seg[2]) * 100, 1)]
 
-    # ─── 🟠 MEDIA: 1 Córners + 1 Tarjetas + 1 Goles ───
-    # Córners España O9.5 (edge +44.6%) + Tarjetas Portugal O3.5 (edge +19%) + Goles Suiza O2.5 (edge +23.2%)
+    # ─── 🟠 MEDIA: Tarjetas + Córners + Goles O3.5 ───
     cuota_med = [
-        2.10,  # Spain Córners Over 9.5
-        2.20,  # Portugal Tarjetas Over 3.5
-        b[2].get('over_25') or 2.10,  # Switzerland Goles Over 2.5
+        b[0].get('yellowCards', {}).get('under_3.5') or 1.72,
+        b[1].get('cornerKicks', {}).get('under_8.5') or 1.80,
+        b[2].get('over_35') or 4.00,
     ]
-    p_med = 0.92 * 0.64 * m[2]['ov25']
+    p_med = 0.89 * 0.88 * m[2]['ov35']
     cuota_med_total = cuota_med[0] * cuota_med[1] * cuota_med[2]
 
-    edges_med = [44.6, 19.0, round((m[2]['ov25'] - 1 / cuota_med[2]) * 100, 1)]
+    edges_med = [30.4, 32.4, round((m[2]['ov35'] - 1 / cuota_med[2]) * 100, 1)]
 
-    # ─── 🔴 SOÑADORA: 1 Córners + 1 Tarjetas + 1 Goles O3.5 ───
-    # Córners España O9.5 + Tarjetas Portugal O3.5 + Goles Suiza O3.5
+    # ─── 🔴 SOÑADORA: Tarjetas + Córners + Goles O4.5 ───
     cuota_son = [
-        2.10,  # Spain Córners Over 9.5
-        2.20,  # Portugal Tarjetas Over 3.5
-        b[2].get('over_35') or 4.00,  # Switzerland Goles Over 3.5
+        b[0].get('yellowCards', {}).get('under_3.5') or 1.72,
+        b[1].get('cornerKicks', {}).get('under_8.5') or 1.80,
+        b[2].get('over_45') or 8.00,
     ]
-    p_son = 0.92 * 0.64 * m[2]['ov35']
+    p_son = 0.89 * 0.88 * m[2]['ov45']
     cuota_son_total = cuota_son[0] * cuota_son[1] * cuota_son[2]
 
-    edges_son = [44.6, 19.0, round((m[2]['ov35'] - 1 / cuota_son[2]) * 100, 1)]
+    edges_son = [30.4, 32.4, round((m[2]['ov45'] - 1 / cuota_son[2]) * 100, 1)]
 
-    # ─── 🔥 VOLÁTIL: 1 Córners + 1 Tarjetas + 1 Goles O4.5 ───
-    # Córners España O9.5 + Tarjetas Portugal O3.5 + Goles Suiza O4.5
+    # ─── 🔥 VOLÁTIL: 1X2 + Tarjetas + Goles O3.5 ───
+    # Mezcla mercados: Gana Austria (sorpresa) + Tarjetas Portugal U3.5 + Goles Suiza O3.5
     cuota_vol = [
-        2.10,  # Spain Córners Over 9.5
-        2.20,  # Portugal Tarjetas Over 3.5
-        b[2].get('over_45') or 8.00,  # Switzerland Goles Over 4.5
+        b[0].get('1x2', {}).get('away') or 8.50,  # Austria gana
+        b[1].get('yellowCards', {}).get('under_3.5') or 1.61,  # Portugal Tarjetas Under 3.5
+        b[2].get('over_35') or 4.00,
     ]
-    p_vol = 0.92 * 0.64 * m[2]['ov45']
+    p_vol = 0.22 * 0.86 * m[2]['ov35']
     cuota_vol_total = cuota_vol[0] * cuota_vol[1] * cuota_vol[2]
 
-    edges_vol = [44.6, 19.0, round((m[2]['ov45'] - 1 / cuota_vol[2]) * 100, 1)]
+    edges_vol = [10.0, 23.6, round((m[2]['ov35'] - 1 / cuota_vol[2]) * 100, 1)]
 
     return {
         'segura': {
             'prob': p_seg, 'cuota': cuota_seg_total,
             'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Córners Over 9.5", 'cuota': cuota_seg[0], 'prob': 0.92, 'edge': edges_seg[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Córners Over 8.5", 'cuota': cuota_seg[1], 'prob': 0.77, 'edge': edges_seg[1]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_seg[0], 'prob': 0.89, 'edge': edges_seg[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Córners Under 8.5", 'cuota': cuota_seg[1], 'prob': 0.88, 'edge': edges_seg[1]},
                 {'text': f"{m[2]['home']} vs {m[2]['away']}: Goles Over 1.5", 'cuota': cuota_seg[2], 'prob': m[2]['ov15'], 'edge': edges_seg[2]},
             ],
-            'desc': '2 Córners + 1 Goles — 3 mercados con EV+'
+            'desc': 'Tarjetas + Córners + Goles — 3 mercados con EV+'
         },
         'media': {
             'prob': p_med, 'cuota': cuota_med_total,
             'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Córners Over 9.5", 'cuota': cuota_med[0], 'prob': 0.92, 'edge': edges_med[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Tarjetas Over 3.5", 'cuota': cuota_med[1], 'prob': 0.64, 'edge': edges_med[1]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: Goles Over 2.5", 'cuota': cuota_med[2], 'prob': m[2]['ov25'], 'edge': edges_med[2]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_med[0], 'prob': 0.89, 'edge': edges_med[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Córners Under 8.5", 'cuota': cuota_med[1], 'prob': 0.88, 'edge': edges_med[1]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: Goles Over 3.5", 'cuota': cuota_med[2], 'prob': m[2]['ov35'], 'edge': edges_med[2]},
             ],
-            'desc': 'Córners + Tarjetas + Goles O2.5 — 3 mercados con EV+'
+            'desc': 'Tarjetas + Córners + Goles O3.5 — 3 mercados con EV+'
         },
         'sonadora': {
             'prob': p_son, 'cuota': cuota_son_total,
             'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Córners Over 9.5", 'cuota': cuota_son[0], 'prob': 0.92, 'edge': edges_son[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Tarjetas Over 3.5", 'cuota': cuota_son[1], 'prob': 0.64, 'edge': edges_son[1]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: Goles Over 3.5", 'cuota': cuota_son[2], 'prob': m[2]['ov35'], 'edge': edges_son[2]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_son[0], 'prob': 0.89, 'edge': edges_son[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Córners Under 8.5", 'cuota': cuota_son[1], 'prob': 0.88, 'edge': edges_son[1]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: Goles Over 4.5", 'cuota': cuota_son[2], 'prob': m[2]['ov45'], 'edge': edges_son[2]},
             ],
-            'desc': 'Córners + Tarjetas + Goles O3.5 — apuesta ambiciosa'
+            'desc': 'Tarjetas + Córners + Goles O4.5 — apuesta ambiciosa'
         },
         'volatil': {
             'prob': p_vol, 'cuota': cuota_vol_total,
             'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Córners Over 9.5", 'cuota': cuota_vol[0], 'prob': 0.92, 'edge': edges_vol[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Tarjetas Over 3.5", 'cuota': cuota_vol[1], 'prob': 0.64, 'edge': edges_vol[1]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: Goles Over 4.5", 'cuota': cuota_vol[2], 'prob': m[2]['ov45'], 'edge': edges_vol[2]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Gana {m[0]['away']}", 'cuota': cuota_vol[0], 'prob': 0.22, 'edge': edges_vol[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Tarjetas Under 3.5", 'cuota': cuota_vol[1], 'prob': 0.86, 'edge': edges_vol[1]},
+                {'text': f"{m[2]['home']} vs {m[2]['away']}: Goles Over 3.5", 'cuota': cuota_vol[2], 'prob': m[2]['ov35'], 'edge': edges_vol[2]},
             ],
-            'desc': 'Córners + Tarjetas + Goles O4.5 — volatilidad pura'
+            'desc': '1X2 sorpresa + Tarjetas + Goles O3.5 — volatilidad pura'
         }
     }
 
