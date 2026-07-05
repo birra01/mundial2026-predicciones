@@ -145,11 +145,10 @@ def build_value_bets(matches_data, odds_cache):
     team_stats = compute_team_averages(matches_data)
     value_bets = []
 
-    # Partidos de hoy (2 julio 2026)
+    # Partidos de hoy (5 julio 2026)
     today_matches = [
-        ("Spain", "Austria"),
-        ("Portugal", "Croatia"),
-        ("Switzerland", "Algeria"),
+        ("Brazil", "Norway"),
+        ("Mexico", "England"),
     ]
 
     for home_team, away_team in today_matches:

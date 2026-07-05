@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 World Cup 2026 — Predicciones Web
-Genera HTML premium con analisis de los 3 partidos (1 julio 2026)
+Genera HTML premium con analisis de los 2 partidos (5 julio 2026)
 """
 
 import sys
@@ -46,11 +46,7 @@ def load_odds_cache():
 
 def get_sportdb_extra_odds(home_team, away_team):
     """Lee cuotas bet365 de sportdb (incluye líneas decimales tipo O2.25, O3.25)"""
-    files = {
-        "Spain": "sportdb_Spain_vs_Austria.json",
-        "Portugal": "sportdb_Portugal_vs_Croatia.json",
-        "Switzerland": "sportdb_Switzerland_vs_Algeria.json",
-    }
+    files = {}  # No sportdb files for current matches (Brazil, Mexico)
     fname = files.get(home_team)
     if not fname:
         return {}
@@ -184,7 +180,7 @@ def build_combinadas(predictions, odds_cache):
     Combina los MEJORES value bets del análisis exhaustivo (24 picks, 5 mercados),
     diversificando mercados y partidos en cada combinada.
     """
-    # ─── Extraer datos de los 3 partidos ───
+    # ─── Extraer datos de los 2 partidos ───
     matches = []
     for r in predictions:
         home = r['home_team']
@@ -212,110 +208,103 @@ def build_combinadas(predictions, odds_cache):
 
     m = matches  # shortcut
     b = [m_.get('b365', {}) for m_ in m]  # bet365 for each match
-    # m[0]=Spain-Austria, m[1]=Portugal-Croatia, m[2]=Switzerland-Algeria
+    # m[0]=Brazil-Norway, m[1]=Mexico-England
 
-    # ─── VALUE BETS REALES (del análisis exhaustivo vbs_bug_fixed.json) ───
-    # Los mejores edges ordenados:
-    # 1. Portugal Córners U8.5      (88%, 1.80, +32.4%)
-    # 2. Suiza Tarjetas U3.5        (95%, 1.57, +31.7%)
-    # 3. España Tarjetas U3.5       (89%, 1.72, +30.4%)
-    # 4. Suiza Goles O3.5           (50%, 4.00, +24.7%)
-    # 5. Portugal Tarjetas U3.5     (86%, 1.61, +23.6%)
-    # 6. Suiza Goles O2.5           (71%, 2.10, +23.2%)
-    # 7. España Tarjetas U2.5       (72%, 2.00, +22.2%)
-    # 8. Suiza Goles O4.5           (31%, 8.00, +18.0%)
-    # 9. Suiza Goles O1.5           (88%, 1.36, +14.5%)
-    # 10. Suiza BTTS Sí             (66%, 1.90, +13.8%)
-    # 11. España BTTS Sí            (57%, 2.20, +11.1%)
-    # 12. Suiza Córners O9.5        (58%, 2.10, +10.7%)
-    # 13. España Gana Austria       (22%, 8.50, +10.0%)
-    # 14. España Goles O3.5         (41%, 3.20, +9.6%)
-    # 15. España Goles O2.5         (63%, 1.80, +7.5%)
-    # 16. Suiza Gana Suiza          (56%, 2.05, +6.7%)
-    # 17. Portugal Goles O2.5       (54%, 2.10, +6.1%)
-    # 18. España Goles O1.5         (84%, 1.28, +5.4%)
-    # 19. Portugal Gana Croatia     (25%, 5.00, +5.2%)
+    # ─── VALUE BETS REALES (modelo Poisson + cuotas bet365) ───
+    # Brazil vs Norway  (xG 2.33-1.50, total 3.83):
+    #   1. YC U3.5   (86%, 1.61, +23.6%)
+    #   2. O3.5       (53%, 2.62, +15.1%)
+    #   3. YC U2.5   (68%, 1.83, +13.1%)
+    #   4. O2.5       (74%, 1.66, +13.4%)
+    #   5. O4.5       (34%, 4.50, +11.6%)
+    #   6. CK O8.5   (67%, 1.72, +8.6%)
+    #   7. BTTS Sí   (70%, 1.61, +8.0%)
+    #   8. Norway 1X2 (25.3%, 4.90, +4.9%)
+    #
+    # Mexico vs England  (xG 1.33-1.00, total 2.33):
+    #   1. YC U3.5   (95%, 1.66, +35.2%)
+    #   2. YC U2.5   (85%, 2.25, +40.5%)
+    #   3. Mexico 1X2 (49%, 3.28, +18.5%)
+    #   4. CK O8.5   (59%, 2.00, +8.7%)
 
-    # ─── 🟢 SEGURA: 3 patas alta prob (>80%) - Tarjetas + Córners + Goles O1.5 ───
-    # Suiza Tarjetas U3.5 (95%, 1.57) + España Tarjetas U3.5 (89%, 1.72) + Portugal Córners U8.5 (88%, 1.80)
+    # ─── 🟢 SEGURA: 2 patas alta prob — Tarjetas U3.5 ambos partidos ───
+    # Mexico Tarjetas U3.5 (95%, 1.66, +35.2%) + Brazil Tarjetas U3.5 (86%, 1.61, +23.6%)
     cuota_seg = [
-        b[2].get('yellowCards', {}).get('under_3.5') or 1.57,  # Suiza Tarjetas U3.5
-        b[0].get('yellowCards', {}).get('under_3.5') or 1.72,  # España Tarjetas U3.5
-        b[1].get('cornerKicks', {}).get('under_8.5') or 1.80,  # Portugal Córners U8.5
+        b[1].get('yellowCards', {}).get('under_3.5') or 1.66,  # Mexico YC U3.5
+        b[0].get('yellowCards', {}).get('under_3.5') or 1.61,  # Brazil YC U3.5
     ]
-    p_seg = 0.95 * 0.89 * 0.88  # 74.4%
-    cuota_seg_total = cuota_seg[0] * cuota_seg[1] * cuota_seg[2]  # ~4.86
-    edges_seg = [31.7, 30.4, 32.4]
+    p_seg = 0.95 * 0.86  # 81.7%
+    cuota_seg_total = cuota_seg[0] * cuota_seg[1]  # ~2.67
+    edges_seg = [35.2, 23.6]
 
-    # ─── 🟠 MEDIA: 3 mercados distintos, 3 partidos distintos ───
-    # Portugal Córners U8.5 (88%, 1.80, +32.4%) + Suiza Goles O2.5 (71%, 2.10, +23.2%) + España BTTS Sí (57%, 2.20, +11.1%)
+    # ─── 🟠 MEDIA: 3 mercados, 2 partidos — Tarjetas + Córners ───
+    # Mexico YC U3.5 (95%, 1.66) + Brazil CK O8.5 (67%, 1.72) + Brazil YC U3.5 (86%, 1.61)
     cuota_med = [
-        b[1].get('cornerKicks', {}).get('under_8.5') or 1.80,  # Portugal Córners U8.5
-        b[2].get('over_25') or 2.10,                             # Suiza Goles O2.5
-        b[0].get('btts_yes') or 2.20,                            # España BTTS Sí
+        b[1].get('yellowCards', {}).get('under_3.5') or 1.66,  # Mexico YC U3.5
+        b[0].get('cornerKicks', {}).get('over_8.5') or 1.72,   # Brazil CK O8.5
+        b[0].get('yellowCards', {}).get('under_3.5') or 1.61,  # Brazil YC U3.5
     ]
-    p_med = 0.88 * 0.71 * 0.57  # 35.6%
-    cuota_med_total = cuota_med[0] * cuota_med[1] * cuota_med[2]  # ~6.65
-    edges_med = [32.4, 23.2, 11.1]
+    p_med = 0.95 * 0.67 * 0.86  # 54.7%
+    cuota_med_total = cuota_med[0] * cuota_med[1] * cuota_med[2]  # ~4.61
+    edges_med = [35.2, 8.6, 23.6]
 
-    # ─── 🔴 SOÑADORA: Mix goles altos + 1X2 sorpresa ───
-    # Suiza Goles O3.5 (50%, 4.00, +24.7%) + Portugal Tarjetas U3.5 (86%, 1.61, +23.6%) + España Gana Austria (22%, 8.50, +10.0%)
+    # ─── 🔴 SOÑADORA: 1X2 sorpresa + Goles + BTTS ───
+    # Mexico 1X2 (49%, 3.28, +18.5%) + Brazil O2.5 (74%, 1.66, +13.4%) + Brazil BTTS (70%, 1.61, +8.0%)
     cuota_son = [
-        b[2].get('over_35') or 4.00,                             # Suiza Goles O3.5
-        b[1].get('yellowCards', {}).get('under_3.5') or 1.61,   # Portugal Tarjetas U3.5
-        b[0].get('1x2', {}).get('away') or 8.50,                 # Austria gana (1X2)
+        b[1].get('1x2', {}).get('home') or 3.28,                # Mexico gana
+        b[0].get('over_25') or 1.66,                             # Brazil O2.5
+        b[0].get('btts_yes') or 1.61,                            # Brazil BTTS
     ]
-    p_son = 0.50 * 0.86 * 0.22  # 9.5%
-    cuota_son_total = cuota_son[0] * cuota_son[1] * cuota_son[2]  # ~54.9
-    edges_son = [24.7, 23.6, 10.0]
+    p_son = 0.49 * 0.74 * 0.70  # 25.4%
+    cuota_son_total = cuota_son[0] * cuota_son[1] * cuota_son[2]  # ~8.78
+    edges_son = [18.5, 13.4, 8.0]
 
-    # ─── 🔥 VOLÁTIL: 1 sorpresa + 2 value bets sólidos ───
-    # España Gana Austria (22%, 8.50) + Suiza Córners O9.5 (58%, 2.10, +10.7%) + Portugal Gana Croatia (25%, 5.00, +5.2%)
+    # ─── 🔥 VOLÁTIL: 1X2 sorpresa + Goles altos + Córners ───
+    # Norway 1X2 (25.3%, 4.90, +4.9%) + Brazil O3.5 (53%, 2.62, +15.1%) + Mexico CK O8.5 (59%, 2.00, +8.7%)
     cuota_vol = [
-        b[0].get('1x2', {}).get('away') or 8.50,                 # Austria gana
-        b[2].get('cornerKicks', {}).get('over_9.5') or 2.10,     # Suiza Córners O9.5
-        b[1].get('1x2', {}).get('away') or 5.00,                 # Croatia gana
+        b[0].get('1x2', {}).get('away') or 4.90,                # Norway gana
+        b[0].get('over_35') or 2.62,                             # Brazil O3.5
+        b[1].get('cornerKicks', {}).get('over_8.5') or 2.00,    # Mexico CK O8.5
     ]
-    p_vol = 0.22 * 0.58 * 0.25  # 3.2%
-    cuota_vol_total = cuota_vol[0] * cuota_vol[1] * cuota_vol[2]  # ~89.3
-    edges_vol = [10.0, 10.7, 5.2]
+    p_vol = 0.253 * 0.53 * 0.59  # 7.9%
+    cuota_vol_total = cuota_vol[0] * cuota_vol[1] * cuota_vol[2]  # ~25.8
+    edges_vol = [4.9, 15.1, 8.7]
 
     return {
         'segura': {
             'prob': p_seg, 'cuota': cuota_seg_total,
             'legs': [
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: Tarjetas Under 3.5", 'cuota': cuota_seg[0], 'prob': 0.95, 'edge': edges_seg[0]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_seg[1], 'prob': 0.89, 'edge': edges_seg[1]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Córners Under 8.5", 'cuota': cuota_seg[2], 'prob': 0.88, 'edge': edges_seg[2]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Tarjetas Under 3.5", 'cuota': cuota_seg[0], 'prob': 0.95, 'edge': edges_seg[0]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_seg[1], 'prob': 0.86, 'edge': edges_seg[1]},
             ],
-            'desc': '3 under de tarjetas/córners — alta prob, 3 mercados distintos'
+            'desc': '2 under de tarjetas — máxima probabilidad, ambos partidos'
         },
         'media': {
             'prob': p_med, 'cuota': cuota_med_total,
             'legs': [
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Córners Under 8.5", 'cuota': cuota_med[0], 'prob': 0.88, 'edge': edges_med[0]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: Goles Over 2.5", 'cuota': cuota_med[1], 'prob': 0.71, 'edge': edges_med[1]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: BTTS Sí", 'cuota': cuota_med[2], 'prob': 0.57, 'edge': edges_med[2]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Tarjetas Under 3.5", 'cuota': cuota_med[0], 'prob': 0.95, 'edge': edges_med[0]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Córners Over 8.5", 'cuota': cuota_med[1], 'prob': 0.67, 'edge': edges_med[1]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_med[2], 'prob': 0.86, 'edge': edges_med[2]},
             ],
-            'desc': 'Córners + Goles + BTTS — 3 mercados, 3 partidos'
+            'desc': 'Tarjetas + Córners — 3 mercados, ambos partidos'
         },
         'sonadora': {
             'prob': p_son, 'cuota': cuota_son_total,
             'legs': [
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: Goles Over 3.5", 'cuota': cuota_son[0], 'prob': 0.50, 'edge': edges_son[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Tarjetas Under 3.5", 'cuota': cuota_son[1], 'prob': 0.86, 'edge': edges_son[1]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Gana {m[0]['away']}", 'cuota': cuota_son[2], 'prob': 0.22, 'edge': edges_son[2]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Gana {m[1]['home']}", 'cuota': cuota_son[0], 'prob': 0.49, 'edge': edges_son[0]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Goles Over 2.5", 'cuota': cuota_son[1], 'prob': 0.74, 'edge': edges_son[1]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: BTTS Sí", 'cuota': cuota_son[2], 'prob': 0.70, 'edge': edges_son[2]},
             ],
-            'desc': 'Goles altos + Tarjetas + 1X2 sorpresa — cuota alta, value real'
+            'desc': '1X2 sorpresa + Goles + BTTS — cuota media-alta, value real'
         },
         'volatil': {
             'prob': p_vol, 'cuota': cuota_vol_total,
             'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Gana {m[0]['away']}", 'cuota': cuota_vol[0], 'prob': 0.22, 'edge': edges_vol[0]},
-                {'text': f"{m[2]['home']} vs {m[2]['away']}: Córners Over 9.5", 'cuota': cuota_vol[1], 'prob': 0.58, 'edge': edges_vol[1]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Gana {m[1]['away']}", 'cuota': cuota_vol[2], 'prob': 0.25, 'edge': edges_vol[2]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Gana {m[0]['away']}", 'cuota': cuota_vol[0], 'prob': 0.253, 'edge': edges_vol[0]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Goles Over 3.5", 'cuota': cuota_vol[1], 'prob': 0.53, 'edge': edges_vol[1]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Córners Over 8.5", 'cuota': cuota_vol[2], 'prob': 0.59, 'edge': edges_vol[2]},
             ],
-            'desc': 'Dos 1X2 sorpresas + Córners — máxima volatilidad'
+            'desc': '1X2 sorpresa + Goles altos + Córners — máxima volatilidad'
         }
     }
 
@@ -324,11 +313,7 @@ def build_combinadas(predictions, odds_cache):
 def load_sportdb_details():
     """Carga los datos de sportdb.dev de los 3 partidos guardados localmente"""
     data_dir = Path(__file__).parent / "data"
-    files = {
-        "Spain": "sportdb_Spain_vs_Austria.json",
-        "Portugal": "sportdb_Portugal_vs_Croatia.json",
-        "Switzerland": "sportdb_Switzerland_vs_Algeria.json",
-    }
+    files = {}  # No sportdb files for current matches (Brazil, Mexico)
     result = {}
     for team_key, fname in files.items():
         fpath = data_dir / fname
@@ -361,11 +346,7 @@ def load_sportdb_details():
 def get_sportdb_odds(match_key):
     """Extrae las cuotas bet365 (bookmakerId=16) de sportdb para un partido"""
     data_dir = Path(__file__).parent / "data"
-    files = {
-        "Spain": "sportdb_Spain_vs_Austria.json",
-        "Portugal": "sportdb_Portugal_vs_Croatia.json",
-        "Switzerland": "sportdb_Switzerland_vs_Algeria.json",
-    }
+    files = {}  # No sportdb files for current matches (Brazil, Mexico)
     fname = files.get(match_key)
     if not fname:
         return {}
@@ -524,11 +505,10 @@ def generate_web():
     # Cargar datos de sportdb.dev
     sportdb_details = load_sportdb_details()
     
-    # Partidos de hoy 2 julio (Round of 32)
+    # Partidos de hoy 5 julio (Octavos de final)
     matches_today = [
-        ("Spain", "Austria", "19:00"),
-        ("Portugal", "Croatia", "23:00"),
-        ("Switzerland", "Algeria", "03:00"),
+        ("Brazil", "Norway", "18:00"),
+        ("Mexico", "England", "21:00"),
     ]
     
     predictions = []
@@ -601,7 +581,7 @@ def generate_web():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mundial 2026 — Predicciones 2 Julio</title>
+    <title>Mundial 2026 — Predicciones 5 Julio</title>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         
@@ -1231,7 +1211,7 @@ def generate_web():
         <div class="header">
             <h1>🏆 Mundial 2026 — Octavos de Final</h1>
             <div class="subtitle">Predicciones basadas en 72 partidos · 48 equipos · Estadísticas reales de Sofascore + sportdb.dev</div>
-            <div class="badge">📅 2 de julio de 2026 · 3 partidos</div>
+            <div class="badge">📅 5 de julio de 2026 · 2 partidos</div>
         </div>
         
         <!-- ─── PESTAÑAS ─── -->
@@ -1562,7 +1542,7 @@ def generate_web():
             <div class="comparison-section">
                 <h2>📈 COMPARATIVA: PREDICCIONES vs REALIDAD</h2>
                 <div style="background: linear-gradient(135deg, #3a2f1a 0%, #2a2010 100%); border: 1px solid #f0c040; border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; color: #f0c040; font-weight: 600;">
-                    ⚠️ COMPARATIVA DE LOS 3 PARTIDOS PASADOS (1 julio 2026): England 2-1 DR Congo, Belgium 3-2 Senegal (AET), USA 2-0 Bosnia & Herzegovina — Round of 32 ya disputados.
+                    ⚠️ COMPARATIVA DE LOS PARTIDOS PASADOS (1-4 julio 2026): Resultados de fase de grupos y Round of 32 ya disputados.
                 </div>
                 """ + comparison_html + """
             </div>
@@ -1573,7 +1553,7 @@ def generate_web():
         <div class="footer">
             ⚡ Sistema de predicción basado en modelo compuesto (Elo + Estadísticas + Goles esperados)<br>
             Datos de Sofascore · 72 partidos analizados · 48 selecciones · {len(engine.team_stats)} con estadísticas completas<br>
-            <small>Generado el 2 de julio de 2026 · Solo con fines informativos</small>
+            <small>Generado el 5 de julio de 2026 · Solo con fines informativos</small>
         </div>
     </div>
 </body>
