@@ -203,11 +203,14 @@ def build_combinadas(predictions, odds_cache):
             tm = tier_map.get(c['name'], {'icon': '🎯', 'css': 'media', 'key': c['name']})
             legs = []
             for p in c.get('picks', []):
+                pick_prob = p['prob']
+                implied = 100.0 / p['cuota']
+                pick_edge = pick_prob - implied
                 legs.append({
                     'text': f"{label}: {p['pick']}",
                     'cuota': p['cuota'],
-                    'prob': p['prob'] / 100.0,
-                    'edge': 0,
+                    'prob': pick_prob / 100.0,
+                    'edge': round(pick_edge, 1),
                 })
             combis_list.append({
                 'tier': tm['key'],
