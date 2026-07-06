@@ -174,139 +174,88 @@ def btts_prob(xg_home, xg_away):
     return raw * (1 - 0.15 * (1 - raw))
 
 def build_combinadas(predictions, odds_cache):
-    """Construye las combinadas usando cuotas reales de bet365 + edges del modelo.
-    En un Mundial no hay local/visitante: campo neutral. Solo se incluyen patas con EV+.
-
-    Combina los MEJORES value bets del análisis exhaustivo (12 picks, 5 mercados),
-    diversificando mercados y partidos en cada combinada.
-    """
-    # ─── Extraer datos de los 2 partidos ───
+    """Construye 8 combinadas: 4 por partido, cada una con picks de UN solo partido.
+    Mercados: Tarjetas, BTTS, Córners, Goles, 1X2. Solo picks con edge+."""
     matches = []
     for r in predictions:
         home = r['home_team']
         away = r['away_team']
         p = r['probabilities']
         eg = r['expected_goals']
-        total_xg = eg['home'] + eg['away']
-
-        # Cuotas reales
         b365 = r.get('odds_b365') or {}
-
-        ov15 = over_prob(total_xg, 1)
-        ov25 = over_prob(total_xg, 2)
-        ov35 = over_prob(total_xg, 3)
-        ov45 = over_prob(total_xg, 4)
         btts = btts_prob(eg['home'], eg['away'])
-
         matches.append({
+            'label': f"{display_name(home)} vs {display_name(away)}",
             'home': display_name(home), 'away': display_name(away),
-            'prob': p, 'eg': eg,
-            'b365': b365,
-            'ov15': ov15, 'ov25': ov25, 'ov35': ov35, 'ov45': ov45,
-            'btts': btts,
+            'prob': p, 'eg': eg, 'b365': b365, 'btts': btts,
         })
+    b = [m['b365'] for m in matches]
 
-    m = matches  # shortcut
-    b = [m_.get('b365', {}) for m_ in m]  # bet365 for each match
-    # m[0]=Portugal-Spain, m[1]=USA-Belgium
-
-    # ─── VALUE BETS REALES (modelo Poisson + cuotas bet365) ───
-    # Portugal vs Spain  (xG 1.00-1.42, total 2.42):
-    #   1. YC U3.5   (88.6%, 1.80, +33.1%)
-    #   2. YC U2.5   (72.3%, 2.25, +27.8%)
-    #   3. Portugal 1X2 (40.4%, 4.20, +16.6%)
-    #   4. BTTS No    (52.1%, 2.05, +3.3%)
-    #
-    # USA vs Belgium  (xG 1.67-1.67, total 3.34):
-    #   1. YC U3.5   (72.1%, 1.80, +16.5%)
-    #   2. CK O9.5   (65.9%, 1.80, +10.4%)
-    #   3. YC U2.5   (50.1%, 2.25, +5.7%)
-    #   4. USA 1X2   (45.3%, 2.50, +5.3%)
-    #   5. O2.5      (64.9%, 1.66, +4.6%)
-    #   6. O3.5      (42.8%, 2.50, +2.8%)
-
-    # ─── 🟢 SEGURA: 3 patas alta prob — mercados mixtos ───
-    # PT YC U3.5 (88.6%, 1.80) + USA CK O9.5 (65.9%, 1.80) + USA O2.5 (64.9%, 1.66)
-    cuota_seg = [
-        b[0].get('yellowCards', {}).get('under_3.5') or 1.80,
-        b[1].get('cornerKicks', {}).get('over_9.5') or 1.80,
-        b[1].get('over_25') or 1.66,
+    # ─── PORTUGAL-ESPAÑA (m[0]) ───
+    pt_p = matches[0]['prob']  # H=40.4%, D=27.5%, A=32.0%
+    pt_label = matches[0]['label']
+    pt_combis = [
+        {'tier': 'SEGURA', 'icon': '🟢', 'css': 'segura',
+         'desc': 'Alta prob, mercados mixtos',
+         'legs': [
+             {'text': f'{pt_label}: Tarjetas Under 3.5', 'cuota': b[0].get('yellowCards',{}).get('under_3.5') or 1.80, 'prob': 0.886, 'edge': 33.1},
+             {'text': f'{pt_label}: BTTS No', 'cuota': b[0].get('btts_no') or 2.05, 'prob': 0.521, 'edge': 6.8},
+         ]},
+        {'tier': 'MEDIA', 'icon': '🟠', 'css': 'media',
+         'desc': 'Doble under, riesgo moderado',
+         'legs': [
+             {'text': f'{pt_label}: Tarjetas Under 2.5', 'cuota': b[0].get('yellowCards',{}).get('under_2.5') or 2.25, 'prob': 0.723, 'edge': 27.8},
+             {'text': f'{pt_label}: BTTS No', 'cuota': b[0].get('btts_no') or 2.05, 'prob': 0.521, 'edge': 6.8},
+         ]},
+        {'tier': 'SOÑADORA', 'icon': '🔴', 'css': 'sonadora',
+         'desc': 'Portugal gana + seguro tarjetas',
+         'legs': [
+             {'text': f'{pt_label}: Gana Portugal', 'cuota': b[0].get('1x2',{}).get('home') or 4.20, 'prob': 0.404, 'edge': 16.6},
+             {'text': f'{pt_label}: Tarjetas Under 3.5', 'cuota': b[0].get('yellowCards',{}).get('under_3.5') or 1.80, 'prob': 0.886, 'edge': 33.1},
+         ]},
+        {'tier': 'VOLÁTIL', 'icon': '🔥', 'css': 'volatil',
+         'desc': 'Portugal gana + under tarjetas agresivo',
+         'legs': [
+             {'text': f'{pt_label}: Gana Portugal', 'cuota': b[0].get('1x2',{}).get('home') or 4.20, 'prob': 0.404, 'edge': 16.6},
+             {'text': f'{pt_label}: Tarjetas Under 2.5', 'cuota': b[0].get('yellowCards',{}).get('under_2.5') or 2.25, 'prob': 0.723, 'edge': 27.8},
+         ]},
     ]
-    p_seg = 0.886 * 0.659 * 0.649  # 37.9%
-    cuota_seg_total = cuota_seg[0] * cuota_seg[1] * cuota_seg[2]  # ~5.38
-    edges_seg = [33.1, 10.4, 4.6]
 
-    # ─── 🟠 MEDIA: 3 patas, 2 mercados, ambos partidos ───
-    # PT YC U3.5 (88.6%, 1.80) + USA YC U3.5 (72.1%, 1.80) + PT BTTS No (52.1%, 2.05)
-    cuota_med = [
-        b[0].get('yellowCards', {}).get('under_3.5') or 1.80,
-        b[1].get('yellowCards', {}).get('under_3.5') or 1.80,
-        b[0].get('btts_no') or 2.05,
+    # ─── USA-BÉLGICA (m[1]) ───
+    usa_p = matches[1]['prob']  # H=45.3%, D=24.4%, A=30.4%
+    usa_label = matches[1]['label']
+    usa_combis = [
+        {'tier': 'SEGURA', 'icon': '🟢', 'css': 'segura',
+         'desc': 'Córners + tarjetas, alta prob',
+         'legs': [
+             {'text': f'{usa_label}: Córners Over 9.5', 'cuota': b[1].get('cornerKicks',{}).get('over_9.5') or 1.80, 'prob': 0.659, 'edge': 10.4},
+             {'text': f'{usa_label}: Tarjetas Under 3.5', 'cuota': b[1].get('yellowCards',{}).get('under_3.5') or 1.80, 'prob': 0.721, 'edge': 16.5},
+         ]},
+        {'tier': 'MEDIA', 'icon': '🟠', 'css': 'media',
+         'desc': 'Doble under tarjetas',
+         'legs': [
+             {'text': f'{usa_label}: Tarjetas Under 3.5', 'cuota': b[1].get('yellowCards',{}).get('under_3.5') or 1.80, 'prob': 0.721, 'edge': 16.5},
+             {'text': f'{usa_label}: Tarjetas Under 2.5', 'cuota': b[1].get('yellowCards',{}).get('under_2.5') or 2.25, 'prob': 0.501, 'edge': 5.7},
+         ]},
+        {'tier': 'SOÑADORA', 'icon': '🔴', 'css': 'sonadora',
+         'desc': 'USA gana + tarjetas',
+         'legs': [
+             {'text': f'{usa_label}: Gana EE.UU.', 'cuota': b[1].get('1x2',{}).get('home') or 2.50, 'prob': 0.453, 'edge': 5.3},
+             {'text': f'{usa_label}: Tarjetas Under 3.5', 'cuota': b[1].get('yellowCards',{}).get('under_3.5') or 1.80, 'prob': 0.721, 'edge': 16.5},
+         ]},
+        {'tier': 'VOLÁTIL', 'icon': '🔥', 'css': 'volatil',
+         'desc': 'USA gana + goles altos',
+         'legs': [
+             {'text': f'{usa_label}: Gana EE.UU.', 'cuota': b[1].get('1x2',{}).get('home') or 2.50, 'prob': 0.453, 'edge': 5.3},
+             {'text': f'{usa_label}: Goles Over 3.5', 'cuota': b[1].get('over_35') or 2.50, 'prob': 0.428, 'edge': 2.8},
+         ]},
     ]
-    p_med = 0.886 * 0.721 * 0.521  # 33.3%
-    cuota_med_total = cuota_med[0] * cuota_med[1] * cuota_med[2]  # ~6.64
-    edges_med = [33.1, 16.5, 3.3]
 
-    # ─── 🔴 SOÑADORA: 1X2 favoritos + seguro tarjetas ───
-    # PT 1X2 (40.4%, 4.20) + USA 1X2 (45.3%, 2.50) + PT YC U3.5 (88.6%, 1.80)
-    cuota_son = [
-        b[0].get('1x2', {}).get('home') or 4.20,
-        b[1].get('1x2', {}).get('home') or 2.50,
-        b[0].get('yellowCards', {}).get('under_3.5') or 1.80,
+    # Devolver como lista de (match_label, combis_list)
+    return [
+        (pt_label, pt_combis),
+        (usa_label, usa_combis),
     ]
-    p_son = 0.404 * 0.453 * 0.886  # 16.2%
-    cuota_son_total = cuota_son[0] * cuota_son[1] * cuota_son[2]  # ~18.90
-    edges_son = [16.6, 5.3, 33.1]
-
-    # ─── 🔥 VOLÁTIL: 1X2 Portugal + goles altos + tarjetas ───
-    # PT 1X2 (40.4%, 4.20) + USA O3.5 (42.8%, 2.50) + PT YC U2.5 (72.3%, 2.25)
-    cuota_vol = [
-        b[0].get('1x2', {}).get('home') or 4.20,
-        b[1].get('over_35') or 2.50,
-        b[0].get('yellowCards', {}).get('under_2.5') or 2.25,
-    ]
-    p_vol = 0.404 * 0.428 * 0.723  # 12.5%
-    cuota_vol_total = cuota_vol[0] * cuota_vol[1] * cuota_vol[2]  # ~23.62
-    edges_vol = [16.6, 2.8, 27.8]
-
-    return {
-        'segura': {
-            'prob': p_seg, 'cuota': cuota_seg_total,
-            'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_seg[0], 'prob': 0.886, 'edge': edges_seg[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Córners Over 9.5", 'cuota': cuota_seg[1], 'prob': 0.659, 'edge': edges_seg[1]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Goles Over 2.5", 'cuota': cuota_seg[2], 'prob': 0.649, 'edge': edges_seg[2]},
-            ],
-            'desc': 'Tarjetas + Córners + Goles — mercados mixtos, alta prob'
-        },
-        'media': {
-            'prob': p_med, 'cuota': cuota_med_total,
-            'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_med[0], 'prob': 0.886, 'edge': edges_med[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Tarjetas Under 3.5", 'cuota': cuota_med[1], 'prob': 0.721, 'edge': edges_med[1]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: BTTS No", 'cuota': cuota_med[2], 'prob': 0.521, 'edge': edges_med[2]},
-            ],
-            'desc': 'Tarjetas ambos partidos + BTTS — diversificación por mercado'
-        },
-        'sonadora': {
-            'prob': p_son, 'cuota': cuota_son_total,
-            'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Gana {m[0]['home']}", 'cuota': cuota_son[0], 'prob': 0.404, 'edge': edges_son[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Gana {m[1]['home']}", 'cuota': cuota_son[1], 'prob': 0.453, 'edge': edges_son[1]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_son[2], 'prob': 0.886, 'edge': edges_son[2]},
-            ],
-            'desc': 'Ambos favoritos ganan + tarjetas — cuota alta con value'
-        },
-        'volatil': {
-            'prob': p_vol, 'cuota': cuota_vol_total,
-            'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Gana {m[0]['home']}", 'cuota': cuota_vol[0], 'prob': 0.404, 'edge': edges_vol[0]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Goles Over 3.5", 'cuota': cuota_vol[1], 'prob': 0.428, 'edge': edges_vol[1]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 2.5", 'cuota': cuota_vol[2], 'prob': 0.723, 'edge': edges_vol[2]},
-            ],
-            'desc': 'Portugal gana + goles altos + tarjetas — máxima volatilidad'
-        }
-    }
 
 # ─── Integración sportdb.dev ──────────────────────────────────────────
 
@@ -1437,100 +1386,40 @@ def generate_web():
         <div id="tab-combinadas" class="tab-panel">
         <div class="combinadas-section">
             <h2>🎰 COMBINADAS RECOMENDADAS (cuotas bet365)</h2>
-            <div class="combi-row">
-                <div class="combi-card segura">
-                    <h3>🟢 SEGURA</h3>
-                    <div class="combi-tagline">{combinadas['segura']['desc']}</div>
-                    <div class="combi-stats">
-                        <div class="combi-stat">
-                            <div class="stat-num">{combinadas['segura']['prob']*100:.1f}%</div>
-                            <div class="stat-label">Probabilidad</div>
-                        </div>
-                        <div class="combi-stat">
-                            <div class="stat-num">{combinadas['segura']['cuota']:.2f}</div>
-                            <div class="stat-label">Cuota bet365</div>
-                        </div>
-                    </div>
-                    <div class="combi-legs">
 """
-    for i, leg in enumerate(combinadas['segura']['legs'], 1):
-        edge_sign = '+' if leg['edge'] >= 0 else ''
-        html += f'                        <div class="combi-leg"><span class="combi-leg-num">{i}</span> {leg["text"]} (@{leg["cuota"]:.2f} · P={leg["prob"]*100:.0f}% · edge {edge_sign}{leg["edge"]:.1f}%)</div>\n'
-    
-    ev_seg = combinadas['segura']['prob'] * combinadas['segura']['cuota'] * 100
-    html += f"""                    </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~{10*combinadas['segura']['cuota']:.0f}€</strong> &nbsp; <span style="color:#2ecc71">EV +{ev_seg-100:.1f}% 🟢</span></div>
-                </div>
-                <div class="combi-card media">
-                    <h3>🟠 MEDIA</h3>
-                    <div class="combi-tagline">{combinadas['media']['desc']}</div>
-                    <div class="combi-stats">
-                        <div class="combi-stat">
-                            <div class="stat-num">{combinadas['media']['prob']*100:.1f}%</div>
-                            <div class="stat-label">Probabilidad</div>
-                        </div>
-                        <div class="combi-stat">
-                            <div class="stat-num">{combinadas['media']['cuota']:.2f}</div>
-                            <div class="stat-label">Cuota bet365</div>
-                        </div>
-                    </div>
-                    <div class="combi-legs">
-"""
-    for i, leg in enumerate(combinadas['media']['legs'], 1):
-        edge_sign = '+' if leg['edge'] >= 0 else ''
-        html += f'                        <div class="combi-leg"><span class="combi-leg-num">{i}</span> {leg["text"]} (@{leg["cuota"]:.2f} · P={leg["prob"]*100:.0f}% · edge {edge_sign}{leg["edge"]:.1f}%)</div>\n'
-    
-    ev_med = combinadas['media']['prob'] * combinadas['media']['cuota'] * 100
-    html += f"""                    </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~{10*combinadas['media']['cuota']:.0f}€</strong> &nbsp; <span style="color:#2ecc71">EV +{ev_med-100:.1f}% 🟢</span></div>
-                </div>
-                <div class="combi-card sonadora">
-                    <h3>🔴 SOÑADORA</h3>
-                    <div class="combi-tagline">{combinadas['sonadora']['desc']}</div>
-                    <div class="combi-stats">
-                        <div class="combi-stat">
-                            <div class="stat-num">{combinadas['sonadora']['prob']*100:.1f}%</div>
-                            <div class="stat-label">Probabilidad</div>
-                        </div>
-                        <div class="combi-stat">
-                            <div class="stat-num">{combinadas['sonadora']['cuota']:.2f}</div>
-                            <div class="stat-label">Cuota bet365</div>
-                        </div>
-                    </div>
-                    <div class="combi-legs">
-"""
-    for i, leg in enumerate(combinadas['sonadora']['legs'], 1):
-        edge_sign = '+' if leg['edge'] >= 0 else ''
-        html += f'                        <div class="combi-leg"><span class="combi-leg-num">{i}</span> {leg["text"]} (@{leg["cuota"]:.2f} · P={leg["prob"]*100:.0f}% · edge {edge_sign}{leg["edge"]:.1f}%)</div>\n'
-    
-    ev_son = combinadas['sonadora']['prob'] * combinadas['sonadora']['cuota'] * 100
-    html += f"""                    </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~{10*combinadas['sonadora']['cuota']:.0f}€</strong> &nbsp; <span style="color:#2ecc71">EV +{ev_son-100:.1f}% 🟢</span></div>
-                </div>
-                <div class="combi-card volatil">
-                    <h3>🔥 VOLÁTIL</h3>
-                    <div class="combi-tagline">{combinadas['volatil']['desc']}</div>
-                    <div class="combi-stats">
-                        <div class="combi-stat">
-                            <div class="stat-num">{combinadas['volatil']['prob']*100:.1f}%</div>
-                            <div class="stat-label">Probabilidad</div>
-                        </div>
-                        <div class="combi-stat">
-                            <div class="stat-num">{combinadas['volatil']['cuota']:.2f}</div>
-                            <div class="stat-label">Cuota bet365</div>
-                        </div>
-                    </div>
-                    <div class="combi-legs">
-"""
-    for i, leg in enumerate(combinadas['volatil']['legs'], 1):
-        edge_sign = '+' if leg['edge'] >= 0 else ''
-        html += f'                        <div class="combi-leg"><span class="combi-leg-num">{i}</span> {leg["text"]} (@{leg["cuota"]:.2f} · P={leg["prob"]*100:.0f}% · edge {edge_sign}{leg["edge"]:.1f}%)</div>\n'
-    
-    ev_vol = combinadas['volatil']['prob'] * combinadas['volatil']['cuota'] * 100
-    html += f"""                    </div>
-                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~{10*combinadas['volatil']['cuota']:.0f}€</strong> &nbsp; <span style="color:#e74c3c">EV +{ev_vol-100:.1f}% 🔥 ¡APUESTA DE VALOR!</span></div>
-                </div>
-            </div>
+    for match_label, combis_list in combinadas:
+        html += f'            <h3 style="color:#f0c040;font-size:1.1em;margin:18px 0 8px;">⚽ {match_label}</h3>\n'
+        html += '            <div class="combi-row">\n'
+        for c in combis_list:
+            tier = c['tier']
+            icon = c['icon']
+            css = c['css']
+            desc = c['desc']
+            legs = c['legs']
+            cuota_total = 1.0
+            prob_total = 1.0
+            for leg in legs:
+                cuota_total *= leg['cuota']
+                prob_total *= leg['prob']
+            ev = prob_total * cuota_total * 100
+            ev_color = '#2ecc71' if tier != 'VOLÁTIL' else '#e74c3c'
+            ev_suffix = '🟢' if tier != 'VOLÁTIL' else '🔥 ¡APUESTA DE VALOR!'
+            html += f'                <div class="combi-card {css}">\n'
+            html += f'                    <h3>{icon} {tier}</h3>\n'
+            html += f'                    <div class="combi-tagline">{desc}</div>\n'
+            html += f'                    <div class="combi-stats">\n'
+            html += f'                        <div class="combi-stat"><div class="stat-num">{prob_total*100:.1f}%</div><div class="stat-label">Probabilidad</div></div>\n'
+            html += f'                        <div class="combi-stat"><div class="stat-num">{cuota_total:.2f}</div><div class="stat-label">Cuota bet365</div></div>\n'
+            html += f'                    </div>\n'
+            html += f'                    <div class="combi-legs">\n'
+            for i, leg in enumerate(legs, 1):
+                edge_sign = '+' if leg['edge'] >= 0 else ''
+                html += f'                        <div class="combi-leg"><span class="combi-leg-num">{i}</span> {leg["text"]} (@{leg["cuota"]:.2f} · P={leg["prob"]*100:.0f}% · edge {edge_sign}{leg["edge"]:.1f}%)</div>\n'
+            html += f'                    </div>\n'
+            html += f'                    <div class="combi-payout">💶 Con <strong>10€</strong> → <strong>~{10*cuota_total:.0f}€</strong> &nbsp; <span style="color:{ev_color}">EV +{ev-100:.1f}% {ev_suffix}</span></div>\n'
+            html += f'                </div>\n'
+        html += '            </div>\n'
+    html += """
         </div>
         </div><!-- /tab-combinadas -->
         
@@ -1553,7 +1442,7 @@ def generate_web():
         <div class="footer">
             ⚡ Sistema de predicción basado en modelo compuesto (Elo + Estadísticas + Goles esperados)<br>
             Datos de Sofascore · 72 partidos analizados · 48 selecciones · {len(engine.team_stats)} con estadísticas completas<br>
-            <small>Generado el 5 de julio de 2026 · Solo con fines informativos</small>
+            <small>Generado el 6 de julio de 2026 · Solo con fines informativos</small>
         </div>
     </div>
 </body>
