@@ -46,7 +46,10 @@ def load_odds_cache():
 
 def get_sportdb_extra_odds(home_team, away_team):
     """Lee cuotas bet365 de sportdb (incluye líneas decimales tipo O2.25, O3.25)"""
-    files = {}  # No sportdb files for current matches (Brazil, Mexico)
+    files = {
+        'Portugal': 'sportdb_Portugal_vs_Spain.json',
+        'USA': 'sportdb_USA_vs_Belgium.json',
+    }
     fname = files.get(home_team)
     if not fname:
         return {}
@@ -174,95 +177,58 @@ def btts_prob(xg_home, xg_away):
     return raw * (1 - 0.15 * (1 - raw))
 
 def build_combinadas(predictions, odds_cache):
-    """Construye 8 combinadas: 4 por partido, cada una con picks de UN solo partido.
-    Mercados: Tarjetas, BTTS, Córners, Goles, 1X2. Solo picks con edge+."""
-    matches = []
-    for r in predictions:
-        home = r['home_team']
-        away = r['away_team']
-        p = r['probabilities']
-        eg = r['expected_goals']
-        b365 = r.get('odds_b365') or {}
-        btts = btts_prob(eg['home'], eg['away'])
-        matches.append({
-            'label': f"{display_name(home)} vs {display_name(away)}",
-            'home': display_name(home), 'away': display_name(away),
-            'prob': p, 'eg': eg, 'b365': b365, 'btts': btts,
-        })
-    b = [m['b365'] for m in matches]
+    """Carga combinadas desde data/vbs_bug_fixed.json (generado por analysis_6julio_v4.py).
+    Formato: SINGLE(1 pick), SEGURA(2), MEDIA(2), SOÑADORA(3), VOLÁTIL(4)."""
+    data_path = Path(__file__).parent / "data" / "vbs_bug_fixed.json"
+    if not data_path.exists():
+        return []
+    with open(data_path) as f:
+        vbs_data = json.load(f)
 
-    # ─── PORTUGAL-ESPAÑA (m[0]) ───
-    pt_p = matches[0]['prob']  # H=40.4%, D=27.5%, A=32.0%
-    pt_label = matches[0]['label']
-    pt_combis = [
-        {'tier': 'SEGURA', 'icon': '🟢', 'css': 'segura',
-         'desc': 'Alta prob, mercados mixtos',
-         'legs': [
-             {'text': f'{pt_label}: Tarjetas Under 3.5', 'cuota': b[0].get('yellowCards',{}).get('under_3.5') or 1.80, 'prob': 0.886, 'edge': 33.1},
-             {'text': f'{pt_label}: BTTS No', 'cuota': b[0].get('btts_no') or 2.05, 'prob': 0.521, 'edge': 6.8},
-         ]},
-        {'tier': 'MEDIA', 'icon': '🟠', 'css': 'media',
-         'desc': 'Doble under, riesgo moderado',
-         'legs': [
-             {'text': f'{pt_label}: Tarjetas Under 2.5', 'cuota': b[0].get('yellowCards',{}).get('under_2.5') or 2.25, 'prob': 0.723, 'edge': 27.8},
-             {'text': f'{pt_label}: BTTS No', 'cuota': b[0].get('btts_no') or 2.05, 'prob': 0.521, 'edge': 6.8},
-         ]},
-        {'tier': 'SOÑADORA', 'icon': '🔴', 'css': 'sonadora',
-         'desc': 'Portugal gana + seguro tarjetas',
-         'legs': [
-             {'text': f'{pt_label}: Gana Portugal', 'cuota': b[0].get('1x2',{}).get('home') or 4.20, 'prob': 0.404, 'edge': 16.6},
-             {'text': f'{pt_label}: Tarjetas Under 3.5', 'cuota': b[0].get('yellowCards',{}).get('under_3.5') or 1.80, 'prob': 0.886, 'edge': 33.1},
-         ]},
-        {'tier': 'VOLÁTIL', 'icon': '🔥', 'css': 'volatil',
-         'desc': 'Portugal gana + under tarjetas agresivo',
-         'legs': [
-             {'text': f'{pt_label}: Gana Portugal', 'cuota': b[0].get('1x2',{}).get('home') or 4.20, 'prob': 0.404, 'edge': 16.6},
-             {'text': f'{pt_label}: Tarjetas Under 2.5', 'cuota': b[0].get('yellowCards',{}).get('under_2.5') or 2.25, 'prob': 0.723, 'edge': 27.8},
-         ]},
-    ]
+    tier_map = {
+        '🏆 SINGLE BET': {'icon': '🏆', 'css': 'single', 'key': 'SINGLE'},
+        '🛡️ SEGURA':     {'icon': '🛡️', 'css': 'segura', 'key': 'SEGURA'},
+        '⚡ MEDIA':       {'icon': '⚡', 'css': 'media', 'key': 'MEDIA'},
+        '🌙 SOÑADORA':   {'icon': '🌙', 'css': 'sonadora', 'key': 'SOÑADORA'},
+        '🔥 VOLÁTIL':    {'icon': '🔥', 'css': 'volatil', 'key': 'VOLÁTIL'},
+    }
 
-    # ─── USA-BÉLGICA (m[1]) ───
-    usa_p = matches[1]['prob']  # H=45.3%, D=24.4%, A=30.4%
-    usa_label = matches[1]['label']
-    usa_combis = [
-        {'tier': 'SEGURA', 'icon': '🟢', 'css': 'segura',
-         'desc': 'Córners + tarjetas, alta prob',
-         'legs': [
-             {'text': f'{usa_label}: Córners Over 9.5', 'cuota': b[1].get('cornerKicks',{}).get('over_9.5') or 1.80, 'prob': 0.659, 'edge': 10.4},
-             {'text': f'{usa_label}: Tarjetas Under 3.5', 'cuota': b[1].get('yellowCards',{}).get('under_3.5') or 1.80, 'prob': 0.721, 'edge': 16.5},
-         ]},
-        {'tier': 'MEDIA', 'icon': '🟠', 'css': 'media',
-         'desc': 'Doble under tarjetas',
-         'legs': [
-             {'text': f'{usa_label}: Tarjetas Under 3.5', 'cuota': b[1].get('yellowCards',{}).get('under_3.5') or 1.80, 'prob': 0.721, 'edge': 16.5},
-             {'text': f'{usa_label}: Tarjetas Under 2.5', 'cuota': b[1].get('yellowCards',{}).get('under_2.5') or 2.25, 'prob': 0.501, 'edge': 5.7},
-         ]},
-        {'tier': 'SOÑADORA', 'icon': '🔴', 'css': 'sonadora',
-         'desc': 'USA gana + tarjetas',
-         'legs': [
-             {'text': f'{usa_label}: Gana EE.UU.', 'cuota': b[1].get('1x2',{}).get('home') or 2.50, 'prob': 0.453, 'edge': 5.3},
-             {'text': f'{usa_label}: Tarjetas Under 3.5', 'cuota': b[1].get('yellowCards',{}).get('under_3.5') or 1.80, 'prob': 0.721, 'edge': 16.5},
-         ]},
-        {'tier': 'VOLÁTIL', 'icon': '🔥', 'css': 'volatil',
-         'desc': 'USA gana + goles altos',
-         'legs': [
-             {'text': f'{usa_label}: Gana EE.UU.', 'cuota': b[1].get('1x2',{}).get('home') or 2.50, 'prob': 0.453, 'edge': 5.3},
-             {'text': f'{usa_label}: Goles Over 3.5', 'cuota': b[1].get('over_35') or 2.50, 'prob': 0.428, 'edge': 2.8},
-         ]},
-    ]
+    result = []
+    for match_key, match_data in vbs_data.get('matches', {}).items():
+        parts = match_key.split('_vs_')
+        label = f"{parts[0]} vs {parts[1]}" if len(parts) == 2 else match_key
 
-    # Devolver como lista de (match_label, combis_list)
-    return [
-        (pt_label, pt_combis),
-        (usa_label, usa_combis),
-    ]
+        combis_list = []
+        for c in match_data.get('combinadas', []):
+            tm = tier_map.get(c['name'], {'icon': '🎯', 'css': 'media', 'key': c['name']})
+            legs = []
+            for p in c.get('picks', []):
+                legs.append({
+                    'text': f"{label}: {p['pick']}",
+                    'cuota': p['cuota'],
+                    'prob': p['prob'] / 100.0,
+                    'edge': 0,
+                })
+            combis_list.append({
+                'tier': tm['key'],
+                'icon': tm['icon'],
+                'css': tm['css'],
+                'desc': c.get('desc', ''),
+                'legs': legs,
+            })
+        result.append((label, combis_list))
+
+    return result
 
 # ─── Integración sportdb.dev ──────────────────────────────────────────
 
 def load_sportdb_details():
-    """Carga los datos de sportdb.dev de los 3 partidos guardados localmente"""
+    """Carga los datos de sportdb.dev de los partidos guardados localmente"""
     data_dir = Path(__file__).parent / "data"
-    files = {}  # No sportdb files for current matches (Brazil, Mexico)
+    files = {
+        'Portugal': 'sportdb_Portugal_vs_Spain.json',
+        'USA': 'sportdb_USA_vs_Belgium.json',
+    }
     result = {}
     for team_key, fname in files.items():
         fpath = data_dir / fname
@@ -295,7 +261,10 @@ def load_sportdb_details():
 def get_sportdb_odds(match_key):
     """Extrae las cuotas bet365 (bookmakerId=16) de sportdb para un partido"""
     data_dir = Path(__file__).parent / "data"
-    files = {}  # No sportdb files for current matches (Brazil, Mexico)
+    files = {
+        'Portugal': 'sportdb_Portugal_vs_Spain.json',
+        'USA': 'sportdb_USA_vs_Belgium.json',
+    }
     fname = files.get(match_key)
     if not fname:
         return {}
@@ -359,12 +328,22 @@ def get_sportdb_odds(match_key):
 
 def _build_value_bets_html():
     """Genera el HTML de la sección Value Bets - SOLO análisis exhaustivo (5 mercados)"""
-    # Cargar el JSON del análisis exhaustivo (ya corregido con avg_stats_raw)
+    # Cargar el JSON del análisis exhaustivo
     all_vbs_path = Path(__file__).parent / "data" / "vbs_bug_fixed.json"
     extra_vbs = []
     if all_vbs_path.exists():
         with open(all_vbs_path) as f:
-            extra_vbs = json.load(f)
+            raw = json.load(f)
+        # Handle both old flat format and new nested format
+        if isinstance(raw, dict) and 'matches' in raw:
+            for match_key, match_data in raw['matches'].items():
+                parts = match_key.split('_vs_')
+                match_label = f"{parts[0]} vs {parts[1]}" if len(parts) == 2 else match_key
+                for vb in match_data.get('value_bets', []):
+                    vb['match'] = match_label
+                    extra_vbs.append(vb)
+        elif isinstance(raw, list):
+            extra_vbs = raw
 
     if not extra_vbs:
         return '<div class="no-value-bets">🔍 No se encontraron value bets para los próximos partidos.<br><small>Genera primero el análisis exhaustivo con value_bets.py</small></div>'
@@ -898,6 +877,10 @@ def generate_web():
         .combi-card.volatil {{ border-color: #e74c3c; }}
         .combi-card.volatil::before {{ background: linear-gradient(90deg, #e74c3c, #f39c12); }}
         .combi-card.volatil h3 {{ color: #e74c3c; }}
+        .combi-card.single {{ border-color: #f0c040; }}
+        .combi-card.single::before {{ background: linear-gradient(90deg, #f0c040, #fff7b0); }}
+        .combi-card.single h3 {{ color: #f0c040; }}
+        .combi-card.single .stat-num {{ color: #f0c040; }}
         .combi-card .combi-tagline {{
             font-size: 0.72em;
             color: #6a70a0;
