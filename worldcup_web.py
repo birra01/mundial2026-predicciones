@@ -177,7 +177,7 @@ def build_combinadas(predictions, odds_cache):
     """Construye las combinadas usando cuotas reales de bet365 + edges del modelo.
     En un Mundial no hay local/visitante: campo neutral. Solo se incluyen patas con EV+.
 
-    Combina los MEJORES value bets del análisis exhaustivo (24 picks, 5 mercados),
+    Combina los MEJORES value bets del análisis exhaustivo (12 picks, 5 mercados),
     diversificando mercados y partidos en cada combinada.
     """
     # ─── Extraer datos de los 2 partidos ───
@@ -208,103 +208,103 @@ def build_combinadas(predictions, odds_cache):
 
     m = matches  # shortcut
     b = [m_.get('b365', {}) for m_ in m]  # bet365 for each match
-    # m[0]=Brazil-Norway, m[1]=Mexico-England
+    # m[0]=Portugal-Spain, m[1]=USA-Belgium
 
     # ─── VALUE BETS REALES (modelo Poisson + cuotas bet365) ───
-    # Brazil vs Norway  (xG 2.33-1.50, total 3.83):
-    #   1. YC U3.5   (86%, 1.61, +23.6%)
-    #   2. O3.5       (53%, 2.62, +15.1%)
-    #   3. YC U2.5   (68%, 1.83, +13.1%)
-    #   4. O2.5       (74%, 1.66, +13.4%)
-    #   5. O4.5       (34%, 4.50, +11.6%)
-    #   6. CK O8.5   (67%, 1.72, +8.6%)
-    #   7. BTTS Sí   (70%, 1.61, +8.0%)
-    #   8. Norway 1X2 (25.3%, 4.90, +4.9%)
+    # Portugal vs Spain  (xG 1.00-1.42, total 2.42):
+    #   1. YC U3.5   (88.6%, 1.80, +33.1%)
+    #   2. YC U2.5   (72.3%, 2.25, +27.8%)
+    #   3. Portugal 1X2 (40.4%, 4.20, +16.6%)
+    #   4. BTTS No    (52.1%, 2.05, +3.3%)
     #
-    # Mexico vs England  (xG 1.33-1.00, total 2.33):
-    #   1. YC U3.5   (95%, 1.66, +35.2%)
-    #   2. YC U2.5   (85%, 2.25, +40.5%)
-    #   3. Mexico 1X2 (49%, 3.28, +18.5%)
-    #   4. CK O8.5   (59%, 2.00, +8.7%)
+    # USA vs Belgium  (xG 1.67-1.67, total 3.34):
+    #   1. YC U3.5   (72.1%, 1.80, +16.5%)
+    #   2. CK O9.5   (65.9%, 1.80, +10.4%)
+    #   3. YC U2.5   (50.1%, 2.25, +5.7%)
+    #   4. USA 1X2   (45.3%, 2.50, +5.3%)
+    #   5. O2.5      (64.9%, 1.66, +4.6%)
+    #   6. O3.5      (42.8%, 2.50, +2.8%)
 
-    # ─── 🟢 SEGURA: 2 patas alta prob — Tarjetas U3.5 ambos partidos ───
-    # Mexico Tarjetas U3.5 (95%, 1.66, +35.2%) + Brazil Tarjetas U3.5 (86%, 1.61, +23.6%)
+    # ─── 🟢 SEGURA: 3 patas alta prob — mercados mixtos ───
+    # PT YC U3.5 (88.6%, 1.80) + USA CK O9.5 (65.9%, 1.80) + USA O2.5 (64.9%, 1.66)
     cuota_seg = [
-        b[1].get('yellowCards', {}).get('under_3.5') or 1.66,  # Mexico YC U3.5
-        b[0].get('yellowCards', {}).get('under_3.5') or 1.61,  # Brazil YC U3.5
+        b[0].get('yellowCards', {}).get('under_3.5') or 1.80,
+        b[1].get('cornerKicks', {}).get('over_9.5') or 1.80,
+        b[1].get('over_25') or 1.66,
     ]
-    p_seg = 0.95 * 0.86  # 81.7%
-    cuota_seg_total = cuota_seg[0] * cuota_seg[1]  # ~2.67
-    edges_seg = [35.2, 23.6]
+    p_seg = 0.886 * 0.659 * 0.649  # 37.9%
+    cuota_seg_total = cuota_seg[0] * cuota_seg[1] * cuota_seg[2]  # ~5.38
+    edges_seg = [33.1, 10.4, 4.6]
 
-    # ─── 🟠 MEDIA: 3 mercados, 2 partidos — Tarjetas + Córners ───
-    # Mexico YC U3.5 (95%, 1.66) + Brazil CK O8.5 (67%, 1.72) + Brazil YC U3.5 (86%, 1.61)
+    # ─── 🟠 MEDIA: 3 patas, 2 mercados, ambos partidos ───
+    # PT YC U3.5 (88.6%, 1.80) + USA YC U3.5 (72.1%, 1.80) + PT BTTS No (52.1%, 2.05)
     cuota_med = [
-        b[1].get('yellowCards', {}).get('under_3.5') or 1.66,  # Mexico YC U3.5
-        b[0].get('cornerKicks', {}).get('over_8.5') or 1.72,   # Brazil CK O8.5
-        b[0].get('yellowCards', {}).get('under_3.5') or 1.61,  # Brazil YC U3.5
+        b[0].get('yellowCards', {}).get('under_3.5') or 1.80,
+        b[1].get('yellowCards', {}).get('under_3.5') or 1.80,
+        b[0].get('btts_no') or 2.05,
     ]
-    p_med = 0.95 * 0.67 * 0.86  # 54.7%
-    cuota_med_total = cuota_med[0] * cuota_med[1] * cuota_med[2]  # ~4.61
-    edges_med = [35.2, 8.6, 23.6]
+    p_med = 0.886 * 0.721 * 0.521  # 33.3%
+    cuota_med_total = cuota_med[0] * cuota_med[1] * cuota_med[2]  # ~6.64
+    edges_med = [33.1, 16.5, 3.3]
 
-    # ─── 🔴 SOÑADORA: 1X2 sorpresa + Goles + BTTS ───
-    # Mexico 1X2 (49%, 3.28, +18.5%) + Brazil O2.5 (74%, 1.66, +13.4%) + Brazil BTTS (70%, 1.61, +8.0%)
+    # ─── 🔴 SOÑADORA: 1X2 favoritos + seguro tarjetas ───
+    # PT 1X2 (40.4%, 4.20) + USA 1X2 (45.3%, 2.50) + PT YC U3.5 (88.6%, 1.80)
     cuota_son = [
-        b[1].get('1x2', {}).get('home') or 3.28,                # Mexico gana
-        b[0].get('over_25') or 1.66,                             # Brazil O2.5
-        b[0].get('btts_yes') or 1.61,                            # Brazil BTTS
+        b[0].get('1x2', {}).get('home') or 4.20,
+        b[1].get('1x2', {}).get('home') or 2.50,
+        b[0].get('yellowCards', {}).get('under_3.5') or 1.80,
     ]
-    p_son = 0.49 * 0.74 * 0.70  # 25.4%
-    cuota_son_total = cuota_son[0] * cuota_son[1] * cuota_son[2]  # ~8.78
-    edges_son = [18.5, 13.4, 8.0]
+    p_son = 0.404 * 0.453 * 0.886  # 16.2%
+    cuota_son_total = cuota_son[0] * cuota_son[1] * cuota_son[2]  # ~18.90
+    edges_son = [16.6, 5.3, 33.1]
 
-    # ─── 🔥 VOLÁTIL: 1X2 sorpresa + Goles altos + Córners ───
-    # Norway 1X2 (25.3%, 4.90, +4.9%) + Brazil O3.5 (53%, 2.62, +15.1%) + Mexico CK O8.5 (59%, 2.00, +8.7%)
+    # ─── 🔥 VOLÁTIL: 1X2 Portugal + goles altos + tarjetas ───
+    # PT 1X2 (40.4%, 4.20) + USA O3.5 (42.8%, 2.50) + PT YC U2.5 (72.3%, 2.25)
     cuota_vol = [
-        b[0].get('1x2', {}).get('away') or 4.90,                # Norway gana
-        b[0].get('over_35') or 2.62,                             # Brazil O3.5
-        b[1].get('cornerKicks', {}).get('over_8.5') or 2.00,    # Mexico CK O8.5
+        b[0].get('1x2', {}).get('home') or 4.20,
+        b[1].get('over_35') or 2.50,
+        b[0].get('yellowCards', {}).get('under_2.5') or 2.25,
     ]
-    p_vol = 0.253 * 0.53 * 0.59  # 7.9%
-    cuota_vol_total = cuota_vol[0] * cuota_vol[1] * cuota_vol[2]  # ~25.8
-    edges_vol = [4.9, 15.1, 8.7]
+    p_vol = 0.404 * 0.428 * 0.723  # 12.5%
+    cuota_vol_total = cuota_vol[0] * cuota_vol[1] * cuota_vol[2]  # ~23.62
+    edges_vol = [16.6, 2.8, 27.8]
 
     return {
         'segura': {
             'prob': p_seg, 'cuota': cuota_seg_total,
             'legs': [
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Tarjetas Under 3.5", 'cuota': cuota_seg[0], 'prob': 0.95, 'edge': edges_seg[0]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_seg[1], 'prob': 0.86, 'edge': edges_seg[1]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_seg[0], 'prob': 0.886, 'edge': edges_seg[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Córners Over 9.5", 'cuota': cuota_seg[1], 'prob': 0.659, 'edge': edges_seg[1]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Goles Over 2.5", 'cuota': cuota_seg[2], 'prob': 0.649, 'edge': edges_seg[2]},
             ],
-            'desc': '2 under de tarjetas — máxima probabilidad, ambos partidos'
+            'desc': 'Tarjetas + Córners + Goles — mercados mixtos, alta prob'
         },
         'media': {
             'prob': p_med, 'cuota': cuota_med_total,
             'legs': [
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Tarjetas Under 3.5", 'cuota': cuota_med[0], 'prob': 0.95, 'edge': edges_med[0]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Córners Over 8.5", 'cuota': cuota_med[1], 'prob': 0.67, 'edge': edges_med[1]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_med[2], 'prob': 0.86, 'edge': edges_med[2]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_med[0], 'prob': 0.886, 'edge': edges_med[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Tarjetas Under 3.5", 'cuota': cuota_med[1], 'prob': 0.721, 'edge': edges_med[1]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: BTTS No", 'cuota': cuota_med[2], 'prob': 0.521, 'edge': edges_med[2]},
             ],
-            'desc': 'Tarjetas + Córners — 3 mercados, ambos partidos'
+            'desc': 'Tarjetas ambos partidos + BTTS — diversificación por mercado'
         },
         'sonadora': {
             'prob': p_son, 'cuota': cuota_son_total,
             'legs': [
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Gana {m[1]['home']}", 'cuota': cuota_son[0], 'prob': 0.49, 'edge': edges_son[0]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Goles Over 2.5", 'cuota': cuota_son[1], 'prob': 0.74, 'edge': edges_son[1]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: BTTS Sí", 'cuota': cuota_son[2], 'prob': 0.70, 'edge': edges_son[2]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Gana {m[0]['home']}", 'cuota': cuota_son[0], 'prob': 0.404, 'edge': edges_son[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Gana {m[1]['home']}", 'cuota': cuota_son[1], 'prob': 0.453, 'edge': edges_son[1]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 3.5", 'cuota': cuota_son[2], 'prob': 0.886, 'edge': edges_son[2]},
             ],
-            'desc': '1X2 sorpresa + Goles + BTTS — cuota media-alta, value real'
+            'desc': 'Ambos favoritos ganan + tarjetas — cuota alta con value'
         },
         'volatil': {
             'prob': p_vol, 'cuota': cuota_vol_total,
             'legs': [
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Gana {m[0]['away']}", 'cuota': cuota_vol[0], 'prob': 0.253, 'edge': edges_vol[0]},
-                {'text': f"{m[0]['home']} vs {m[0]['away']}: Goles Over 3.5", 'cuota': cuota_vol[1], 'prob': 0.53, 'edge': edges_vol[1]},
-                {'text': f"{m[1]['home']} vs {m[1]['away']}: Córners Over 8.5", 'cuota': cuota_vol[2], 'prob': 0.59, 'edge': edges_vol[2]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Gana {m[0]['home']}", 'cuota': cuota_vol[0], 'prob': 0.404, 'edge': edges_vol[0]},
+                {'text': f"{m[1]['home']} vs {m[1]['away']}: Goles Over 3.5", 'cuota': cuota_vol[1], 'prob': 0.428, 'edge': edges_vol[1]},
+                {'text': f"{m[0]['home']} vs {m[0]['away']}: Tarjetas Under 2.5", 'cuota': cuota_vol[2], 'prob': 0.723, 'edge': edges_vol[2]},
             ],
-            'desc': '1X2 sorpresa + Goles altos + Córners — máxima volatilidad'
+            'desc': 'Portugal gana + goles altos + tarjetas — máxima volatilidad'
         }
     }
 
@@ -505,10 +505,10 @@ def generate_web():
     # Cargar datos de sportdb.dev
     sportdb_details = load_sportdb_details()
     
-    # Partidos de hoy 5 julio (Octavos de final)
+    # Partidos de hoy 6 julio (Octavos de final)
     matches_today = [
-        ("Brazil", "Norway", "18:00"),
-        ("Mexico", "England", "21:00"),
+        ("Portugal", "Spain", "19:00"),
+        ("USA", "Belgium", "00:00"),
     ]
     
     predictions = []
@@ -581,7 +581,7 @@ def generate_web():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mundial 2026 — Predicciones 5 Julio</title>
+    <title>Mundial 2026 — Predicciones 6 Julio</title>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         
