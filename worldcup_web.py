@@ -343,7 +343,7 @@ def _build_value_bets_html():
             for match_key, match_data in raw['matches'].items():
                 parts = match_key.split('_vs_')
                 match_label = f"{parts[0]} vs {parts[1]}" if len(parts) == 2 else match_key
-                for vb in match_data.get('value_bets', []):
+                for vb in match_data.get('vbs', []):
                     vb['match'] = match_label
                     extra_vbs.append(vb)
         elif isinstance(raw, list):
