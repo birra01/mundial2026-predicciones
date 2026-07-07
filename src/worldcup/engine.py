@@ -311,13 +311,26 @@ class WorldCupEngine:
         e_draw = elo_draw_raw / total_e
         e_away = elo_away / total_e
 
-        # ===== 3. POISSON → H/D/A (ya es nativo) =====
+        # ===== 3. POISSON → H/D/A =====
+        # Modelo multiplicativo (Dixon-Coles): ataque × defensa rival × promedio liga
+        # Esto captura correctamente la interacción: Egypt poco goleador vs Argentina sólida defensa
+        all_gf = [ts['avg_goals_for'] for ts in self.team_stats.values()]
+        league_avg = sum(all_gf) / len(all_gf) if all_gf else 1.5
+        
         h_gf = ht['avg_goals_for']
         h_ga = ht['avg_goals_against']
         a_gf = at['avg_goals_for']
         a_ga = at['avg_goals_against']
-        exp_hg = (h_gf + a_ga) / 2
-        exp_ag = (a_gf + h_ga) / 2
+        
+        # Strengths relativos al promedio de la liga
+        h_attack = h_gf / league_avg      # Argentina ataque: 1.77
+        h_defense = h_ga / league_avg     # Argentina defensa: 0.22 (muy bajo = muy bueno)
+        a_attack = a_gf / league_avg      # Egypt ataque: 1.11
+        a_defense = a_ga / league_avg     # Egypt defensa: 0.66
+        
+        # xG = fuerza atacante × debilidad defensiva rival × promedio liga
+        exp_hg = h_attack * a_defense * league_avg   # Argentina goles esperados
+        exp_ag = a_attack * h_defense * league_avg   # Egypt goles esperados (bajo contra defensa ARG)
 
         p_home_raw = p_draw_raw = p_away_raw = 0
         for hg in range(8):

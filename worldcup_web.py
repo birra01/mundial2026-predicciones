@@ -14,6 +14,7 @@ import webbrowser
 # Añadir src al path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 from worldcup.engine import WorldCupEngine
+from worldcup.tracker import BetTracker, MARKET_TYPES
 from value_bets import build_value_bets, load_all_matches, build_matchup_narrative, compute_team_averages, load_real_stats, compare_predictions, build_comparison_html, adjusted_prediction, PREDICTABLE_STATS
 
 # ─── Nombres en español para mostrar ───────────────────────────────────
@@ -387,7 +388,7 @@ def _build_value_bets_html():
             edge_class = 'edge-flat'
             edge_icon = '🟡'
 
-        ev = prob * cuota * 100  # EV%
+        ev = (prob / 100) * cuota * 100  # EV%
         edge_sign = '+' if edge >= 0 else ''
 
         html += f'''        <div class="value-bet-card {edge_class}">
@@ -397,7 +398,7 @@ def _build_value_bets_html():
             </div>
             <div class="value-bet-body">
                 <div class="value-bet-stat highlight">
-                    <div class="stat-num">{prob*100:.0f}%</div>
+                    <div class="stat-num">{prob:.1f}%</div>
                     <div class="stat-label">Prob. modelo</div>
                 </div>
                 <div class="value-bet-stat">
@@ -419,6 +420,146 @@ def _build_value_bets_html():
     return html
 
 
+def build_tracker_section(report):
+    """Genera HTML para la sección de aprendizaje del motor."""
+    o = report['overall']
+    by_market = report['by_market']
+    calibration = report.get('calibration', {})
+    learned = report.get('learned_weights', {})
+    recommendations = calibration.get('recommendations', [])
+    
+    def roi_color(roi):
+        if roi > 20: return '#00ff88'
+        if roi > 5: return '#88ff88'
+        if roi > 0: return '#ffff88'
+        if roi > -10: return '#ffaa88'
+        return '#ff4444'
+    
+    def wr_color(wr):
+        if wr > 55: return '#00ff88'
+        if wr > 50: return '#88ff88'
+        if wr > 45: return '#ffff88'
+        return '#ff4444'
+    
+    html = '''
+<div style="margin-top:40px;padding-top:30px;border-top:2px solid #1a2030">
+<h2 style="color:#60f0a0;font-size:1.5em;margin-bottom:20px">🧠 Motor de Aprendizaje</h2>
+<p style="color:#888;margin-bottom:20px">El motor registra cada predicción y la compara con el resultado real. Cuantos más partidos, más preciso.</p>
+'''
+    
+    # KPIs
+    profit_class = 'kpi-positive' if o['total_profit'] > 0 else 'kpi-negative'
+    profit_sign = '+' if o['total_profit'] > 0 else ''
+    roi_sign = '+' if o['roi'] > 0 else ''
+    
+    html += f'''
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:20px 0">
+  <div style="background:#12161f;border:1px solid #1a2030;border-radius:10px;padding:15px;text-align:center">
+    <div style="font-size:1.8em;font-weight:700;color:#f0c040">{o['total_matches']}</div>
+    <div style="color:#888;font-size:0.8em">Partidos</div>
+  </div>
+  <div style="background:#12161f;border:1px solid #1a2030;border-radius:10px;padding:15px;text-align:center">
+    <div style="font-size:1.8em;font-weight:700;color:#f0c040">{o['total_bets']}</div>
+    <div style="color:#888;font-size:0.8em">Apuestas</div>
+  </div>
+  <div style="background:#12161f;border:1px solid #1a2030;border-radius:10px;padding:15px;text-align:center">
+    <div style="font-size:1.8em;font-weight:700;color:{wr_color(o['win_rate'])}">{o['win_rate']}%</div>
+    <div style="color:#888;font-size:0.8em">Win Rate</div>
+  </div>
+  <div style="background:#12161f;border:1px solid #1a2030;border-radius:10px;padding:15px;text-align:center">
+    <div style="font-size:1.8em;font-weight:700;color:{profit_class}">{roi_sign}{o['roi']}%</div>
+    <div style="color:#888;font-size:0.8em">ROI</div>
+  </div>
+  <div style="background:#12161f;border:1px solid #1a2030;border-radius:10px;padding:15px;text-align:center">
+    <div style="font-size:1.8em;font-weight:700;color:{profit_class}">{profit_sign}{o['total_profit']}</div>
+    <div style="color:#888;font-size:0.8em">Profit</div>
+  </div>
+</div>
+'''
+    
+    # Tabla por mercado
+    html += '''
+<h3 style="color:#f0c040;margin:20px 0 10px">📊 Rendimiento por Mercado</h3>
+<table style="width:100%;border-collapse:collapse">
+<thead>
+<tr style="background:#12161f">
+  <th style="padding:10px;text-align:left;color:#f0c040;font-size:0.85em">MERCADO</th>
+  <th style="padding:10px;text-align:center;color:#f0c040;font-size:0.85em">BETS</th>
+  <th style="padding:10px;text-align:center;color:#f0c040;font-size:0.85em">WIN%</th>
+  <th style="padding:10px;text-align:center;color:#f0c040;font-size:0.85em">ROI</th>
+  <th style="padding:10px;text-align:center;color:#f0c040;font-size:0.85em">PROFIT</th>
+</tr>
+</thead>
+<tbody>'''
+    
+    for m, s in sorted(by_market.items(), key=lambda x: x[1]['roi'], reverse=True):
+        name = m.replace('_', ' ').title()
+        roi = s['roi']
+        wr = s['win_rate']
+        bets = s['bets']
+        profit = s['total_profit']
+        
+        roi_cls = 'color:#00ff88' if roi > 5 else 'color:#ff4444' if roi < -5 else 'color:#f0c040'
+        profit_sign = '+' if profit > 0 else ''
+        bar_w = min(100, max(5, abs(roi)))
+        bar_c = roi_color(roi)
+        
+        html += f'''
+<tr style="border-bottom:1px solid #1a2030">
+  <td style="padding:10px;font-weight:600">{name}</td>
+  <td style="padding:10px;text-align:center">{bets}</td>
+  <td style="padding:10px;text-align:center;color:{wr_color(wr)}">{wr}%</td>
+  <td style="padding:10px;text-align:center;{roi_cls}">{'+' if roi > 0 else ''}{roi}%</td>
+  <td style="padding:10px;text-align:center;{roi_cls}">{profit_sign}{profit}</td>
+</tr>'''
+    
+    html += '</tbody></table>'
+    
+    # Insights
+    insights = []
+    if 'corners_under' in by_market:
+        cu = by_market['corners_under']
+        if cu['roi'] > 10:
+            insights.append(f"✅ <strong>Córners Under</strong> es el mercado más rentable: +{cu['roi']}% ROI en {cu['bets']} apuestas.")
+    if 'cards_over' in by_market:
+        co = by_market['cards_over']
+        if co['roi'] > 5:
+            insights.append(f"✅ <strong>Tarjetas Over</strong> tiene edge consistente: +{co['roi']}% ROI, {co['win_rate']}% acierto.")
+    if 'corners_over' in by_market:
+        co = by_market['corners_over']
+        if co['roi'] < -5:
+            insights.append(f"❌ <strong>Córners Over</strong> pierde dinero: {co['roi']}% ROI. El modelo predice demasiados córners.")
+    
+    if insights:
+        html += '''
+<h3 style="color:#f0c040;margin:20px 0 10px">💡 Insights</h3>'''
+        for ins in insights:
+            html += f'''
+<div style="background:#12161f;border-left:4px solid #f0c040;border-radius:0 8px 8px 0;padding:12px 16px;margin:8px 0;color:#ccc">
+  {ins}
+</div>'''
+    
+    # Recomendaciones
+    if recommendations:
+        html += '''
+<h3 style="color:#f0c040;margin:20px 0 10px">🔧 Recomendaciones Automáticas</h3>'''
+        for rec in recommendations:
+            arrow = '⬆️' if rec['action'] == 'increase_weight' else '⬇️'
+            if rec['action'] == 'recalibrate_probabilities':
+                arrow = '🔄'
+            html += f'''
+<div style="background:#12161f;border:1px solid #1a2030;border-radius:8px;padding:12px;margin:6px 0;display:flex;align-items:center;gap:10px">
+  <span style="font-size:1.3em">{arrow}</span>
+  <div>
+    <div style="font-weight:600;color:#f0c040">{rec['market'].replace('_', ' ').title()}</div>
+    <div style="color:#aaa;font-size:0.9em">{rec['reason']}</div>
+  </div>
+</div>'''
+    
+    html += '</div>'
+    return html
+
+
 def generate_web():
     """Genera predicciones.html con diseño premium"""
     
@@ -436,10 +577,10 @@ def generate_web():
     # Cargar datos de sportdb.dev
     sportdb_details = load_sportdb_details()
     
-    # Partidos de hoy 6 julio (Octavos de final)
+    # Partidos de hoy 7 julio (Octavos de final)
     matches_today = [
-        ("Portugal", "Spain", "19:00"),
-        ("USA", "Belgium", "00:00"),
+        ("Argentina", "Egypt", "20:00"),
+        ("Switzerland", "Colombia", "23:00"),
     ]
     
     predictions = []
@@ -505,6 +646,29 @@ def generate_web():
         all_predictions_for_comparison = predictions
     comparisons = compare_predictions(all_predictions_for_comparison, real_stats)
     comparison_html = build_comparison_html(comparisons)
+    
+    # ─── TRACKER DE APRENDIZAJE ───
+    tracker = BetTracker()
+    # Registrar predicciones de hoy
+    for r in predictions:
+        match_name = f"{r['home_team']} vs {r['away_team']}"
+        tracker.log_prediction(match_name, r['home_team'], r['away_team'], r.get('value_bets', []))
+    # Intentar registrar resultados de partidos ya jugados
+    for r in predictions:
+        match_key = f"{r['home_team']} vs {r['away_team']}"
+        # Buscar stats reales
+        real = real_stats.get(match_key)
+        if not real:
+            for rk, rv in real_stats.items():
+                if rk.startswith('_'):
+                    continue
+                if rk.lower() == match_key.lower():
+                    real = rv
+                    break
+        if real:
+            tracker.log_result(match_key, real)
+    tracker_report = tracker.get_report()
+    tracker_html = build_tracker_section(tracker_report)
     
     # Construir HTML
     html = f"""<!DOCTYPE html>
@@ -1154,7 +1318,7 @@ def generate_web():
             <button class="tab-btn active" onclick="switchTab('partidos')">📊 Partidos</button>
             <button class="tab-btn" onclick="switchTab('combinadas')">🎰 Combinadas</button>
             <button class="tab-btn" onclick="switchTab('valuebets')">🎯 Value Bets</button>
-            <button class="tab-btn" onclick="switchTab('comparativa')">📈 Comparativa</button>
+            <button class="tab-btn" onclick="switchTab('aprendizaje')">🧠 Aprendizaje</button>
         </div>
         
         <script>
@@ -1413,15 +1577,9 @@ def generate_web():
 """ + _build_value_bets_html() + """
         </div><!-- /tab-valuebets -->
         
-        <div id="tab-comparativa" class="tab-panel">
-            <div class="comparison-section">
-                <h2>📈 COMPARATIVA: PREDICCIONES vs REALIDAD</h2>
-                <div style="background: linear-gradient(135deg, #3a2f1a 0%, #2a2010 100%); border: 1px solid #f0c040; border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; color: #f0c040; font-weight: 600;">
-                    ⚠️ COMPARATIVA DE LOS PARTIDOS PASADOS (1-4 julio 2026): Resultados de fase de grupos y Round of 32 ya disputados.
-                </div>
-                """ + comparison_html + """
-            </div>
-        </div><!-- /tab-comparativa -->
+        <div id="tab-aprendizaje" class="tab-panel">
+""" + tracker_html + """
+        </div><!-- /tab-aprendizaje -->
 """
 
     html += f"""

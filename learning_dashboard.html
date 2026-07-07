@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧠 Motor de Aprendizaje — World Cup 2026</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0a0e14; color:#e0e0e0; font-family:'Segoe UI',system-ui,sans-serif; padding:20px; }
+.container { max-width:1200px; margin:0 auto; }
+h1 { color:#60f0a0; font-size:2em; margin-bottom:5px; }
+h2 { color:#f0c040; font-size:1.3em; margin:25px 0 15px; border-bottom:1px solid #223; padding-bottom:8px; }
+.subtitle { color:#888; margin-bottom:25px; }
+
+/* KPI Cards */
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:15px; margin:20px 0; }
+.kpi { background:#12161f; border:1px solid #1a2030; border-radius:12px; padding:18px; text-align:center; }
+.kpi-value { font-size:2em; font-weight:700; }
+.kpi-label { color:#888; font-size:0.85em; margin-top:4px; }
+.kpi-positive { color:#00ff88; }
+.kpi-negative { color:#ff4444; }
+.kpi-neutral { color:#f0c040; }
+
+/* Table */
+table { width:100%; border-collapse:collapse; margin:10px 0; }
+th { background:#12161f; color:#f0c040; padding:12px; text-align:left; font-size:0.85em; text-transform:uppercase; letter-spacing:1px; }
+td { padding:10px 12px; border-bottom:1px solid #1a2030; }
+tr:hover { background:#12161f; }
+.badge { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.8em; font-weight:600; }
+.badge-green { background:#00ff8822; color:#00ff88; }
+.badge-red { background:#ff444422; color:#ff4444; }
+.badge-yellow { background:#f0c04022; color:#f0c040; }
+
+/* ROI Bar */
+.roi-bar { height:24px; border-radius:4px; position:relative; min-width:4px; }
+.roi-bar-bg { background:#1a2030; border-radius:4px; overflow:hidden; height:24px; }
+.roi-bar-fill { height:100%; border-radius:4px; transition:width 0.5s; display:flex; align-items:center; padding-left:8px; font-size:0.75em; font-weight:600; }
+
+/* Profit Chart (CSS-only) */
+.chart-container { background:#12161f; border:1px solid #1a2030; border-radius:12px; padding:20px; margin:15px 0; }
+.chart-line { display:flex; align-items:flex-end; height:200px; gap:2px; padding:0 5px; }
+.chart-bar { flex:1; min-width:3px; border-radius:2px 2px 0 0; transition:height 0.3s; }
+
+/* Recomendaciones */
+.rec-card { background:#12161f; border:1px solid #1a2030; border-radius:10px; padding:15px; margin:8px 0; display:flex; align-items:center; gap:12px; }
+.rec-icon { font-size:1.5em; }
+.rec-text { flex:1; }
+.rec-market { font-weight:600; color:#f0c040; }
+.rec-reason { color:#aaa; font-size:0.9em; }
+
+/* Bet History */
+.bet-won { color:#00ff88; }
+.bet-lost { color:#ff4444; }
+.bet-detail { font-size:0.8em; color:#888; }
+
+/* Scrollable */
+.scroll-x { overflow-x:auto; }
+
+/* Insights */
+.insight { background:linear-gradient(135deg,#12161f,#1a2030); border-left:4px solid #f0c040; border-radius:0 10px 10px 0; padding:15px 20px; margin:10px 0; }
+.insight-title { color:#f0c040; font-weight:600; margin-bottom:5px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🧠 Motor de Aprendizaje</h1>
+<p class="subtitle">World Cup 2026 — Tracking de predicciones vs resultados reales</p>
+
+<h2>📊 Resumen General</h2>
+<div class="kpi-grid">
+  <div class="kpi">
+    <div class="kpi-value kpi-neutral">6</div>
+    <div class="kpi-label">Partidos analizados</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-value kpi-neutral">120</div>
+    <div class="kpi-label">Apuestas totales</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-value" style="color:#88ff88">51.7%</div>
+    <div class="kpi-label">Win Rate</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-value kpi-positive">+6.5%</div>
+    <div class="kpi-label">ROI Global</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-value kpi-positive">+7.85</div>
+    <div class="kpi-label">Profit (units)</div>
+  </div>
+</div>
+
+<h2>📈 Evolución del Profit</h2>
+<div class="chart-container">
+  <div class="chart-line">
+    <div class="chart-bar" style="height:19px;background:#00ff88" title="2.53"></div>
+    <div class="chart-bar" style="height:26px;background:#00ff88" title="3.37"></div>
+    <div class="chart-bar" style="height:32px;background:#00ff88" title="4.17"></div>
+    <div class="chart-bar" style="height:42px;background:#00ff88" title="5.42"></div>
+    <div class="chart-bar" style="height:52px;background:#00ff88" title="6.66"></div>
+    <div class="chart-bar" style="height:56px;background:#00ff88" title="7.22"></div>
+    <div class="chart-bar" style="height:66px;background:#00ff88" title="8.49"></div>
+    <div class="chart-bar" style="height:72px;background:#00ff88" title="9.24"></div>
+    <div class="chart-bar" style="height:64px;background:#00ff88" title="8.24"></div>
+    <div class="chart-bar" style="height:67px;background:#00ff88" title="8.64"></div>
+    <div class="chart-bar" style="height:75px;background:#00ff88" title="9.64"></div>
+    <div class="chart-bar" style="height:80px;background:#00ff88" title="10.22"></div>
+    <div class="chart-bar" style="height:72px;background:#00ff88" title="9.22"></div>
+    <div class="chart-bar" style="height:91px;background:#00ff88" title="11.75"></div>
+    <div class="chart-bar" style="height:98px;background:#00ff88" title="12.59"></div>
+    <div class="chart-bar" style="height:104px;background:#00ff88" title="13.39"></div>
+    <div class="chart-bar" style="height:114px;background:#00ff88" title="14.64"></div>
+    <div class="chart-bar" style="height:124px;background:#00ff88" title="15.88"></div>
+    <div class="chart-bar" style="height:128px;background:#00ff88" title="16.44"></div>
+    <div class="chart-bar" style="height:138px;background:#00ff88" title="17.71"></div>
+    <div class="chart-bar" style="height:144px;background:#00ff88" title="18.46"></div>
+    <div class="chart-bar" style="height:136px;background:#00ff88" title="17.46"></div>
+    <div class="chart-bar" style="height:139px;background:#00ff88" title="17.86"></div>
+    <div class="chart-bar" style="height:147px;background:#00ff88" title="18.86"></div>
+    <div class="chart-bar" style="height:152px;background:#00ff88" title="19.44"></div>
+    <div class="chart-bar" style="height:144px;background:#00ff88" title="18.44"></div>
+    <div class="chart-bar" style="height:136px;background:#00ff88" title="17.44"></div>
+    <div class="chart-bar" style="height:128px;background:#00ff88" title="16.44"></div>
+    <div class="chart-bar" style="height:120px;background:#00ff88" title="15.44"></div>
+    <div class="chart-bar" style="height:113px;background:#00ff88" title="14.44"></div>
+    <div class="chart-bar" style="height:105px;background:#00ff88" title="13.44"></div>
+    <div class="chart-bar" style="height:97px;background:#00ff88" title="12.44"></div>
+    <div class="chart-bar" style="height:89px;background:#00ff88" title="11.44"></div>
+    <div class="chart-bar" style="height:104px;background:#00ff88" title="13.4"></div>
+    <div class="chart-bar" style="height:97px;background:#00ff88" title="12.4"></div>
+    <div class="chart-bar" style="height:99px;background:#00ff88" title="12.67"></div>
+    <div class="chart-bar" style="height:91px;background:#00ff88" title="11.67"></div>
+    <div class="chart-bar" style="height:83px;background:#00ff88" title="10.67"></div>
+    <div class="chart-bar" style="height:96px;background:#00ff88" title="12.37"></div>
+    <div class="chart-bar" style="height:89px;background:#00ff88" title="11.37"></div>
+    <div class="chart-bar" style="height:81px;background:#00ff88" title="10.37"></div>
+    <div class="chart-bar" style="height:73px;background:#00ff88" title="9.37"></div>
+    <div class="chart-bar" style="height:65px;background:#00ff88" title="8.37"></div>
+    <div class="chart-bar" style="height:57px;background:#00ff88" title="7.37"></div>
+    <div class="chart-bar" style="height:49px;background:#00ff88" title="6.37"></div>
+    <div class="chart-bar" style="height:42px;background:#00ff88" title="5.37"></div>
+    <div class="chart-bar" style="height:34px;background:#00ff88" title="4.37"></div>
+    <div class="chart-bar" style="height:49px;background:#00ff88" title="6.33"></div>
+    <div class="chart-bar" style="height:41px;background:#00ff88" title="5.33"></div>
+    <div class="chart-bar" style="height:43px;background:#00ff88" title="5.6"></div>
+    <div class="chart-bar" style="height:36px;background:#00ff88" title="4.6"></div>
+    <div class="chart-bar" style="height:28px;background:#00ff88" title="3.6"></div>
+    <div class="chart-bar" style="height:41px;background:#00ff88" title="5.3"></div>
+    <div class="chart-bar" style="height:33px;background:#00ff88" title="4.3"></div>
+    <div class="chart-bar" style="height:39px;background:#00ff88" title="5.1"></div>
+    <div class="chart-bar" style="height:49px;background:#00ff88" title="6.35"></div>
+    <div class="chart-bar" style="height:56px;background:#00ff88" title="7.18"></div>
+    <div class="chart-bar" style="height:48px;background:#00ff88" title="6.18"></div>
+    <div class="chart-bar" style="height:40px;background:#00ff88" title="5.18"></div>
+    <div class="chart-bar" style="height:32px;background:#00ff88" title="4.18"></div>
+    <div class="chart-bar" style="height:24px;background:#00ff88" title="3.18"></div>
+    <div class="chart-bar" style="height:17px;background:#00ff88" title="2.18"></div>
+    <div class="chart-bar" style="height:9px;background:#00ff88" title="1.18"></div>
+    <div class="chart-bar" style="height:13px;background:#00ff88" title="1.75"></div>
+    <div class="chart-bar" style="height:20px;background:#00ff88" title="2.65"></div>
+    <div class="chart-bar" style="height:27px;background:#00ff88" title="3.55"></div>
+    <div class="chart-bar" style="height:47px;background:#00ff88" title="6.08"></div>
+    <div class="chart-bar" style="height:54px;background:#00ff88" title="6.92"></div>
+    <div class="chart-bar" style="height:60px;background:#00ff88" title="7.72"></div>
+    <div class="chart-bar" style="height:70px;background:#00ff88" title="8.97"></div>
+    <div class="chart-bar" style="height:79px;background:#00ff88" title="10.21"></div>
+    <div class="chart-bar" style="height:84px;background:#00ff88" title="10.77"></div>
+    <div class="chart-bar" style="height:94px;background:#00ff88" title="12.04"></div>
+    <div class="chart-bar" style="height:100px;background:#00ff88" title="12.79"></div>
+    <div class="chart-bar" style="height:92px;background:#00ff88" title="11.79"></div>
+    <div class="chart-bar" style="height:95px;background:#00ff88" title="12.19"></div>
+    <div class="chart-bar" style="height:103px;background:#00ff88" title="13.19"></div>
+    <div class="chart-bar" style="height:107px;background:#00ff88" title="13.77"></div>
+    <div class="chart-bar" style="height:99px;background:#00ff88" title="12.77"></div>
+    <div class="chart-bar" style="height:119px;background:#00ff88" title="15.3"></div>
+    <div class="chart-bar" style="height:126px;background:#00ff88" title="16.14"></div>
+    <div class="chart-bar" style="height:132px;background:#00ff88" title="16.94"></div>
+    <div class="chart-bar" style="height:142px;background:#00ff88" title="18.19"></div>
+    <div class="chart-bar" style="height:152px;background:#00ff88" title="19.43"></div>
+    <div class="chart-bar" style="height:156px;background:#00ff88" title="19.99"></div>
+    <div class="chart-bar" style="height:166px;background:#00ff88" title="21.26"></div>
+    <div class="chart-bar" style="height:172px;background:#00ff88" title="22.01"></div>
+    <div class="chart-bar" style="height:164px;background:#00ff88" title="21.01"></div>
+    <div class="chart-bar" style="height:167px;background:#00ff88" title="21.41"></div>
+    <div class="chart-bar" style="height:175px;background:#00ff88" title="22.41"></div>
+    <div class="chart-bar" style="height:180px;background:#00ff88" title="22.99"></div>
+    <div class="chart-bar" style="height:172px;background:#00ff88" title="21.99"></div>
+    <div class="chart-bar" style="height:164px;background:#00ff88" title="20.99"></div>
+    <div class="chart-bar" style="height:156px;background:#00ff88" title="19.99"></div>
+    <div class="chart-bar" style="height:148px;background:#00ff88" title="18.99"></div>
+    <div class="chart-bar" style="height:140px;background:#00ff88" title="17.99"></div>
+    <div class="chart-bar" style="height:133px;background:#00ff88" title="16.99"></div>
+    <div class="chart-bar" style="height:125px;background:#00ff88" title="15.99"></div>
+    <div class="chart-bar" style="height:117px;background:#00ff88" title="14.99"></div>
+    <div class="chart-bar" style="height:132px;background:#00ff88" title="16.95"></div>
+    <div class="chart-bar" style="height:124px;background:#00ff88" title="15.95"></div>
+    <div class="chart-bar" style="height:126px;background:#00ff88" title="16.22"></div>
+    <div class="chart-bar" style="height:119px;background:#00ff88" title="15.22"></div>
+    <div class="chart-bar" style="height:111px;background:#00ff88" title="14.22"></div>
+    <div class="chart-bar" style="height:124px;background:#00ff88" title="15.92"></div>
+    <div class="chart-bar" style="height:116px;background:#00ff88" title="14.92"></div>
+    <div class="chart-bar" style="height:108px;background:#00ff88" title="13.92"></div>
+    <div class="chart-bar" style="height:101px;background:#00ff88" title="12.92"></div>
+    <div class="chart-bar" style="height:93px;background:#00ff88" title="11.92"></div>
+    <div class="chart-bar" style="height:85px;background:#00ff88" title="10.92"></div>
+    <div class="chart-bar" style="height:77px;background:#00ff88" title="9.92"></div>
+    <div class="chart-bar" style="height:69px;background:#00ff88" title="8.92"></div>
+    <div class="chart-bar" style="height:62px;background:#00ff88" title="7.92"></div>
+    <div class="chart-bar" style="height:77px;background:#00ff88" title="9.88"></div>
+    <div class="chart-bar" style="height:69px;background:#00ff88" title="8.88"></div>
+    <div class="chart-bar" style="height:71px;background:#00ff88" title="9.15"></div>
+    <div class="chart-bar" style="height:63px;background:#00ff88" title="8.15"></div>
+    <div class="chart-bar" style="height:55px;background:#00ff88" title="7.15"></div>
+    <div class="chart-bar" style="height:69px;background:#00ff88" title="8.85"></div>
+    <div class="chart-bar" style="height:61px;background:#00ff88" title="7.85"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;color:#666;font-size:0.75em;padding:5px 5px 0">
+    <span>Primera apuesta</span>
+    <span>Profit acumulado: +7.85 units</span>
+    <span>Última apuesta</span>
+  </div>
+</div>
+
+<h2>🎯 Rendimiento por Mercado</h2>
+<div class="scroll-x">
+<table>
+<thead>
+<tr><th>Mercado</th><th>Apuestas</th><th>Win Rate</th><th>ROI</th><th>Profit</th><th>Visual</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Corners Under</strong></td>
+  <td>18</td>
+  <td><span style="color:#ffff88">50.0%</span></td>
+  <td><span class="badge badge-green">+36.3%</span></td>
+  <td style="color:#00ff88">+6.54</td>
+  <td>
+    <div class="roi-bar-bg">
+      <div class="roi-bar-fill" style="width:36.3%;background:#00ff88">36.3%</div>
+    </div>
+  </td>
+</tr>
+<tr>
+  <td><strong>Cards Over</strong></td>
+  <td>48</td>
+  <td><span style="color:#88ff88">54.2%</span></td>
+  <td><span class="badge badge-green">+18.6%</span></td>
+  <td style="color:#00ff88">+8.93</td>
+  <td>
+    <div class="roi-bar-bg">
+      <div class="roi-bar-fill" style="width:18.6%;background:#88ff88">18.6%</div>
+    </div>
+  </td>
+</tr>
+<tr>
+  <td><strong>Cards Under</strong></td>
+  <td>4</td>
+  <td><span style="color:#ffff88">50.0%</span></td>
+  <td><span class="badge badge-red">-13.3%</span></td>
+  <td style="color:#ff4444">-0.53</td>
+  <td>
+    <div class="roi-bar-bg">
+      <div class="roi-bar-fill" style="width:13.3%;background:#ff4444">-13.3%</div>
+    </div>
+  </td>
+</tr>
+<tr>
+  <td><strong>Corners Over</strong></td>
+  <td>50</td>
+  <td><span style="color:#ffff88">50.0%</span></td>
+  <td><span class="badge badge-red">-14.2%</span></td>
+  <td style="color:#ff4444">-7.09</td>
+  <td>
+    <div class="roi-bar-bg">
+      <div class="roi-bar-fill" style="width:14.2%;background:#ff4444">-14.2%</div>
+    </div>
+  </td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2>💡 Insights del Motor</h2>
+
+<div class="insight">
+  <div class="insight-title">Córners Under = Edge real</div>
+  <div>Con 18 apuestas y 50.0% win rate, el modelo detecta bien los partidos con pocos córners. ROI de +36.3%. Mantener o subir peso.</div>
+</div>
+<div class="insight">
+  <div class="insight-title">Tarjetas Over = consistente</div>
+  <div>48 apuestas, 54.2% acierto. El modelo sobreestima tarjetas en general, pero eso genera edge en Over porque las cuotas están ajustadas para más tarjetas.</div>
+</div>
+<div class="insight">
+  <div class="insight-title">Córners Over = fuga de dinero</div>
+  <div>ROI -14.2% en 50 apuestas. El modelo predice demasiados córners. Reducir peso o invertir la dirección.</div>
+</div>
+<div class="insight">
+  <div class="insight-title">Cards Over: probabilidades poco fiables</div>
+  <div>Error de calibración del 24.5% — cuando el modelo dice 72.5%, gana el 54.2%. Las probabilidades del modelo no son confiables para este mercado.</div>
+</div>
+<div class="insight">
+  <div class="insight-title">Corners Over: probabilidades poco fiables</div>
+  <div>Error de calibración del 17.7% — cuando el modelo dice 65.4%, gana el 50.0%. Las probabilidades del modelo no son confiables para este mercado.</div>
+</div>
+<div class="insight">
+  <div class="insight-title">Corners Under: probabilidades poco fiables</div>
+  <div>Error de calibración del 19.6% — cuando el modelo dice 61.3%, gana el 50.0%. Las probabilidades del modelo no son confiables para este mercado.</div>
+</div>
+<div class="insight">
+  <div class="insight-title">Cards Under: probabilidades poco fiables</div>
+  <div>Error de calibración del 22.2% — cuando el modelo dice 70.8%, gana el 50.0%. Las probabilidades del modelo no son confiables para este mercado.</div>
+</div>
+
+<h2>🔧 Recomendaciones de Peso</h2>
+
+<div class="rec-card">
+  <div class="rec-icon">⬆️</div>
+  <div class="rec-text">
+    <div class="rec-market">Cards Over</div>
+    <div class="rec-reason">Subir peso: ROI +18.6%, win rate 54.2%</div>
+  </div>
+</div>
+<div class="rec-card">
+  <div class="rec-icon">🔄</div>
+  <div class="rec-text">
+    <div class="rec-market">Cards Over</div>
+    <div class="rec-reason">Recalibrar probabilidades: Calibration error 24.5% — probabilities are unreliable</div>
+  </div>
+</div>
+<div class="rec-card">
+  <div class="rec-icon">🔄</div>
+  <div class="rec-text">
+    <div class="rec-market">Corners Over</div>
+    <div class="rec-reason">Recalibrar probabilidades: Calibration error 17.7% — probabilities are unreliable</div>
+  </div>
+</div>
+<div class="rec-card">
+  <div class="rec-icon">⬆️</div>
+  <div class="rec-text">
+    <div class="rec-market">Corners Under</div>
+    <div class="rec-reason">Subir peso: ROI +36.3%, win rate 50.0%</div>
+  </div>
+</div>
+<div class="rec-card">
+  <div class="rec-icon">🔄</div>
+  <div class="rec-text">
+    <div class="rec-market">Corners Under</div>
+    <div class="rec-reason">Recalibrar probabilidades: Calibration error 19.6% — probabilities are unreliable</div>
+  </div>
+</div>
+
+<h2>📋 Historial de Apuestas (120 total)</h2>
+<div class="scroll-x">
+<table>
+<thead>
+<tr><th>Partido</th><th>Mercado</th><th>Línea</th><th>Prob</th><th>Cuota</th><th>Real</th><th>Resultado</th><th>P/L</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>cards over</td>
+  <td>OVER 2.5</td>
+  <td>72%</td>
+  <td>2.24</td>
+  <td>6</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+1.24</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>cards over</td>
+  <td>OVER 3.5</td>
+  <td>89%</td>
+  <td>1.56</td>
+  <td>6</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+0.56</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners over</td>
+  <td>OVER 9.0</td>
+  <td>54%</td>
+  <td>2.27</td>
+  <td>12</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+1.27</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners over</td>
+  <td>OVER 10.0</td>
+  <td>67%</td>
+  <td>1.75</td>
+  <td>12</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+0.75</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners under</td>
+  <td>UNDER 8.0</td>
+  <td>59%</td>
+  <td>3.02</td>
+  <td>12</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners over</td>
+  <td>OVER 11.0</td>
+  <td>77%</td>
+  <td>1.40</td>
+  <td>12</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+0.40</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners over</td>
+  <td>OVER 9.5</td>
+  <td>54%</td>
+  <td>2.00</td>
+  <td>12</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+1.00</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners over</td>
+  <td>OVER 10.5</td>
+  <td>67%</td>
+  <td>1.58</td>
+  <td>12</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+0.58</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners under</td>
+  <td>UNDER 7.0</td>
+  <td>71%</td>
+  <td>3.76</td>
+  <td>12</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>cards over</td>
+  <td>OVER 2.0</td>
+  <td>72%</td>
+  <td>3.53</td>
+  <td>6</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+2.53</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>cards over</td>
+  <td>OVER 3.0</td>
+  <td>89%</td>
+  <td>1.84</td>
+  <td>6</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+0.84</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>cards over</td>
+  <td>OVER 3.5</td>
+  <td>89%</td>
+  <td>1.80</td>
+  <td>6</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+0.80</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>cards over</td>
+  <td>OVER 2.5</td>
+  <td>72%</td>
+  <td>2.25</td>
+  <td>6</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+1.25</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>cards over</td>
+  <td>OVER 2.5</td>
+  <td>72%</td>
+  <td>2.24</td>
+  <td>6</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+1.24</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>cards over</td>
+  <td>OVER 3.5</td>
+  <td>89%</td>
+  <td>1.56</td>
+  <td>6</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+0.56</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners over</td>
+  <td>OVER 9.0</td>
+  <td>54%</td>
+  <td>2.27</td>
+  <td>12</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+1.27</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners over</td>
+  <td>OVER 10.0</td>
+  <td>67%</td>
+  <td>1.75</td>
+  <td>12</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+0.75</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners under</td>
+  <td>UNDER 8.0</td>
+  <td>59%</td>
+  <td>3.02</td>
+  <td>12</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners over</td>
+  <td>OVER 11.0</td>
+  <td>77%</td>
+  <td>1.40</td>
+  <td>12</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+0.40</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners over</td>
+  <td>OVER 9.5</td>
+  <td>54%</td>
+  <td>2.00</td>
+  <td>12</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+1.00</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners over</td>
+  <td>OVER 10.5</td>
+  <td>67%</td>
+  <td>1.58</td>
+  <td>12</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+0.58</td>
+</tr>
+<tr>
+  <td>Portugal vs Spain</td>
+  <td>corners under</td>
+  <td>UNDER 7.0</td>
+  <td>71%</td>
+  <td>3.76</td>
+  <td>12</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>cards over</td>
+  <td>OVER 3.0</td>
+  <td>72%</td>
+  <td>1.93</td>
+  <td>2</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>cards over</td>
+  <td>OVER 3.5</td>
+  <td>72%</td>
+  <td>1.80</td>
+  <td>2</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 9.5</td>
+  <td>66%</td>
+  <td>1.86</td>
+  <td>8</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 9.5</td>
+  <td>66%</td>
+  <td>1.80</td>
+  <td>8</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 10.5</td>
+  <td>54%</td>
+  <td>2.29</td>
+  <td>8</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 8.5</td>
+  <td>77%</td>
+  <td>1.50</td>
+  <td>8</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>cards over</td>
+  <td>OVER 3.5</td>
+  <td>72%</td>
+  <td>1.60</td>
+  <td>2</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners under</td>
+  <td>UNDER 11.5</td>
+  <td>58%</td>
+  <td>2.96</td>
+  <td>8</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+1.96</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>cards over</td>
+  <td>OVER 2.5</td>
+  <td>50%</td>
+  <td>2.36</td>
+  <td>2</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 7.5</td>
+  <td>86%</td>
+  <td>1.27</td>
+  <td>8</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+0.27</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>cards over</td>
+  <td>OVER 2.5</td>
+  <td>50%</td>
+  <td>2.25</td>
+  <td>2</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 10.0</td>
+  <td>54%</td>
+  <td>2.07</td>
+  <td>8</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners under</td>
+  <td>UNDER 11.0</td>
+  <td>58%</td>
+  <td>2.70</td>
+  <td>8</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+1.70</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 9.0</td>
+  <td>66%</td>
+  <td>1.64</td>
+  <td>8</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>cards over</td>
+  <td>OVER 3.0</td>
+  <td>72%</td>
+  <td>1.93</td>
+  <td>2</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>cards over</td>
+  <td>OVER 3.5</td>
+  <td>72%</td>
+  <td>1.80</td>
+  <td>2</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 9.5</td>
+  <td>66%</td>
+  <td>1.86</td>
+  <td>8</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 9.5</td>
+  <td>66%</td>
+  <td>1.80</td>
+  <td>8</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 10.5</td>
+  <td>54%</td>
+  <td>2.29</td>
+  <td>8</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 8.5</td>
+  <td>77%</td>
+  <td>1.50</td>
+  <td>8</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>cards over</td>
+  <td>OVER 3.5</td>
+  <td>72%</td>
+  <td>1.60</td>
+  <td>2</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners under</td>
+  <td>UNDER 11.5</td>
+  <td>58%</td>
+  <td>2.96</td>
+  <td>8</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+1.96</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>cards over</td>
+  <td>OVER 2.5</td>
+  <td>50%</td>
+  <td>2.36</td>
+  <td>2</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 7.5</td>
+  <td>86%</td>
+  <td>1.27</td>
+  <td>8</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+0.27</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>cards over</td>
+  <td>OVER 2.5</td>
+  <td>50%</td>
+  <td>2.25</td>
+  <td>2</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 10.0</td>
+  <td>54%</td>
+  <td>2.07</td>
+  <td>8</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners under</td>
+  <td>UNDER 11.0</td>
+  <td>58%</td>
+  <td>2.70</td>
+  <td>8</td>
+  <td class="bet-won">✅</td>
+  <td class="bet-won">+1.70</td>
+</tr>
+<tr>
+  <td>USA vs Belgium</td>
+  <td>corners over</td>
+  <td>OVER 9.0</td>
+  <td>66%</td>
+  <td>1.64</td>
+  <td>8</td>
+  <td class="bet-lost">❌</td>
+  <td class="bet-lost">-1.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div style="text-align:center;color:#444;padding:30px;font-size:0.8em">
+  Generado: 2026-07-07 12:54 | Motor de Aprendizaje v1.0
+</div>
+
+</div>
+</body>
+</html>

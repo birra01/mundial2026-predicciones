@@ -208,5 +208,25 @@
       "home": 61,
       "away": 39
     }
+  },
+  "Portugal vs Spain": {
+    "cornerKicks": {"home": 4, "away": 8, "total": 12},
+    "yellowCards": {"home": 3, "away": 3, "total": 6},
+    "totalShotsOnGoal": {"home": 8, "away": 14, "total": 22},
+    "shotsOnGoal": {"home": 2, "away": 6, "total": 8},
+    "fouls": {"home": 9, "away": 13, "total": 22},
+    "xg": {"home": 0.63, "away": 1.69},
+    "possession": {"home": 45, "away": 55},
+    "home_score": 0, "away_score": 1
+  },
+  "USA vs Belgium": {
+    "cornerKicks": {"home": 3, "away": 5, "total": 8},
+    "yellowCards": {"home": 2, "away": 0, "total": 2},
+    "totalShotsOnGoal": {"home": 7, "away": 15, "total": 22},
+    "shotsOnGoal": {"home": 2, "away": 7, "total": 9},
+    "fouls": {"home": 11, "away": 10, "total": 21},
+    "xg": {"home": 0.75, "away": 2.85},
+    "possession": {"home": 56, "away": 44},
+    "home_score": 1, "away_score": 4
   }
 }

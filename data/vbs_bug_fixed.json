@@ -1,541 +1,362 @@
 {
-  "date": "2026-07-06",
   "matches": {
-    "Portugal_vs_Spain": {
-      "value_bets": [
-        {
-          "market": "YC U2.0",
-          "pick": "U2.0",
-          "cuota": 3.53,
-          "prob": 72.16794093875072,
-          "edge": 43.83932904073372,
-          "src": "pinnacle"
-        },
+    "Argentina_vs_Egypt": {
+      "vbs": [
         {
           "market": "YC U3.0",
           "pick": "U3.0",
-          "cuota": 1.84,
-          "prob": 88.58768955233656,
-          "edge": 34.23986346538004,
-          "src": "pinnacle"
-        },
-        {
-          "market": "YC U3.5",
-          "pick": "U3.5",
-          "cuota": 1.8,
-          "prob": 88.58768955233656,
-          "edge": 33.032133996781,
-          "src": "bet365"
-        },
-        {
-          "market": "YC U2.5",
-          "pick": "U2.5",
-          "cuota": 2.25,
-          "prob": 72.16794093875072,
-          "edge": 27.723496494306275,
-          "src": "bet365"
-        },
-        {
-          "market": "YC U2.5",
-          "pick": "U2.5",
-          "cuota": 2.24,
-          "prob": 72.16794093875072,
-          "edge": 27.52508379589358,
-          "src": "pinnacle"
-        },
-        {
-          "market": "YC U3.5",
-          "pick": "U3.5",
-          "cuota": 1.558,
-          "prob": 88.58768955233656,
-          "edge": 24.402837177497016,
-          "src": "pinnacle"
-        },
-        {
-          "market": "1X2",
-          "pick": "Portugal",
-          "cuota": 4.2,
-          "prob": 40.4,
-          "edge": 16.59047619047619,
-          "src": "bet365"
-        },
-        {
-          "market": "CK U9.0",
-          "pick": "U9.0",
-          "cuota": 2.27,
-          "prob": 54.357826740657785,
-          "edge": 10.304963304534443,
-          "src": "pinnacle"
-        },
-        {
-          "market": "CK U10.0",
-          "pick": "U10.0",
-          "cuota": 1.746,
-          "prob": 66.58115764442125,
-          "edge": 9.307389030446455,
-          "src": "pinnacle"
-        },
-        {
-          "market": "CK U8.0",
-          "pick": "U8.0",
-          "cuota": 3.02,
-          "prob": 41.2614007723398,
-          "edge": 8.14881799088284,
-          "src": "pinnacle"
-        },
-        {
-          "market": "Goles U2.5",
-          "pick": "Under 2.5",
-          "cuota": 2.0,
-          "prob": 56.44922119556763,
-          "edge": 6.449221195567634,
-          "src": "bet365"
-        },
-        {
-          "market": "Goles U3.5",
-          "pick": "Under 3.5",
-          "cuota": 1.4,
-          "prob": 77.45323046863003,
-          "edge": 6.0246590400586,
-          "src": "bet365"
-        },
-        {
-          "market": "CK U11.0",
-          "pick": "U11.0",
-          "cuota": 1.404,
-          "prob": 76.95246871428115,
-          "edge": 5.727397489209918,
-          "src": "pinnacle"
-        },
-        {
-          "market": "Goles U1.5",
-          "pick": "Under 1.5",
-          "cuota": 4.0,
-          "prob": 30.411193171110128,
-          "edge": 5.4111931711101295,
-          "src": "bet365"
-        },
-        {
-          "market": "CK U9.5",
-          "pick": "U9.5",
-          "cuota": 2.0,
-          "prob": 54.357826740657785,
-          "edge": 4.357826740657789,
-          "src": "pinnacle"
+          "cuota": 1.854,
+          "prob": 72.14269441774826,
+          "edge": 18.205261839538988
         },
         {
           "market": "BTTS",
           "pick": "BTTS No",
-          "cuota": 2.05,
-          "prob": 52.06718406090924,
-          "edge": 3.286696256031191,
-          "src": "bet365"
-        },
-        {
-          "market": "CK U10.5",
-          "pick": "U10.5",
-          "cuota": 1.578,
-          "prob": 66.58115764442125,
-          "edge": 3.2098014973997113,
-          "src": "pinnacle"
-        },
-        {
-          "market": "Goles U4.5",
-          "pick": "Under 4.5",
-          "cuota": 1.14,
-          "prob": 90.16065607883277,
-          "edge": 2.441357833218727,
-          "src": "bet365"
-        },
-        {
-          "market": "CK U7.0",
-          "pick": "U7.0",
-          "cuota": 3.76,
-          "prob": 28.63270430289031,
-          "edge": 2.036959622039247,
-          "src": "pinnacle"
-        },
-        {
-          "market": "Goles U0.5",
-          "pick": "Under 0.5",
-          "cuota": 12.0,
-          "prob": 8.892161745938632,
-          "edge": 0.5588284126052987,
-          "src": "bet365"
-        }
-      ],
-      "combinadas": [
-        {
-          "name": "🛡️ SEGURA",
-          "cuota": 2.58,
-          "picks": [
-            {
-              "pick": "Tarjetas Menos de 3.0",
-              "cuota": 1.84,
-              "prob": 88.58768955233656
-            },
-            {
-              "pick": "Goles Under 3.5",
-              "cuota": 1.4,
-              "prob": 77.45323046863003
-            }
-          ],
-          "desc": "2 picks · Prob combinada 68.6% · Máxima fiabilidad",
-          "n_picks": 2
-        },
-        {
-          "name": "⚡ MEDIA",
-          "cuota": 4.94,
-          "picks": [
-            {
-              "pick": "Tarjetas Menos de 2.0",
-              "cuota": 3.53,
-              "prob": 72.16794093875072
-            },
-            {
-              "pick": "Goles Under 3.5",
-              "cuota": 1.4,
-              "prob": 77.45323046863003
-            }
-          ],
-          "desc": "2 picks · Mercados mixtos · Prob 55.9%",
-          "n_picks": 2
-        },
-        {
-          "name": "🌙 SOÑADORA",
-          "cuota": 33.66,
-          "picks": [
-            {
-              "pick": "Tarjetas Menos de 2.0",
-              "cuota": 3.53,
-              "prob": 72.16794093875072
-            },
-            {
-              "pick": "Gana Portugal",
-              "cuota": 4.2,
-              "prob": 40.4
-            },
-            {
-              "pick": "Córners Menos de 9.0",
-              "cuota": 2.27,
-              "prob": 54.357826740657785
-            }
-          ],
-          "desc": "3 mercados distintos · Prob 15.8% · Cuota alta",
-          "n_picks": 3
-        },
-        {
-          "name": "🔥 VOLÁTIL",
-          "cuota": 67.31,
-          "picks": [
-            {
-              "pick": "Tarjetas Menos de 2.0",
-              "cuota": 3.53,
-              "prob": 72.16794093875072
-            },
-            {
-              "pick": "Gana Portugal",
-              "cuota": 4.2,
-              "prob": 40.4
-            },
-            {
-              "pick": "Córners Menos de 9.0",
-              "cuota": 2.27,
-              "prob": 54.357826740657785
-            },
-            {
-              "pick": "Goles Under 2.5",
-              "cuota": 2.0,
-              "prob": 56.44922119556763
-            }
-          ],
-          "desc": "Max edge total (+77%) · 4 picks · Alta varianza",
-          "n_picks": 4
-        }
-      ],
-      "venue": {
-        "homeId": "WvJrjFVN",
-        "homeSlug": "portugal",
-        "homeName": "Portugal",
-        "homeLogo": "https://static.flashscore.com/res/image/data/IBvrXaZg-vZG58BBc.png",
-        "awayId": "bLyo6mco",
-        "awaySlug": "spain",
-        "awayName": "Spain",
-        "awayLogo": "https://static.flashscore.com/res/image/data/Od7JGXZA-0E8Iihe1.png",
-        "referee": "Taylor A.",
-        "venue": "AT&T Stadium",
-        "venueCity": "Arlington, TX",
-        "capacity": "95 000",
-        "events": []
-      }
-    },
-    "USA_vs_Belgium": {
-      "value_bets": [
-        {
-          "market": "YC U3.0",
-          "pick": "U3.0",
-          "cuota": 1.925,
-          "prob": 72.14269441774826,
-          "edge": 20.194642469696312,
-          "src": "pinnacle"
+          "cuota": 1.53,
+          "prob": 74.34124764409849,
+          "edge": 8.981770519915477
         },
         {
           "market": "YC U3.5",
           "pick": "U3.5",
-          "cuota": 1.8,
+          "cuota": 1.57,
           "prob": 72.14269441774826,
-          "edge": 16.587138862192695,
-          "src": "bet365"
+          "edge": 8.448426901824702
         },
         {
-          "market": "CK O9.5",
-          "pick": "O9.5",
-          "cuota": 1.862,
-          "prob": 65.9489357534339,
-          "edge": 12.243242949996736,
-          "src": "pinnacle"
+          "market": "YC U3.5",
+          "pick": "U3.5",
+          "cuota": 1.546,
+          "prob": 72.14269441774826,
+          "edge": 7.459641377644777
         },
         {
-          "market": "CK O9.5",
-          "pick": "O9.5",
-          "cuota": 1.8,
-          "prob": 65.9489357534339,
-          "edge": 10.393380197878344,
-          "src": "bet365"
-        },
-        {
-          "market": "CK O10.5",
-          "pick": "O10.5",
-          "cuota": 2.29,
-          "prob": 54.011129730631346,
-          "edge": 10.343007459888987,
-          "src": "pinnacle"
+          "market": "YC U2.5",
+          "pick": "U2.5",
+          "cuota": 2.3,
+          "prob": 50.18249254980112,
+          "edge": 6.704231680235894
         },
         {
           "market": "CK O8.5",
           "pick": "O8.5",
-          "cuota": 1.502,
-          "prob": 76.8014866832544,
-          "edge": 10.223590544772366,
-          "src": "pinnacle"
-        },
-        {
-          "market": "YC U3.5",
-          "pick": "U3.5",
-          "cuota": 1.602,
-          "prob": 72.14269441774826,
-          "edge": 9.720721883416171,
-          "src": "pinnacle"
-        },
-        {
-          "market": "CK O11.5",
-          "pick": "O11.5",
-          "cuota": 2.96,
-          "prob": 42.07332370782879,
-          "edge": 8.289539924045009,
-          "src": "pinnacle"
-        },
-        {
-          "market": "YC U2.5",
-          "pick": "U2.5",
-          "cuota": 2.36,
-          "prob": 50.182492549801104,
-          "edge": 7.809611193868898,
-          "src": "pinnacle"
+          "cuota": 2.08,
+          "prob": 54.43473956775813,
+          "edge": 6.357816490835056
         },
         {
           "market": "CK O7.5",
           "pick": "O7.5",
-          "cuota": 1.268,
-          "prob": 85.68084653492572,
-          "edge": 6.816493222622877,
-          "src": "pinnacle"
+          "cuota": 1.628,
+          "prob": 67.61030356871038,
+          "edge": 6.18524214364895
         },
         {
-          "market": "YC U2.5",
-          "pick": "U2.5",
-          "cuota": 2.25,
-          "prob": 50.182492549801104,
-          "edge": 5.738048105356663,
-          "src": "bet365"
+          "market": "CK O8.5",
+          "pick": "O8.5",
+          "cuota": 2.0,
+          "prob": 54.43473956775813,
+          "edge": 4.434739567758128
         },
         {
-          "market": "CK O10.0",
-          "pick": "O10.0",
-          "cuota": 2.07,
-          "prob": 54.011129730631346,
-          "edge": 5.70195098666999,
-          "src": "pinnacle"
+          "market": "CK O9.5",
+          "pick": "O9.5",
+          "cuota": 2.68,
+          "prob": 41.25917556680585,
+          "edge": 3.945742730984958
         },
         {
-          "market": "1X2",
-          "pick": "USA",
-          "cuota": 2.5,
-          "prob": 45.3,
-          "edge": 5.299999999999994,
-          "src": "bet365"
-        },
-        {
-          "market": "CK O11.0",
-          "pick": "O11.0",
-          "cuota": 2.7,
-          "prob": 42.07332370782879,
-          "edge": 5.036286670791757,
-          "src": "pinnacle"
-        },
-        {
-          "market": "CK O9.0",
-          "pick": "O9.0",
-          "cuota": 1.636,
-          "prob": 65.9489357534339,
-          "edge": 4.82424137690578,
-          "src": "pinnacle"
-        },
-        {
-          "market": "Goles O2.5",
-          "pick": "Over 2.5",
-          "cuota": 1.66,
-          "prob": 64.85433407087291,
-          "edge": 4.6133702154512175,
-          "src": "bet365"
-        },
-        {
-          "market": "Goles O3.5",
-          "pick": "Over 3.5",
-          "cuota": 2.5,
-          "prob": 42.84815814808491,
-          "edge": 2.8481581480849116,
-          "src": "bet365"
-        },
-        {
-          "market": "Goles O4.5",
-          "pick": "Over 4.5",
-          "cuota": 4.5,
-          "prob": 24.473001252556937,
-          "edge": 2.2507790303347153,
-          "src": "bet365"
-        },
-        {
-          "market": "Goles O1.5",
-          "pick": "Over 1.5",
-          "cuota": 1.2,
-          "prob": 84.62036034882618,
-          "edge": 1.2870270154928476,
-          "src": "bet365"
-        },
-        {
-          "market": "Goles O0.5",
-          "pick": "Over 0.5",
-          "cuota": 1.04,
-          "prob": 96.45630422784014,
-          "edge": 0.30245807399399416,
-          "src": "bet365"
+          "market": "CK O6.5",
+          "pick": "O6.5",
+          "cuota": 1.32,
+          "prob": 79.32191601400129,
+          "edge": 3.5643402564255355
         }
       ],
       "combinadas": [
         {
           "name": "🛡️ SEGURA",
-          "cuota": 2.44,
           "picks": [
             {
-              "pick": "Tarjetas Menos de 3.0",
-              "cuota": 1.925,
-              "prob": 72.14269441774826
+              "pick": "BTTS No",
+              "cuota": 1.53,
+              "prob": 74.34124764409849
             },
             {
-              "pick": "Córners Más de 7.5",
-              "cuota": 1.268,
-              "prob": 85.68084653492572
+              "pick": "Córners Más de 6.5",
+              "cuota": 1.32,
+              "prob": 79.32191601400129
             }
           ],
-          "desc": "2 picks · Prob combinada 61.8% · Máxima fiabilidad",
+          "cuota": 2.02,
+          "desc": "Prob 59.0% · Baja varianza",
           "n_picks": 2
         },
         {
           "name": "⚡ MEDIA",
-          "cuota": 3.58,
           "picks": [
             {
-              "pick": "Tarjetas Menos de 3.0",
-              "cuota": 1.925,
-              "prob": 72.14269441774826
+              "pick": "BTTS No",
+              "cuota": 1.53,
+              "prob": 74.34124764409849
             },
             {
-              "pick": "Córners Más de 9.5",
-              "cuota": 1.862,
-              "prob": 65.9489357534339
+              "pick": "Córners Más de 8.5",
+              "cuota": 2.0,
+              "prob": 54.43473956775813
             }
           ],
-          "desc": "2 picks · Mercados mixtos · Prob 47.6%",
+          "cuota": 3.06,
+          "desc": "Prob 40.5% · Riesgo moderado",
           "n_picks": 2
         },
         {
           "name": "🌙 SOÑADORA",
-          "cuota": 8.96,
           "picks": [
             {
-              "pick": "Tarjetas Menos de 3.0",
-              "cuota": 1.925,
+              "pick": "BTTS No",
+              "cuota": 1.53,
+              "prob": 74.34124764409849
+            },
+            {
+              "pick": "Tarjetas Menos de 3.5",
+              "cuota": 1.546,
               "prob": 72.14269441774826
             },
             {
-              "pick": "Córners Más de 9.5",
-              "cuota": 1.862,
-              "prob": 65.9489357534339
-            },
-            {
-              "pick": "Gana USA",
-              "cuota": 2.5,
-              "prob": 45.3
+              "pick": "Córners Más de 7.5",
+              "cuota": 1.628,
+              "prob": 67.61030356871038
             }
           ],
-          "desc": "3 mercados distintos · Prob 21.6% · Cuota alta",
+          "cuota": 3.85,
+          "desc": "Prob 36.3% · Arriesgado · Cuota alta",
           "n_picks": 3
         },
         {
           "name": "🔥 VOLÁTIL",
-          "cuota": 14.88,
           "picks": [
             {
-              "pick": "Tarjetas Menos de 3.0",
-              "cuota": 1.925,
-              "prob": 72.14269441774826
+              "pick": "BTTS No",
+              "cuota": 1.53,
+              "prob": 74.34124764409849
+            },
+            {
+              "pick": "Tarjetas Menos de 2.5",
+              "cuota": 2.3,
+              "prob": 50.18249254980112
             },
             {
               "pick": "Córners Más de 9.5",
-              "cuota": 1.862,
-              "prob": 65.9489357534339
-            },
-            {
-              "pick": "Gana USA",
-              "cuota": 2.5,
-              "prob": 45.3
-            },
-            {
-              "pick": "Goles Over 2.5",
-              "cuota": 1.66,
-              "prob": 64.85433407087291
+              "cuota": 2.68,
+              "prob": 41.25917556680585
             }
           ],
-          "desc": "Max edge total (+42%) · 4 picks · Alta varianza",
-          "n_picks": 4
+          "cuota": 9.43,
+          "desc": "Prob 15.4% · Max cuota · Alta varianza",
+          "n_picks": 3
+        }
+      ]
+    },
+    "Switzerland_vs_Colombia": {
+      "vbs": [
+        {
+          "market": "YC U3.0",
+          "pick": "U3.0",
+          "cuota": 1.99,
+          "prob": 79.25363299535329,
+          "edge": 29.002376713946255
+        },
+        {
+          "market": "YC U3.5",
+          "pick": "U3.5",
+          "cuota": 1.8,
+          "prob": 79.25363299535329,
+          "edge": 23.69807743979773
+        },
+        {
+          "market": "CK O8.5",
+          "pick": "O8.5",
+          "cuota": 1.83,
+          "prob": 76.8014866832544,
+          "edge": 22.156677940085
+        },
+        {
+          "market": "CK O9.5",
+          "pick": "O9.5",
+          "cuota": 2.28,
+          "prob": 65.9489357534339,
+          "edge": 22.08928663062688
+        },
+        {
+          "market": "CK O8.5",
+          "pick": "O8.5",
+          "cuota": 1.826,
+          "prob": 76.8014866832544,
+          "edge": 22.036974087416496
+        },
+        {
+          "market": "BTTS",
+          "pick": "BTTS No",
+          "cuota": 1.8,
+          "prob": 76.10330175691028,
+          "edge": 20.547746201354723
+        },
+        {
+          "market": "YC U4.0",
+          "pick": "U4.0",
+          "cuota": 1.408,
+          "prob": 91.2304691497996,
+          "edge": 20.207741877072326
+        },
+        {
+          "market": "CK O10.5",
+          "pick": "O10.5",
+          "cuota": 2.95,
+          "prob": 54.011129730631346,
+          "edge": 20.112824645885585
+        },
+        {
+          "market": "YC U2.5",
+          "pick": "U2.5",
+          "cuota": 2.47,
+          "prob": 58.721913873445295,
+          "edge": 18.23608391393113
+        },
+        {
+          "market": "CK O7.5",
+          "pick": "O7.5",
+          "cuota": 1.465,
+          "prob": 85.68084653492572,
+          "edge": 17.42146086939671
+        },
+        {
+          "market": "YC U3.5",
+          "pick": "U3.5",
+          "cuota": 1.617,
+          "prob": 79.25363299535329,
+          "edge": 17.410714009577156
+        },
+        {
+          "market": "CK O9.0",
+          "pick": "O9.0",
+          "cuota": 2.04,
+          "prob": 65.9489357534339,
+          "edge": 16.92932791029665
+        },
+        {
+          "market": "CK O10.0",
+          "pick": "O10.0",
+          "cuota": 2.69,
+          "prob": 54.011129730631346,
+          "edge": 16.836408541040264
+        },
+        {
+          "market": "CK O8.0",
+          "pick": "O8.0",
+          "cuota": 1.595,
+          "prob": 76.8014866832544,
+          "edge": 14.105561918364106
+        },
+        {
+          "market": "CK O6.5",
+          "pick": "O6.5",
+          "cuota": 1.238,
+          "prob": 92.13856279068668,
+          "edge": 11.36311852574321
+        },
+        {
+          "market": "CK O7.0",
+          "pick": "O7.0",
+          "cuota": 1.297,
+          "prob": 85.68084653492572,
+          "edge": 8.579844221895637
         }
       ],
-      "venue": {
-        "homeId": "fuitL4CF",
-        "homeSlug": "usa",
-        "homeName": "USA",
-        "homeLogo": "https://static.flashscore.com/res/image/data/GpV4Cle5-MPdHoKT3.png",
-        "awayId": "GbB957na",
-        "awaySlug": "belgium",
-        "awayName": "Belgium",
-        "awayLogo": "https://static.flashscore.com/res/image/data/Qur1J5jl-dtrVaP64.png",
-        "referee": "Makhadmeh A.",
-        "venue": "Lumen Field",
-        "venueCity": "Seattle, WA",
-        "capacity": "72 000",
-        "events": []
-      }
+      "combinadas": [
+        {
+          "name": "🛡️ SEGURA",
+          "picks": [
+            {
+              "pick": "Tarjetas Menos de 4.0",
+              "cuota": 1.408,
+              "prob": 91.2304691497996
+            },
+            {
+              "pick": "Córners Más de 6.5",
+              "cuota": 1.238,
+              "prob": 92.13856279068668
+            }
+          ],
+          "cuota": 1.74,
+          "desc": "Prob 84.1% · Baja varianza",
+          "n_picks": 2
+        },
+        {
+          "name": "⚡ MEDIA",
+          "picks": [
+            {
+              "pick": "Tarjetas Menos de 3.0",
+              "cuota": 1.99,
+              "prob": 79.25363299535329
+            },
+            {
+              "pick": "Córners Más de 8.0",
+              "cuota": 1.595,
+              "prob": 76.8014866832544
+            }
+          ],
+          "cuota": 3.17,
+          "desc": "Prob 60.9% · Riesgo moderado",
+          "n_picks": 2
+        },
+        {
+          "name": "🌙 SOÑADORA",
+          "picks": [
+            {
+              "pick": "BTTS No",
+              "cuota": 1.8,
+              "prob": 76.10330175691028
+            },
+            {
+              "pick": "Córners Más de 7.5",
+              "cuota": 1.465,
+              "prob": 85.68084653492572
+            },
+            {
+              "pick": "Tarjetas Menos de 3.5",
+              "cuota": 1.617,
+              "prob": 79.25363299535329
+            }
+          ],
+          "cuota": 4.26,
+          "desc": "Prob 51.7% · Arriesgado · Cuota alta",
+          "n_picks": 3
+        },
+        {
+          "name": "🔥 VOLÁTIL",
+          "picks": [
+            {
+              "pick": "BTTS No",
+              "cuota": 1.8,
+              "prob": 76.10330175691028
+            },
+            {
+              "pick": "Córners Más de 10.5",
+              "cuota": 2.95,
+              "prob": 54.011129730631346
+            },
+            {
+              "pick": "Tarjetas Menos de 2.5",
+              "cuota": 2.47,
+              "prob": 58.721913873445295
+            }
+          ],
+          "cuota": 13.12,
+          "desc": "Prob 24.1% · Max cuota · Alta varianza",
+          "n_picks": 3
+        }
+      ]
     }
   }
 }

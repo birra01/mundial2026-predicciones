@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-07-07T12:49:34.678763",
+  "market_performance": {
+    "cards_over": {
+      "bets": 48,
+      "wins": 26,
+      "losses": 22,
+      "win_rate": 54.2,
+      "roi": 18.6,
+      "total_profit": 8.93,
+      "avg_prob": 72.5,
+      "calibration_error": 24.5
+    },
+    "corners_over": {
+      "bets": 50,
+      "wins": 25,
+      "losses": 25,
+      "win_rate": 50.0,
+      "roi": -14.2,
+      "total_profit": -7.09,
+      "avg_prob": 65.4,
+      "calibration_error": 17.7
+    },
+    "corners_under": {
+      "bets": 18,
+      "wins": 9,
+      "losses": 9,
+      "win_rate": 50.0,
+      "roi": 36.3,
+      "total_profit": 6.54,
+      "avg_prob": 61.3,
+      "calibration_error": 19.6
+    },
+    "cards_under": {
+      "bets": 4,
+      "wins": 2,
+      "losses": 2,
+      "win_rate": 50.0,
+      "roi": -13.3,
+      "total_profit": -0.53,
+      "avg_prob": 70.8,
+      "calibration_error": 22.2
+    }
+  },
+  "weight_adjustments": {
+    "cards_over": 1.372,
+    "corners_under": 1.5
+  },
+  "recommendations": [
+    {
+      "market": "cards_over",
+      "action": "increase_weight",
+      "reason": "ROI +18.6%, win rate 54.2%",
+      "suggested_weight": 1.372
+    },
+    {
+      "market": "cards_over",
+      "action": "recalibrate_probabilities",
+      "reason": "Calibration error 24.5% — probabilities are unreliable"
+    },
+    {
+      "market": "corners_over",
+      "action": "recalibrate_probabilities",
+      "reason": "Calibration error 17.7% — probabilities are unreliable"
+    },
+    {
+      "market": "corners_under",
+      "action": "increase_weight",
+      "reason": "ROI +36.3%, win rate 50.0%",
+      "suggested_weight": 1.5
+    },
+    {
+      "market": "corners_under",
+      "action": "recalibrate_probabilities",
+      "reason": "Calibration error 19.6% — probabilities are unreliable"
+    }
+  ]
+}
