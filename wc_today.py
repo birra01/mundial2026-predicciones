@@ -8,18 +8,14 @@ from worldcup.engine import WorldCupEngine
 API_KEY = open('.oddspapi_key').read().strip()
 BASE = 'https://api.oddspapi.io/v4'
 
-# Equipos: (nombre_cache_odds, nombre_motor, hora_local_ET)
+# Equipos: (nombre_cache_odds, nombre_motor, nombre_cache_odds2, nombre_motor2, hora_local_CET)
 MATCHES = [
-    ("Ivory Coast", "Côte d'Ivoire", "Norway", "Norway", "23:00"),
-    ("France", "France", "Sweden", "Sweden", "03:00"),
-    ("Mexico", "Mexico", "Ecuador", "Ecuador", "03:00"),
+    ("France", "France", "Morocco", "Morocco", "22:00"),
 ]
 
 # Fixture IDs del cache
 FIXTURE_IDS = {
-    "Ivory Coast vs Norway": "id1000001653452561",
-    "France vs Sweden": "id1000001653452543",
-    "Mexico vs Ecuador": "id1000001653452563",
+    "France vs Morocco": "id1000001653452525",
 }
 
 # Outcome ID -> significado
