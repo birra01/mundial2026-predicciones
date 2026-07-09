@@ -4,52 +4,45 @@
     "France_vs_Morocco": {
       "value_bets": [
         {
-          "market": "Tarjetas",
-          "pick": "Tarjetas -2.5",
-          "cuota": 2.25,
-          "prob": 79.79701939684101,
-          "edge": 35.4
-        },
-        {
-          "market": "Tarjetas",
-          "pick": "Tarjetas -3.5",
-          "cuota": 1.66,
-          "prob": 94.8167370641863,
-          "edge": 34.6
+          "market": "Goles",
+          "pick": "Goles +1.5",
+          "cuota": 1.3,
+          "prob": 93.0,
+          "edge": 16.3
         },
         {
           "market": "Goles",
           "pick": "Goles +2.5",
           "cuota": 2.0,
-          "prob": 81.5298270186413,
+          "prob": 81.5,
           "edge": 31.5
         },
         {
           "market": "Goles",
           "pick": "Goles +3.5",
           "cuota": 3.5,
-          "prob": 59.883685268536766,
+          "prob": 59.9,
           "edge": 31.3
+        },
+        {
+          "market": "BTTS",
+          "pick": "Ambos Marcan",
+          "cuota": 2.0,
+          "prob": 52.5,
+          "edge": 2.5
         },
         {
           "market": "Corners",
           "pick": "Corners +8.5",
           "cuota": 1.66,
-          "prob": 80.80469650654611,
+          "prob": 80.8,
           "edge": 20.6
-        },
-        {
-          "market": "Goles",
-          "pick": "Goles +1.5",
-          "cuota": 1.3,
-          "prob": 95.49507976064422,
-          "edge": 18.6
         },
         {
           "market": "Corners",
           "pick": "Corners +9.5",
           "cuota": 1.83,
-          "prob": 70.30878765243315,
+          "prob": 70.3,
           "edge": 15.7
         },
         {
@@ -58,165 +51,117 @@
           "cuota": 6.25,
           "prob": 22.4,
           "edge": 6.4
-        },
-        {
-          "market": "BTTS",
-          "pick": "Ambos Marcan",
-          "cuota": 2.0,
-          "prob": 52.46928011257008,
-          "edge": 2.5
-        },
-        {
-          "market": "1X2",
-          "pick": "Empate",
-          "cuota": 3.9,
-          "prob": 22.1,
-          "edge": -3.5
-        },
-        {
-          "market": "1X2",
-          "pick": "France gana",
-          "cuota": 1.57,
-          "prob": 55.50000000000001,
-          "edge": -8.2
-        },
-        {
-          "market": "Corners",
-          "pick": "Corners -9.5",
-          "cuota": 1.83,
-          "prob": 29.691212347566843,
-          "edge": -25.0
-        },
-        {
-          "market": "Corners",
-          "pick": "Corners -8.5",
-          "cuota": 2.1,
-          "prob": 19.195303493453885,
-          "edge": -28.4
-        },
-        {
-          "market": "Tarjetas",
-          "pick": "Tarjetas +3.5",
-          "cuota": 2.1,
-          "prob": 5.183262935813704,
-          "edge": -42.4
-        },
-        {
-          "market": "Tarjetas",
-          "pick": "Tarjetas +2.5",
-          "cuota": 1.57,
-          "prob": 20.20298060315899,
-          "edge": -43.5
         }
       ],
       "combinadas": [
         {
           "name": "SEGURA",
-          "desc": "Cuota 4.50",
+          "desc": "Baja varianza, ambos picks muy probables",
           "picks": [
             {
-              "market": "Tarjetas",
-              "pick": "Tarjetas -2.5",
-              "cuota": 2.25,
-              "prob": 79.79701939684101,
-              "edge": 35.4
+              "market": "Goles",
+              "pick": "Goles +1.5",
+              "cuota": 1.3,
+              "prob": 93.0,
+              "edge": 16.3
             },
             {
-              "market": "Goles",
-              "pick": "Goles +2.5",
-              "cuota": 2.0,
-              "prob": 81.5298270186413,
-              "edge": 31.5
+              "market": "Corners",
+              "pick": "Corners +8.5",
+              "cuota": 1.66,
+              "prob": 80.8,
+              "edge": 20.6
             }
-          ]
+          ],
+          "cuota_total": 2.16,
+          "prob_total": 75.1
         },
         {
           "name": "MEDIA",
-          "desc": "Cuota 7.47",
+          "desc": "Riesgo moderado, xG 3.10 justifica +2.5",
           "picks": [
-            {
-              "market": "Tarjetas",
-              "pick": "Tarjetas -2.5",
-              "cuota": 2.25,
-              "prob": 79.79701939684101,
-              "edge": 35.4
-            },
             {
               "market": "Goles",
               "pick": "Goles +2.5",
               "cuota": 2.0,
-              "prob": 81.5298270186413,
+              "prob": 81.5,
               "edge": 31.5
             },
             {
               "market": "Corners",
               "pick": "Corners +8.5",
               "cuota": 1.66,
-              "prob": 80.80469650654611,
+              "prob": 80.8,
               "edge": 20.6
             }
-          ]
+          ],
+          "cuota_total": 3.32,
+          "prob_total": 65.9
         },
         {
           "name": "SONADORA",
-          "desc": "Cuota 7.47",
+          "desc": "Francia gana pero Marruecos marca",
           "picks": [
             {
-              "market": "Tarjetas",
-              "pick": "Tarjetas -2.5",
-              "cuota": 2.25,
-              "prob": 79.79701939684101,
-              "edge": 35.4
+              "market": "1X2",
+              "pick": "France gana",
+              "cuota": 1.57,
+              "prob": 55.5,
+              "edge": -6.3
             },
             {
               "market": "Goles",
               "pick": "Goles +2.5",
               "cuota": 2.0,
-              "prob": 81.5298270186413,
+              "prob": 81.5,
               "edge": 31.5
             },
             {
-              "market": "Corners",
-              "pick": "Corners +8.5",
-              "cuota": 1.66,
-              "prob": 80.80469650654611,
-              "edge": 20.6
+              "market": "BTTS",
+              "pick": "Ambos Marcan",
+              "cuota": 2.0,
+              "prob": 52.5,
+              "edge": 2.5
             }
-          ]
+          ],
+          "cuota_total": 6.28,
+          "prob_total": 23.7
         },
         {
           "name": "VOLATIL",
-          "desc": "Cuota 46.69",
+          "desc": "Escenario soñado: goleada con emoción",
           "picks": [
             {
-              "market": "Tarjetas",
-              "pick": "Tarjetas -2.5",
-              "cuota": 2.25,
-              "prob": 79.79701939684101,
-              "edge": 35.4
+              "market": "1X2",
+              "pick": "France gana",
+              "cuota": 1.57,
+              "prob": 55.5,
+              "edge": -6.3
             },
             {
               "market": "Goles",
-              "pick": "Goles +2.5",
+              "pick": "Goles +3.5",
+              "cuota": 3.5,
+              "prob": 59.9,
+              "edge": 31.3
+            },
+            {
+              "market": "BTTS",
+              "pick": "Ambos Marcan",
               "cuota": 2.0,
-              "prob": 81.5298270186413,
-              "edge": 31.5
+              "prob": 52.5,
+              "edge": 2.5
             },
             {
               "market": "Corners",
-              "pick": "Corners +8.5",
-              "cuota": 1.66,
-              "prob": 80.80469650654611,
-              "edge": 20.6
-            },
-            {
-              "market": "1X2",
-              "pick": "Morocco gana",
-              "cuota": 6.25,
-              "prob": 22.4,
-              "edge": 6.4
+              "pick": "Corners +9.5",
+              "cuota": 1.83,
+              "prob": 70.3,
+              "edge": 15.7
             }
-          ]
+          ],
+          "cuota_total": 20.11,
+          "prob_total": 12.3
         }
       ]
     }
