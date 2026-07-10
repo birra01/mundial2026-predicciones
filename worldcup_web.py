@@ -1405,6 +1405,35 @@ def generate_web():
             line-height: 1.5;
         }}
         .preview-verdict strong {{ color: #f0c040; }}
+        .preview-section {{
+            margin-bottom: 18px;
+        }}
+        .preview-section h3 {{
+            font-size: 0.9em;
+            color: #f0c040;
+            margin-bottom: 10px;
+        }}
+        .preview-table {{
+            background: #0a0e27;
+            border-radius: 10px;
+            border: 1px solid #1a1f3a;
+            overflow: hidden;
+        }}
+        .ptr {{
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            align-items: center;
+            border-bottom: 1px solid #111530;
+            font-size: 0.82em;
+        }}
+        .ptr:last-child {{ border-bottom: none; }}
+        .ptr:first-child {{ background: #0d1230; font-weight: 700; color: #8890b0; }}
+        .pl, .pr, .ph, .pa {{ padding: 7px 12px; }}
+        .pl {{ color: #2ecc71; text-align: left; }}
+        .pr {{ color: #e74c3c; text-align: right; }}
+        .ph {{ color: #e0e0e0; text-align: left; font-weight: 600; }}
+        .pa {{ color: #e0e0e0; text-align: right; font-weight: 600; }}
+        .pc {{ color: #8890b0; text-align: center; }}
         
         /* ─── RESPONSIVE ─── */
         @media (max-width: 768px) {{
@@ -1467,63 +1496,172 @@ def generate_web():
         else:
             pred_text = "Empate"
         
+        # xG blend para away (fallback cuando engine da 0)
+        away_xg = eg['away'] if eg['away'] > 0 else ts['away']['avg_goals_for'] * max(ts['home']['avg_goals_against'], 0.5) / max(ts['home']['avg_goals_against'], 0.5)
+        home_xg = eg['home']
+        # Poisson helpers
+        import math as _m
+        def _poiss(k, lam):
+            return (_m.exp(-lam) * lam**k) / _m.factorial(k)
+        home_lam = (home_xg + ts['home']['avg_goals_for']) / 2
+        away_lam = (away_xg + ts['away']['avg_goals_for']) / 2
+        home_dist = [_poiss(k, home_lam) for k in range(5)]
+        away_dist = [_poiss(k, away_lam) for k in range(5)]
+        # Cuotas reales
+        b365_odds, _ = get_match_odds(odds_cache, r['home_team'], r['away_team'])
+        o25 = b365_odds.get('over_25', 1.80)
+        u25 = b365_odds.get('under_25', 2.00)
+        btts_y = b365_odds.get('btts_yes', 1.75)
+        btts_n = b365_odds.get('btts_no', 2.00)
+        o95c = b365_odds.get('cornerKicks', {}).get('over_9.5', 2.0)
+        u95c = b365_odds.get('cornerKicks', {}).get('under_9.5', 1.72)
+        o35y = b365_odds.get('yellowCards', {}).get('over_3.5', 2.2)
+        u35y = b365_odds.get('yellowCards', {}).get('under_3.5', 1.61)
+        total_corners = ts['home']['avg_stats_raw']['cornerKicks'] + ts['away']['avg_stats_raw']['cornerKicks']
+        total_cards = ts['home']['avg_stats_raw']['yellowCards'] + ts['away']['avg_stats_raw']['yellowCards']
+        # xG Poisson blend
+        hxg_blend = (home_xg + home_lam) / 2
+        axg_blend = (away_xg + away_lam) / 2
+
         html += f"""
         <div class="match-preview">
             <div class="preview-header" onclick="this.nextElementSibling.classList.toggle('open')">
                 <h2>📋 Previa del Partido</h2>
-                <span class="preview-toggle">▼ Ver análisis</span>
+                <span class="preview-toggle">▼ Ver análisis completo</span>
             </div>
             <div class="preview-body">
                 <div class="preview-content">
-                    <div class="preview-grid">
-                        <div class="preview-team home">
-                            <h3>🏳️ {display_name(r['home_team'])}</h3>
-                            <div class="preview-stat"><span class="label">Forma</span><span class="value">{''.join('✅' if x=='W' else '🟡' if x=='D' else '❌' for x in ts['home']['results'])}</span></div>
-                            <div class="preview-stat"><span class="label">Goles/partido</span><span class="value">{ts['home']['avg_goals_for']:.1f}</span></div>
-                            <div class="preview-stat"><span class="label">Encajados/partido</span><span class="value">{ts['home']['avg_goals_against']:.1f}</span></div>
-                            <div class="preview-stat"><span class="label">Posesión media</span><span class="value">{ts['home']['avg_stats_raw']['ballPossession']:.0f}%</span></div>
-                            <div class="preview-stat"><span class="label">Corners/partido</span><span class="value">{ts['home']['avg_stats_raw']['cornerKicks']:.1f}</span></div>
-                            <div class="preview-stat"><span class="label">Tarjetas/partido</span><span class="value">{ts['home']['avg_stats_raw']['yellowCards']:.1f}</span></div>
-                            <div class="preview-stat"><span class="label">xG promedio</span><span class="value">{ts['home']['avg_stats_raw']['expectedGoals']:.2f}</span></div>
-                            <div class="preview-stat"><span class="label">Rivales</span><span class="value">{', '.join(ts['home']['opponents'])}</span></div>
-                        </div>
-                        <div class="preview-team away">
-                            <h3>🏳️ {display_name(r['away_team'])}</h3>
-                            <div class="preview-stat"><span class="label">Forma</span><span class="value">{''.join('✅' if x=='W' else '🟡' if x=='D' else '❌' for x in ts['away']['results'])}</span></div>
-                            <div class="preview-stat"><span class="label">Goles/partido</span><span class="value">{ts['away']['avg_goals_for']:.1f}</span></div>
-                            <div class="preview-stat"><span class="label">Encajados/partido</span><span class="value">{ts['away']['avg_goals_against']:.1f}</span></div>
-                            <div class="preview-stat"><span class="label">Posesión media</span><span class="value">{ts['away']['avg_stats_raw']['ballPossession']:.0f}%</span></div>
-                            <div class="preview-stat"><span class="label">Corners/partido</span><span class="value">{ts['away']['avg_stats_raw']['cornerKicks']:.1f}</span></div>
-                            <div class="preview-stat"><span class="label">Tarjetas/partido</span><span class="value">{ts['away']['avg_stats_raw']['yellowCards']:.1f}</span></div>
-                            <div class="preview-stat"><span class="label">xG promedio</span><span class="value">{ts['away']['avg_stats_raw']['expectedGoals']:.2f}</span></div>
-                            <div class="preview-stat"><span class="label">Rivales</span><span class="value">{', '.join(ts['away']['opponents'])}</span></div>
+
+                    <!-- FORMA RECIENTE -->
+                    <div class="preview-section">
+                        <h3>📊 Forma Reciente</h3>
+                        <div class="preview-grid">
+                            <div class="preview-team home">
+                                <h3>🏳️ {display_name(r['home_team'])} ({ts['home']['games']} partidos oficiales)</h3>
+                                <div class="preview-stat"><span class="label">Forma</span><span class="value">{''.join('✅' if x=='W' else '🟡' if x=='D' else '❌' for x in ts['home']['results'])}</span></div>
+                                <div class="preview-stat"><span class="label">Goles a favor</span><span class="value">{ts['home']['goals_for']}</span></div>
+                                <div class="preview-stat"><span class="label">Goles en contra</span><span class="value">{ts['home']['goals_against']}</span></div>
+                                <div class="preview-stat"><span class="label">Rivales enfrentados</span><span class="value">{', '.join(ts['home']['opponents'])}</span></div>
+                            </div>
+                            <div class="preview-team away">
+                                <h3>🏳️ {display_name(r['away_team'])} ({ts['away']['games']} partidos oficiales)</h3>
+                                <div class="preview-stat"><span class="label">Forma</span><span class="value">{''.join('✅' if x=='W' else '🟡' if x=='D' else '❌' for x in ts['away']['results'])}</span></div>
+                                <div class="preview-stat"><span class="label">Goles a favor</span><span class="value">{ts['away']['goals_for']}</span></div>
+                                <div class="preview-stat"><span class="label">Goles en contra</span><span class="value">{ts['away']['goals_against']}</span></div>
+                                <div class="preview-stat"><span class="label">Rivales enfrentados</span><span class="value">{', '.join(ts['away']['opponents'])}</span></div>
+                            </div>
                         </div>
                     </div>
-                    
+
+                    <!-- ESTADÍSTICAS CLAVE -->
+                    <div class="preview-section">
+                        <h3>📈 Estadísticas por Partido</h3>
+                        <div class="preview-table">
+                            <div class="ptr"><div class="pl">{display_name(r['home_team'])}</div><div class="pc">Stat</div><div class="pr">{display_name(r['away_team'])}</div></div>
+                            <div class="ptr"><div class="ph">{ts['home']['avg_stats_raw']['ballPossession']:.0f}%</div><div class="pc">Posesión</div><div class="pa">{ts['away']['avg_stats_raw']['ballPossession']:.0f}%</div></div>
+                            <div class="ptr"><div class="ph">{hxg_blend:.2f}</div><div class="pc">xG promedio</div><div class="pa">{axg_blend:.2f}</div></div>
+                            <div class="ptr"><div class="ph">{ts['home']['avg_goals_for']:.1f}</div><div class="pc">Goles marcados</div><div class="pa">{ts['away']['avg_goals_for']:.1f}</div></div>
+                            <div class="ptr"><div class="ph">{ts['home']['avg_goals_against']:.1f}</div><div class="pc">Goles encajados</div><div class="pa">{ts['away']['avg_goals_against']:.1f}</div></div>
+                            <div class="ptr"><div class="ph">{ts['home']['avg_stats_raw']['cornerKicks']:.1f}</div><div class="pc">Corners</div><div class="pa">{ts['away']['avg_stats_raw']['cornerKicks']:.1f}</div></div>
+                            <div class="ptr"><div class="ph">{ts['home']['avg_stats_raw']['yellowCards']:.1f}</div><div class="pc">Tarjetas amarillas</div><div class="pa">{ts['away']['avg_stats_raw']['yellowCards']:.1f}</div></div>
+                            <div class="ptr"><div class="ph">{ts['home']['avg_stats_raw']['totalShotsOnGoal']:.0f}</div><div class="pc">Tiros totales</div><div class="pa">{ts['away']['avg_stats_raw']['totalShotsOnGoal']:.0f}</div></div>
+                            <div class="ptr"><div class="ph">{ts['home']['avg_stats_raw']['shotsOnGoal']:.1f}</div><div class="pc">Tiros a puerta</div><div class="pa">{ts['away']['avg_stats_raw']['shotsOnGoal']:.1f}</div></div>
+                            <div class="ptr"><div class="ph">{ts['home']['avg_stats_raw']['bigChanceScored']:.1f}</div><div class="pc">Ocasiones claras</div><div class="pa">{ts['away']['avg_stats_raw']['bigChanceScored']:.1f}</div></div>
+                            <div class="ptr"><div class="ph">{ts['home']['avg_stats_raw']['fouls']:.1f}</div><div class="pc">Faltas</div><div class="pa">{ts['away']['avg_stats_raw']['fouls']:.1f}</div></div>
+                        </div>
+                    </div>
+
+                    <!-- xG -->
                     <div class="preview-xg">
                         <div class="xg-home">
                             <div class="xg-team">{display_name(r['home_team'])}</div>
-                            <div class="xg-val">{eg['home']:.2f}</div>
+                            <div class="xg-val">{hxg_blend:.2f}</div>
                         </div>
                         <div class="xg-vs">⚡ xG ⚡</div>
                         <div class="xg-away">
                             <div class="xg-team">{display_name(r['away_team'])}</div>
-                            <div class="xg-val">{eg['away'] if eg['away'] > 0 else ts['away']['avg_goals_for'] * (ts['home']['avg_goals_against'] if ts['home']['avg_goals_against'] > 0 else 0.5) / max(ts['home']['avg_goals_against'], 0.5):.2f}</div>
+                            <div class="xg-val">{axg_blend:.2f}</div>
                         </div>
                     </div>
-                    
+
+                    <!-- POISSON -->
+                    <div class="preview-section">
+                        <h3>🎯 Distribución de Goles (Poisson λ={home_lam:.2f} / {away_lam:.2f})</h3>
+                        <div class="preview-grid">
+                            <div class="preview-team home">
+                                <h3>{display_name(r['home_team'])}</h3>
+                                {''.join(f'<div class="preview-stat"><span class="label">{k} goles</span><span class="value">{v*100:.0f}%</span></div>' for k, v in enumerate(home_dist[:4]))}
+                                <div class="preview-stat"><span class="label">4+ goles</span><span class="value">{sum(home_dist[4:])*100:.0f}%</span></div>
+                            </div>
+                            <div class="preview-team away">
+                                <h3>{display_name(r['away_team'])}</h3>
+                                {''.join(f'<div class="preview-stat"><span class="label">{k} goles</span><span class="value">{v*100:.0f}%</span></div>' for k, v in enumerate(away_dist[:4]))}
+                                <div class="preview-stat"><span class="label">4+ goles</span><span class="value">{sum(away_dist[4:])*100:.0f}%</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CUOTAS -->
+                    <div class="preview-section">
+                        <h3>💰 Cuotas y Value (bet365)</h3>
+                        <div class="preview-table">
+                            <div class="ptr"><div class="pl">Cuota</div><div class="pc">Mercado</div><div class="pr">Edge</div></div>
+                            <div class="ptr"><div class="ph">{b365_odds.get('home', '—')}</div><div class="pc">{display_name(r['home_team'])} gana</div><div class="pa">{p['home'] - 100/b365_odds.get('home', 99):+.1f}%</div></div>
+                            <div class="ptr"><div class="ph">{b365_odds.get('draw', '—')}</div><div class="pc">Empate</div><div class="pa">{p['draw'] - 100/b365_odds.get('draw', 99):+.1f}%</div></div>
+                            <div class="ptr"><div class="ph">{b365_odds.get('away', '—')}</div><div class="pc">{display_name(r['away_team'])} gana</div><div class="pa">{p['away'] - 100/b365_odds.get('away', 99):+.1f}%</div></div>
+                            <div class="ptr"><div class="ph">{o25}</div><div class="pc">Goles O2.5</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">{u25}</div><div class="pc">Goles U2.5</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">{btts_y}</div><div class="pc">BTTS Sí</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">{btts_n}</div><div class="pc">BTTS No</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">{o95c}</div><div class="pc">Corners O9.5</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">{u95c}</div><div class="pc">Corners U9.5</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">{o35y}</div><div class="pc">Tarjetas O3.5</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">{u35y}</div><div class="pc">Tarjetas U3.5</div><div class="pa">—</div></div>
+                        </div>
+                    </div>
+
+                    <!-- ANÁLISIS TÁCTICO -->
                     <div class="preview-tactical">
                         <h3>🔬 Análisis Táctico</h3>
-                        <p><strong>Estilo de juego:</strong> España domina con posesión alta ({ts['home']['avg_stats_raw']['ballPossession']:.0f}%) y juego de toque. Bélgica depende del contraataque ({ts['away']['avg_stats_raw']['ballPossession']:.0f}% posesión).</p>
-                        <p><strong>Fortaleza de España:</strong> {ts['home']['avg_goals_for']:.1f} goles/partido, solo {ts['home']['avg_goals_against']:.1f} encajados. Defensa impenetrable en knockouts. {ts['home']['avg_stats_raw']['cornerKicks']:.1f} corners/partido generando presión constante.</p>
-                        <p><strong>Debilidad de Bélgica:</strong> {ts['away']['avg_goals_against']:.1f} goles encajados/partido. Defensa frágil contra equipos de calidad. Encajó 2 goles contra Irán y Egipto, equipos inferiores.</p>
-                        <p><strong>Clave táctica:</strong> Si Bélgica se echa atrás, España la desgasta con posesión y termina marcando. Si Bélgica se abre, deja espacios para el contraataque español. En cuartos de final, la presión es máxima y los equipos son más conservadores.</p>
-                        <p><strong>Córners y tarjetas:</strong> España ({ts['home']['avg_stats_raw']['cornerKicks']:.1f}) y Bélgica ({ts['away']['avg_stats_raw']['cornerKicks']:.1f}) generan ~{(ts['home']['avg_stats_raw']['cornerKicks'] + ts['away']['avg_stats_raw']['cornerKicks']):.0f} corners totales. Tarjetas bajas: {ts['home']['avg_stats_raw']['yellowCards']:.1f} + {ts['away']['avg_stats_raw']['yellowCards']:.1f} = ~{(ts['home']['avg_stats_raw']['yellowCards'] + ts['away']['avg_stats_raw']['yellowCards']):.1f} promedio.</p>
-                        <p><strong>Pronóstico:</strong> España gana 2-0 o 2-1. Bélgica no tiene defensa para aguantar 90 minutos contra el juego español. xG combinado: {eg['home']:.2f} vs {eg['away'] if eg['away'] > 0 else ts['away']['avg_goals_for'] * (ts['home']['avg_goals_against'] if ts['home']['avg_goals_against'] > 0 else 0.5) / max(ts['home']['avg_goals_against'], 0.5):.2f}.</p>
+                        <p><strong>Estilo de juego:</strong> {display_name(r['home_team'])} domina con posesión alta ({ts['home']['avg_stats_raw']['ballPossession']:.0f}%) y juego de toque. {display_name(r['away_team'])} depende del contraataque y transiciones rápidas ({ts['away']['avg_stats_raw']['ballPossession']:.0f}% posesión).</p>
+                        <p><strong>Fortaleza {display_name(r['home_team'])}:</strong> {ts['home']['avg_goals_for']:.1f} goles/partido, solo {ts['home']['avg_goals_against']:.1f} encajados. Defensa impenetrable en knockouts. {ts['home']['avg_stats_raw']['cornerKicks']:.1f} corners/partido generando presión constante.</p>
+                        <p><strong>Debilidad {display_name(r['away_team'])}:</strong> {ts['away']['avg_goals_against']:.1f} goles encajados/partido. Defensa frágil contra equipos de calidad.</p>
+                        <p><strong>Clave táctica:</strong> Si {display_name(r['away_team'])} se echa atrás, {display_name(r['home_team'])} la desgasta con posesión y termina marcando. Si se abre, deja espacios para el contraataque. En cuartos de final la presión es máxima y los equipos son más conservadores.</p>
+                        <p><strong>Cárneros y tarjetas:</strong> {display_name(r['home_team'])} ({ts['home']['avg_stats_raw']['cornerKicks']:.1f}) + {display_name(r['away_team'])} ({ts['away']['avg_stats_raw']['cornerKicks']:.1f}) = ~{total_corners:.0f} corners esperados. Tarjetas: ~{total_cards:.1f} promedio.</p>
+                        <p><strong>Pronóstico:</strong> {display_name(r['home_team'])} gana 2-0 o 2-1. {display_name(r['away_team'])} no tiene defensa para aguantar 90 minutos.</p>
                     </div>
-                    
+
+                    <!-- MODELO -->
+                    <div class="preview-section">
+                        <h3>🧠 Desglose del Modelo (4 × 25%)</h3>
+                        <div class="preview-grid">
+                            <div class="preview-team home">
+                                <h3>{display_name(r['home_team'])}</h3>
+                                <div class="preview-stat"><span class="label">Elo</span><span class="value">{r['model_breakdown']['elo']}%</span></div>
+                                <div class="preview-stat"><span class="label">Estadístico</span><span class="value">{r['model_breakdown']['statistical']}%</span></div>
+                                <div class="preview-stat"><span class="label">Poisson</span><span class="value">{r['model_breakdown']['poisson']}%</span></div>
+                                <div class="preview-stat"><span class="label">Elo diff</span><span class="value">+{elo['diff']}</span></div>
+                            </div>
+                            <div class="preview-team away">
+                                <h3>Resultado</h3>
+                                <div class="preview-stat"><span class="label">{display_name(r['home_team'])}</span><span class="value">{p['home']}%</span></div>
+                                <div class="preview-stat"><span class="label">Empate</span><span class="value">{p['draw']}%</span></div>
+                                <div class="preview-stat"><span class="label">{display_name(r['away_team'])}</span><span class="value">{p['away']}%</span></div>
+                                <div class="preview-stat"><span class="label">Confianza</span><span class="value">{r['confidence']}</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NARRATIVA -->
+                    <div class="preview-tactical">
+                        <h3>📝 Narrativa del Partido</h3>
+                        <p>{display_name(r['home_team'])} llega como favorita clara. {ts['home']['wins']} victorias de {ts['home']['games']}, {ts['home']['goals_against']} goles encajados en knockouts. Su posesión y control del juego sofocan a los rivales.</p>
+                        <p>{display_name(r['away_team'])} es el caballo oscuro. {ts['away']['avg_goals_for']:.1f} goles/partido pero con {ts['away']['avg_goals_against']:.1f} encajados. Su defensa es el talón de Aquiles.</p>
+                        <p>En cuartos de final, la presión es máxima. {display_name(r['away_team'])} necesita atacar si quiere ganar, lo que deja espacios para {display_name(r['home_team'])}. Si se echa atrás, {display_name(r['home_team'])} la desgasta con posesión.</p>
+                    </div>
+
                     <div class="preview-verdict">
-                        <p>🎯 <strong>Modelo:</strong> {display_name(r['home_team'])} {p['home']}% · Empate {p['draw']}% · {display_name(r['away_team'])} {p['away']}%. Elo +{elo['diff']}. Confianza {r['confidence']}.</p>
+                        <p>🎯 <strong>Pronóstico final:</strong> {display_name(r['home_team'])} gana 2-0 o 2-1. xG: {hxg_blend:.2f} vs {axg_blend:.2f}. {display_name(r['away_team'])} no tiene defensa para aguantar.</p>
                     </div>
                 </div>
             </div>

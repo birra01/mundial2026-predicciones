@@ -733,6 +733,35 @@
             line-height: 1.5;
         }
         .preview-verdict strong { color: #f0c040; }
+        .preview-section {
+            margin-bottom: 18px;
+        }
+        .preview-section h3 {
+            font-size: 0.9em;
+            color: #f0c040;
+            margin-bottom: 10px;
+        }
+        .preview-table {
+            background: #0a0e27;
+            border-radius: 10px;
+            border: 1px solid #1a1f3a;
+            overflow: hidden;
+        }
+        .ptr {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            align-items: center;
+            border-bottom: 1px solid #111530;
+            font-size: 0.82em;
+        }
+        .ptr:last-child { border-bottom: none; }
+        .ptr:first-child { background: #0d1230; font-weight: 700; color: #8890b0; }
+        .pl, .pr, .ph, .pa { padding: 7px 12px; }
+        .pl { color: #2ecc71; text-align: left; }
+        .pr { color: #e74c3c; text-align: right; }
+        .ph { color: #e0e0e0; text-align: left; font-weight: 600; }
+        .pa { color: #e0e0e0; text-align: right; font-weight: 600; }
+        .pc { color: #8890b0; text-align: center; }
         
         /* ─── RESPONSIVE ─── */
         @media (max-width: 768px) {
@@ -780,39 +809,55 @@
         <div class="match-preview">
             <div class="preview-header" onclick="this.nextElementSibling.classList.toggle('open')">
                 <h2>📋 Previa del Partido</h2>
-                <span class="preview-toggle">▼ Ver análisis</span>
+                <span class="preview-toggle">▼ Ver análisis completo</span>
             </div>
             <div class="preview-body">
                 <div class="preview-content">
-                    <div class="preview-grid">
-                        <div class="preview-team home">
-                            <h3>🏳️ Spain</h3>
-                            <div class="preview-stat"><span class="label">Forma</span><span class="value">✅✅</span></div>
-                            <div class="preview-stat"><span class="label">Goles/partido</span><span class="value">2.5</span></div>
-                            <div class="preview-stat"><span class="label">Encajados/partido</span><span class="value">0.0</span></div>
-                            <div class="preview-stat"><span class="label">Posesión media</span><span class="value">67%</span></div>
-                            <div class="preview-stat"><span class="label">Corners/partido</span><span class="value">6.0</span></div>
-                            <div class="preview-stat"><span class="label">Tarjetas/partido</span><span class="value">0.5</span></div>
-                            <div class="preview-stat"><span class="label">xG promedio</span><span class="value">1.58</span></div>
-                            <div class="preview-stat"><span class="label">Rivales</span><span class="value">Uruguay, Saudi Arabia</span></div>
-                        </div>
-                        <div class="preview-team away">
-                            <h3>🏳️ Bélgica</h3>
-                            <div class="preview-stat"><span class="label">Forma</span><span class="value">✅🟡🟡</span></div>
-                            <div class="preview-stat"><span class="label">Goles/partido</span><span class="value">2.0</span></div>
-                            <div class="preview-stat"><span class="label">Encajados/partido</span><span class="value">0.7</span></div>
-                            <div class="preview-stat"><span class="label">Posesión media</span><span class="value">59%</span></div>
-                            <div class="preview-stat"><span class="label">Corners/partido</span><span class="value">4.7</span></div>
-                            <div class="preview-stat"><span class="label">Tarjetas/partido</span><span class="value">1.0</span></div>
-                            <div class="preview-stat"><span class="label">xG promedio</span><span class="value">2.26</span></div>
-                            <div class="preview-stat"><span class="label">Rivales</span><span class="value">New Zealand, Egypt, Iran</span></div>
+
+                    <!-- FORMA RECIENTE -->
+                    <div class="preview-section">
+                        <h3>📊 Forma Reciente</h3>
+                        <div class="preview-grid">
+                            <div class="preview-team home">
+                                <h3>🏳️ Spain (2 partidos oficiales)</h3>
+                                <div class="preview-stat"><span class="label">Forma</span><span class="value">✅✅</span></div>
+                                <div class="preview-stat"><span class="label">Goles a favor</span><span class="value">5</span></div>
+                                <div class="preview-stat"><span class="label">Goles en contra</span><span class="value">0</span></div>
+                                <div class="preview-stat"><span class="label">Rivales enfrentados</span><span class="value">Uruguay, Saudi Arabia</span></div>
+                            </div>
+                            <div class="preview-team away">
+                                <h3>🏳️ Bélgica (3 partidos oficiales)</h3>
+                                <div class="preview-stat"><span class="label">Forma</span><span class="value">✅🟡🟡</span></div>
+                                <div class="preview-stat"><span class="label">Goles a favor</span><span class="value">6</span></div>
+                                <div class="preview-stat"><span class="label">Goles en contra</span><span class="value">2</span></div>
+                                <div class="preview-stat"><span class="label">Rivales enfrentados</span><span class="value">New Zealand, Egypt, Iran</span></div>
+                            </div>
                         </div>
                     </div>
-                    
+
+                    <!-- ESTADÍSTICAS CLAVE -->
+                    <div class="preview-section">
+                        <h3>📈 Estadísticas por Partido</h3>
+                        <div class="preview-table">
+                            <div class="ptr"><div class="pl">Spain</div><div class="pc">Stat</div><div class="pr">Bélgica</div></div>
+                            <div class="ptr"><div class="ph">67%</div><div class="pc">Posesión</div><div class="pa">59%</div></div>
+                            <div class="ptr"><div class="ph">1.46</div><div class="pc">xG promedio</div><div class="pa">2.00</div></div>
+                            <div class="ptr"><div class="ph">2.5</div><div class="pc">Goles marcados</div><div class="pa">2.0</div></div>
+                            <div class="ptr"><div class="ph">0.0</div><div class="pc">Goles encajados</div><div class="pa">0.7</div></div>
+                            <div class="ptr"><div class="ph">6.0</div><div class="pc">Corners</div><div class="pa">4.7</div></div>
+                            <div class="ptr"><div class="ph">0.5</div><div class="pc">Tarjetas amarillas</div><div class="pa">1.0</div></div>
+                            <div class="ptr"><div class="ph">14</div><div class="pc">Tiros totales</div><div class="pa">24</div></div>
+                            <div class="ptr"><div class="ph">4.5</div><div class="pc">Tiros a puerta</div><div class="pa">6.7</div></div>
+                            <div class="ptr"><div class="ph">1.5</div><div class="pc">Ocasiones claras</div><div class="pa">0.7</div></div>
+                            <div class="ptr"><div class="ph">12.0</div><div class="pc">Faltas</div><div class="pa">9.7</div></div>
+                        </div>
+                    </div>
+
+                    <!-- xG -->
                     <div class="preview-xg">
                         <div class="xg-home">
                             <div class="xg-team">Spain</div>
-                            <div class="xg-val">1.11</div>
+                            <div class="xg-val">1.46</div>
                         </div>
                         <div class="xg-vs">⚡ xG ⚡</div>
                         <div class="xg-away">
@@ -820,19 +865,85 @@
                             <div class="xg-val">2.00</div>
                         </div>
                     </div>
-                    
+
+                    <!-- POISSON -->
+                    <div class="preview-section">
+                        <h3>🎯 Distribución de Goles (Poisson λ=1.81 / 2.00)</h3>
+                        <div class="preview-grid">
+                            <div class="preview-team home">
+                                <h3>Spain</h3>
+                                <div class="preview-stat"><span class="label">0 goles</span><span class="value">16%</span></div><div class="preview-stat"><span class="label">1 goles</span><span class="value">30%</span></div><div class="preview-stat"><span class="label">2 goles</span><span class="value">27%</span></div><div class="preview-stat"><span class="label">3 goles</span><span class="value">16%</span></div>
+                                <div class="preview-stat"><span class="label">4+ goles</span><span class="value">7%</span></div>
+                            </div>
+                            <div class="preview-team away">
+                                <h3>Bélgica</h3>
+                                <div class="preview-stat"><span class="label">0 goles</span><span class="value">14%</span></div><div class="preview-stat"><span class="label">1 goles</span><span class="value">27%</span></div><div class="preview-stat"><span class="label">2 goles</span><span class="value">27%</span></div><div class="preview-stat"><span class="label">3 goles</span><span class="value">18%</span></div>
+                                <div class="preview-stat"><span class="label">4+ goles</span><span class="value">9%</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CUOTAS -->
+                    <div class="preview-section">
+                        <h3>💰 Cuotas y Value (bet365)</h3>
+                        <div class="preview-table">
+                            <div class="ptr"><div class="pl">Cuota</div><div class="pc">Mercado</div><div class="pr">Edge</div></div>
+                            <div class="ptr"><div class="ph">1.65</div><div class="pc">Spain gana</div><div class="pa">-6.8%</div></div>
+                            <div class="ptr"><div class="ph">3.8</div><div class="pc">Empate</div><div class="pa">+0.6%</div></div>
+                            <div class="ptr"><div class="ph">5.5</div><div class="pc">Bélgica gana</div><div class="pa">+1.2%</div></div>
+                            <div class="ptr"><div class="ph">1.8</div><div class="pc">Goles O2.5</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">2.0</div><div class="pc">Goles U2.5</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">1.75</div><div class="pc">BTTS Sí</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">2.0</div><div class="pc">BTTS No</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">2.0</div><div class="pc">Corners O9.5</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">1.72</div><div class="pc">Corners U9.5</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">2.2</div><div class="pc">Tarjetas O3.5</div><div class="pa">—</div></div>
+                            <div class="ptr"><div class="ph">1.61</div><div class="pc">Tarjetas U3.5</div><div class="pa">—</div></div>
+                        </div>
+                    </div>
+
+                    <!-- ANÁLISIS TÁCTICO -->
                     <div class="preview-tactical">
                         <h3>🔬 Análisis Táctico</h3>
-                        <p><strong>Estilo de juego:</strong> España domina con posesión alta (67%) y juego de toque. Bélgica depende del contraataque (59% posesión).</p>
-                        <p><strong>Fortaleza de España:</strong> 2.5 goles/partido, solo 0.0 encajados. Defensa impenetrable en knockouts. 6.0 corners/partido generando presión constante.</p>
-                        <p><strong>Debilidad de Bélgica:</strong> 0.7 goles encajados/partido. Defensa frágil contra equipos de calidad. Encajó 2 goles contra Irán y Egipto, equipos inferiores.</p>
-                        <p><strong>Clave táctica:</strong> Si Bélgica se echa atrás, España la desgasta con posesión y termina marcando. Si Bélgica se abre, deja espacios para el contraataque español. En cuartos de final, la presión es máxima y los equipos son más conservadores.</p>
-                        <p><strong>Córners y tarjetas:</strong> España (6.0) y Bélgica (4.7) generan ~11 corners totales. Tarjetas bajas: 0.5 + 1.0 = ~1.5 promedio.</p>
-                        <p><strong>Pronóstico:</strong> España gana 2-0 o 2-1. Bélgica no tiene defensa para aguantar 90 minutos contra el juego español. xG combinado: 1.11 vs 2.00.</p>
+                        <p><strong>Estilo de juego:</strong> Spain domina con posesión alta (67%) y juego de toque. Bélgica depende del contraataque y transiciones rápidas (59% posesión).</p>
+                        <p><strong>Fortaleza Spain:</strong> 2.5 goles/partido, solo 0.0 encajados. Defensa impenetrable en knockouts. 6.0 corners/partido generando presión constante.</p>
+                        <p><strong>Debilidad Bélgica:</strong> 0.7 goles encajados/partido. Defensa frágil contra equipos de calidad.</p>
+                        <p><strong>Clave táctica:</strong> Si Bélgica se echa atrás, Spain la desgasta con posesión y termina marcando. Si se abre, deja espacios para el contraataque. En cuartos de final la presión es máxima y los equipos son más conservadores.</p>
+                        <p><strong>Cárneros y tarjetas:</strong> Spain (6.0) + Bélgica (4.7) = ~11 corners esperados. Tarjetas: ~1.5 promedio.</p>
+                        <p><strong>Pronóstico:</strong> Spain gana 2-0 o 2-1. Bélgica no tiene defensa para aguantar 90 minutos.</p>
                     </div>
-                    
+
+                    <!-- MODELO -->
+                    <div class="preview-section">
+                        <h3>🧠 Desglose del Modelo (4 × 25%)</h3>
+                        <div class="preview-grid">
+                            <div class="preview-team home">
+                                <h3>Spain</h3>
+                                <div class="preview-stat"><span class="label">Elo</span><span class="value">60.1%</span></div>
+                                <div class="preview-stat"><span class="label">Estadístico</span><span class="value">50.8%</span></div>
+                                <div class="preview-stat"><span class="label">Poisson</span><span class="value">67.0%</span></div>
+                                <div class="preview-stat"><span class="label">Elo diff</span><span class="value">+45</span></div>
+                            </div>
+                            <div class="preview-team away">
+                                <h3>Resultado</h3>
+                                <div class="preview-stat"><span class="label">Spain</span><span class="value">53.8%</span></div>
+                                <div class="preview-stat"><span class="label">Empate</span><span class="value">26.9%</span></div>
+                                <div class="preview-stat"><span class="label">Bélgica</span><span class="value">19.4%</span></div>
+                                <div class="preview-stat"><span class="label">Confianza</span><span class="value">MEDIA</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NARRATIVA -->
+                    <div class="preview-tactical">
+                        <h3>📝 Narrativa del Partido</h3>
+                        <p>Spain llega como favorita clara. 2 victorias de 2, 0 goles encajados en knockouts. Su posesión y control del juego sofocan a los rivales.</p>
+                        <p>Bélgica es el caballo oscuro. 2.0 goles/partido pero con 0.7 encajados. Su defensa es el talón de Aquiles.</p>
+                        <p>En cuartos de final, la presión es máxima. Bélgica necesita atacar si quiere ganar, lo que deja espacios para Spain. Si se echa atrás, Spain la desgasta con posesión.</p>
+                    </div>
+
                     <div class="preview-verdict">
-                        <p>🎯 <strong>Modelo:</strong> Spain 53.8% · Empate 26.9% · Bélgica 19.4%. Elo +45. Confianza MEDIA.</p>
+                        <p>🎯 <strong>Pronóstico final:</strong> Spain gana 2-0 o 2-1. xG: 1.46 vs 2.00. Bélgica no tiene defensa para aguantar.</p>
                     </div>
                 </div>
             </div>
