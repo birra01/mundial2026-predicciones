@@ -127,9 +127,9 @@ class BetTracker:
             edge = vb.get('edge_pct', 0)
 
             # Determinar dirección y mercado
-            direction = 'over'  # por defecto
-            # Si el edge es negativo y la prob under > prob over, es under
-            if odd and prob < 0.5:
+            direction = vb.get('direction', 'over')  # usar direction del bridge si existe
+            # Fallback: si no hay direction, inferir de prob
+            if 'direction' not in vb and odd and prob < 0.5:
                 direction = 'under'
                 prob = 1.0 - prob  # invertir para la prob de under
                 if odd > 1:
@@ -207,8 +207,12 @@ class BetTracker:
             odd = bet['odd']
 
             # Obtener valor real
-            real = real_stats.get(stat_key, {})
-            actual = real.get('total')
+            # Para goles usar marcador real, no xG
+            if stat_key == 'totalGoals' and home_score is not None and away_score is not None:
+                actual = home_score + away_score
+            else:
+                real = real_stats.get(stat_key, {})
+                actual = real.get('total')
             if actual is None:
                 continue
 

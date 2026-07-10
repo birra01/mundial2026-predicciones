@@ -15,6 +15,7 @@ import webbrowser
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 from worldcup.engine import WorldCupEngine
 from worldcup.tracker import BetTracker, MARKET_TYPES
+from worldcup.tracker_bridge import log_vbs_predictions, log_vbs_result
 from value_bets import build_value_bets, load_all_matches, build_matchup_narrative, compute_team_averages, load_real_stats, compare_predictions, build_comparison_html, adjusted_prediction, PREDICTABLE_STATS
 
 # ─── Nombres en español para mostrar ───────────────────────────────────
@@ -646,28 +647,9 @@ def generate_web():
     comparisons = compare_predictions(all_predictions_for_comparison, real_stats)
     comparison_html = build_comparison_html(comparisons)
     
-    # ─── TRACKER DE APRENDIZAJE ───
-    tracker = BetTracker()
-    # Registrar predicciones de hoy
-    for r in predictions:
-        match_name = f"{r['home_team']} vs {r['away_team']}"
-        tracker.log_prediction(match_name, r['home_team'], r['away_team'], r.get('value_bets', []))
-    # Intentar registrar resultados de partidos ya jugados
-    for r in predictions:
-        match_key = f"{r['home_team']} vs {r['away_team']}"
-        # Buscar stats reales
-        real = real_stats.get(match_key)
-        if not real:
-            for rk, rv in real_stats.items():
-                if rk.startswith('_'):
-                    continue
-                if rk.lower() == match_key.lower():
-                    real = rv
-                    break
-        if real:
-            tracker.log_result(match_key, real)
-    tracker_report = tracker.get_report()
-    tracker_html = build_tracker_section(tracker_report)
+    # ─── TRACKER: se ejecuta al final de generate_web() ───
+    tracker_report = {}
+    tracker_html = ''
     
     # Construir HTML
     html = f"""<!DOCTYPE html>
@@ -1919,6 +1901,60 @@ def generate_web():
     print(f"✅ Web generada: {out_path}")
     print(f"   Tamaño: {len(html):,} bytes")
     print(f"   Partidos: {len(predictions)}")
+    
+    # ─── TRACKER: registrar predicciones y resultados ───
+    try:
+        tracker = BetTracker()
+        vbs_path = Path(__file__).parent / "data" / "vbs_bug_fixed.json"
+        
+        # 1) Log resultados de partidos terminados (ayer)
+        import requests as _req
+        try:
+            API_KEY = open(Path(__file__).parent / ".sportdb_key").read().strip()
+            COMP = 'world:8/world-championship:lvUBR5F8/2026'
+            r = _req.get(f'https://api.sportdb.dev/api/flashscore/football/{COMP}/results',
+                        headers={'X-API-Key': API_KEY}, timeout=10)
+            finished = r.json()
+            for match in finished:
+                if match.get('finished') == 'TRUE':
+                    mname = f"{match.get('homeName','')} vs {match.get('awayName','')}"
+                    hs = int(match.get('homeScore', 0) or 0)
+                    as_ = int(match.get('awayScore', 0) or 0)
+                    eid = match.get('eventId', '')
+                    # Fetch stats
+                    try:
+                        sr = _req.get(f'https://api.sportdb.dev/api/flashscore/match/{eid}/stats',
+                                     headers={'X-API-Key': API_KEY}, timeout=10)
+                        sstats = sr.json()
+                        eval_count, _, ns_res = log_vbs_result(
+                            tracker, mname, sstats, hs, as_,
+                            match.get('homeName',''), match.get('awayName','')
+                        )
+                        if eval_count > 0 or ns_res:
+                            total_bets = eval_count + len(ns_res)
+                            wins = sum(1 for b in (ns_res or []) if b.get('won'))
+                            print(f"   📊 Tracker: {mname} {hs}-{as_} → {total_bets} bets evaluados")
+                    except Exception:
+                        pass
+        except Exception as e:
+            print(f"   ⚠️ Tracker results error: {e}")
+        
+        # 2) Log predicciones de hoy
+        for pred in predictions:
+            home = pred['home_team']
+            away = pred['away_team']
+            mname = f"{home} vs {away}"
+            stat_c, ns_c, combi_c = log_vbs_predictions(
+                tracker, mname, home, away, str(vbs_path)
+            )
+            print(f"   🎯 Tracker: {mname} → {stat_c} stat + {ns_c} non-stat + {combi_c} combinadas")
+        
+        # 3) Build tracker HTML for the aprendizaje tab
+        tracker_report = tracker.get_report()
+        tracker_html = build_tracker_section(tracker_report)
+        
+    except Exception as e:
+        print(f"   ⚠️ Tracker error: {e}")
     
     return out_path
 
