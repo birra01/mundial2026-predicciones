@@ -1288,6 +1288,124 @@ def generate_web():
         }}
         .footer a {{ color: #e09020; text-decoration: none; }}
         
+        /* ─── PREVIEW DEL PARTIDO ─── */
+        .match-preview {{
+            background: linear-gradient(135deg, #0d1230 0%, #151a40 100%);
+            border: 1px solid #1e2450;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }}
+        .preview-header {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            cursor: pointer;
+            user-select: none;
+        }}
+        .preview-header:hover {{ background: rgba(255,255,255,0.03); }}
+        .preview-header h2 {{
+            font-size: 1.1em;
+            color: #e09020;
+            margin: 0;
+        }}
+        .preview-toggle {{
+            font-size: 0.85em;
+            color: #6a70a0;
+            transition: transform 0.3s;
+        }}
+        .preview-body {{
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }}
+        .preview-body.open {{
+            max-height: 3000px;
+        }}
+        .preview-content {{
+            padding: 0 24px 24px;
+        }}
+        .preview-grid {{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 18px;
+        }}
+        .preview-team {{
+            background: #0a0e27;
+            border-radius: 10px;
+            padding: 16px;
+            border: 1px solid #1a1f3a;
+        }}
+        .preview-team.home {{ border-top: 3px solid #2ecc71; }}
+        .preview-team.away {{ border-top: 3px solid #e74c3c; }}
+        .preview-team h3 {{
+            font-size: 0.95em;
+            margin-bottom: 10px;
+        }}
+        .preview-team.home h3 {{ color: #2ecc71; }}
+        .preview-team.away h3 {{ color: #e74c3c; }}
+        .preview-stat {{
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #111530;
+            font-size: 0.82em;
+        }}
+        .preview-stat:last-child {{ border-bottom: none; }}
+        .preview-stat .label {{ color: #8890b0; }}
+        .preview-stat .value {{ color: #e0e0e0; font-weight: 600; }}
+        .preview-tactical {{
+            background: #0a0e27;
+            border-radius: 10px;
+            padding: 16px;
+            border: 1px solid #1a1f3a;
+            margin-bottom: 18px;
+        }}
+        .preview-tactical h3 {{
+            font-size: 0.9em;
+            color: #f0c040;
+            margin-bottom: 10px;
+        }}
+        .preview-tactical p {{
+            font-size: 0.83em;
+            color: #b0b8d0;
+            line-height: 1.6;
+            margin: 0;
+        }}
+        .preview-xg {{
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 12px;
+            align-items: center;
+            background: #0a0e27;
+            border-radius: 10px;
+            padding: 16px;
+            border: 1px solid #1a1f3a;
+            margin-bottom: 18px;
+            text-align: center;
+        }}
+        .preview-xg .xg-team {{ font-size: 0.85em; }}
+        .preview-xg .xg-val {{ font-size: 1.8em; font-weight: 800; }}
+        .preview-xg .xg-home .xg-val {{ color: #2ecc71; }}
+        .preview-xg .xg-away .xg-val {{ color: #e74c3c; }}
+        .preview-xg .xg-vs {{ color: #3a4070; font-size: 1.2em; }}
+        .preview-verdict {{
+            text-align: center;
+            padding: 14px;
+            background: linear-gradient(135deg, #1a2040, #0d1230);
+            border-radius: 10px;
+            border: 1px solid #e09020;
+        }}
+        .preview-verdict p {{
+            font-size: 0.88em;
+            color: #d0d8f0;
+            margin: 0;
+            line-height: 1.5;
+        }}
+        .preview-verdict strong {{ color: #f0c040; }}
+        
         /* ─── RESPONSIVE ─── */
         @media (max-width: 768px) {{
             .match-header {{ flex-wrap: wrap; }}
@@ -1350,6 +1468,62 @@ def generate_web():
             pred_text = "Empate"
         
         html += f"""
+        <div class="match-preview">
+            <div class="preview-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                <h2>📋 Previa del Partido</h2>
+                <span class="preview-toggle">▼ Ver análisis</span>
+            </div>
+            <div class="preview-body">
+                <div class="preview-content">
+                    <div class="preview-grid">
+                        <div class="preview-team home">
+                            <h3>🏳️ {display_name(r['home_team'])}</h3>
+                            <div class="preview-stat"><span class="label">Forma</span><span class="value">{''.join('✅' if x=='W' else '🟡' if x=='D' else '❌' for x in ts['home']['results'])}</span></div>
+                            <div class="preview-stat"><span class="label">Goles/partido</span><span class="value">{ts['home']['avg_goals_for']:.1f}</span></div>
+                            <div class="preview-stat"><span class="label">Encajados/partido</span><span class="value">{ts['home']['avg_goals_against']:.1f}</span></div>
+                            <div class="preview-stat"><span class="label">Posesión media</span><span class="value">{ts['home']['avg_stats_raw']['ballPossession']:.0f}%</span></div>
+                            <div class="preview-stat"><span class="label">Corners/partido</span><span class="value">{ts['home']['avg_stats_raw']['cornerKicks']:.1f}</span></div>
+                            <div class="preview-stat"><span class="label">Tarjetas/partido</span><span class="value">{ts['home']['avg_stats_raw']['yellowCards']:.1f}</span></div>
+                            <div class="preview-stat"><span class="label">xG promedio</span><span class="value">{ts['home']['avg_stats_raw']['expectedGoals']:.2f}</span></div>
+                            <div class="preview-stat"><span class="label">Rivales</span><span class="value">{', '.join(ts['home']['opponents'])}</span></div>
+                        </div>
+                        <div class="preview-team away">
+                            <h3>🏳️ {display_name(r['away_team'])}</h3>
+                            <div class="preview-stat"><span class="label">Forma</span><span class="value">{''.join('✅' if x=='W' else '🟡' if x=='D' else '❌' for x in ts['away']['results'])}</span></div>
+                            <div class="preview-stat"><span class="label">Goles/partido</span><span class="value">{ts['away']['avg_goals_for']:.1f}</span></div>
+                            <div class="preview-stat"><span class="label">Encajados/partido</span><span class="value">{ts['away']['avg_goals_against']:.1f}</span></div>
+                            <div class="preview-stat"><span class="label">Posesión media</span><span class="value">{ts['away']['avg_stats_raw']['ballPossession']:.0f}%</span></div>
+                            <div class="preview-stat"><span class="label">Corners/partido</span><span class="value">{ts['away']['avg_stats_raw']['cornerKicks']:.1f}</span></div>
+                            <div class="preview-stat"><span class="label">Tarjetas/partido</span><span class="value">{ts['away']['avg_stats_raw']['yellowCards']:.1f}</span></div>
+                            <div class="preview-stat"><span class="label">xG promedio</span><span class="value">{ts['away']['avg_stats_raw']['expectedGoals']:.2f}</span></div>
+                            <div class="preview-stat"><span class="label">Rivales</span><span class="value">{', '.join(ts['away']['opponents'])}</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-xg">
+                        <div class="xg-home">
+                            <div class="xg-team">{display_name(r['home_team'])}</div>
+                            <div class="xg-val">{eg['home']:.2f}</div>
+                        </div>
+                        <div class="xg-vs">⚡ xG ⚡</div>
+                        <div class="xg-away">
+                            <div class="xg-team">{display_name(r['away_team'])}</div>
+                            <div class="xg-val">{eg['away']:.2f}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-tactical">
+                        <h3>🔬 Análisis Táctico</h3>
+                        <p>{r['narrative']}</p>
+                    </div>
+                    
+                    <div class="preview-verdict">
+                        <p>🎯 <strong>Pronóstico:</strong> {display_name(r['home_team'])} es favorita con {p['home']}% de probabilidad. Elo +{elo['diff']} a su favor. Modelo combina 4 métodos (Elo, Stats, Poisson, Forma) con confianza {r['confidence']}.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="match-card">
             <div class="match-header">
                 <div class="match-time">⏰ {r['time']}</div>
