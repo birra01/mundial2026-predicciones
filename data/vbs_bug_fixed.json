@@ -42,7 +42,22 @@
       "combinadas": [
         {
           "name": "SEGURA",
-          "desc": "Cuartos conservadores: pocas tarjetas y pocos corners",
+          "desc": "Cuartos conservadores: pocas tarjetas, referees permisivos",
+          "picks": [
+            {
+              "market": "Tarjetas",
+              "pick": "Tarjetas Menos de 3.5",
+              "cuota": 1.61,
+              "prob": 70.0,
+              "edge": 8.9
+            }
+          ],
+          "cuota_total": 1.61,
+          "prob_total": 70.0
+        },
+        {
+          "name": "MEDIA",
+          "desc": "Pocas tarjetas + pocos corners: cuartos con ritmo bajo",
           "picks": [
             {
               "market": "Tarjetas",
@@ -59,34 +74,12 @@
               "edge": 4.1
             }
           ],
-          "cuota_total": 2.78,
+          "cuota_total": 2.77,
           "prob_total": 43.5
         },
         {
-          "name": "MEDIA",
-          "desc": "España marca, Bélgica defensa débil → goles y pocas tarjetas",
-          "picks": [
-            {
-              "market": "Tarjetas",
-              "pick": "Tarjetas Menos de 3.5",
-              "cuota": 1.61,
-              "prob": 70.0,
-              "edge": 8.9
-            },
-            {
-              "market": "Goles",
-              "pick": "Goles Más de 2.5",
-              "cuota": 1.80,
-              "prob": 60.0,
-              "edge": 4.4
-            }
-          ],
-          "cuota_total": 3.08,
-          "prob_total": 42.0
-        },
-        {
           "name": "SOÑADORA",
-          "desc": "Goles + limpieza defensiva: España no sufre, goles de sobra",
+          "desc": "España golea, Bélgica no aparece, pocos corners",
           "picks": [
             {
               "market": "Corners",
@@ -114,22 +107,15 @@
           "prob_total": 24.3
         },
         {
-          "name": "VOLATIL",
-          "desc": "Triple limpieza: España golea, Bélgica no aparece, pocas faltas",
+          "name": "VOLÁTIL",
+          "desc": "Bélgica sorprende, España no marca, partido cerrado",
           "picks": [
             {
-              "market": "Tarjetas",
-              "pick": "Tarjetas Menos de 3.5",
-              "cuota": 1.61,
-              "prob": 70.0,
-              "edge": 8.9
-            },
-            {
-              "market": "Goles",
-              "pick": "Goles Más de 2.5",
-              "cuota": 1.80,
-              "prob": 60.0,
-              "edge": 4.4
+              "market": "1X2",
+              "pick": "Bélgica gana",
+              "cuota": 5.50,
+              "prob": 21.0,
+              "edge": 2.8
             },
             {
               "market": "BTTS",
@@ -146,8 +132,8 @@
               "edge": 4.1
             }
           ],
-          "cuota_total": 9.44,
-          "prob_total": 16.3
+          "cuota_total": 19.05,
+          "prob_total": 8.3
         }
       ]
     }

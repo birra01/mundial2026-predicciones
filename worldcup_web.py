@@ -187,11 +187,11 @@ def build_combinadas(predictions, odds_cache):
         vbs_data = json.load(f)
 
     tier_map = {
-        '🏆 SINGLE BET': {'icon': '🏆', 'css': 'single', 'key': 'SINGLE'},
-        '🛡️ SEGURA':     {'icon': '🛡️', 'css': 'segura', 'key': 'SEGURA'},
-        '⚡ MEDIA':       {'icon': '⚡', 'css': 'media', 'key': 'MEDIA'},
-        '🌙 SOÑADORA':   {'icon': '🌙', 'css': 'sonadora', 'key': 'SOÑADORA'},
-        '🔥 VOLÁTIL':    {'icon': '🔥', 'css': 'volatil', 'key': 'VOLÁTIL'},
+        'SINGLE':       {'icon': '🏆', 'css': 'single', 'key': 'SINGLE'},
+        'SEGURA':       {'icon': '🛡️', 'css': 'segura', 'key': 'SEGURA'},
+        'MEDIA':        {'icon': '⚡', 'css': 'media', 'key': 'MEDIA'},
+        'SOÑADORA':     {'icon': '🌙', 'css': 'sonadora', 'key': 'SOÑADORA'},
+        'VOLÁTIL':      {'icon': '🔥', 'css': 'volatil', 'key': 'VOLÁTIL'},
     }
 
     result = []
