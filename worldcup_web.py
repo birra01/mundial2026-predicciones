@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 World Cup 2026 — Predicciones Web
-Genera HTML premium con analisis del partido (9 julio 2026)
+Genera HTML premium con analisis del partido (10 julio 2026)
 """
 
 import sys
@@ -577,9 +577,9 @@ def generate_web():
     # Cargar datos de sportdb.dev
     sportdb_details = load_sportdb_details()
     
-    # Partidos de hoy 9 julio (Cuartos de final)
+    # Partidos de hoy 10 julio (Cuartos de final)
     matches_today = [
-        ("France", "Morocco", "22:00"),
+        ("Spain", "Belgium", "12:00"),
     ]
     
     predictions = []
@@ -675,7 +675,7 @@ def generate_web():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mundial 2026 — Predicciones 9 Julio</title>
+    <title>Mundial 2026 — Predicciones 10 Julio</title>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         
@@ -1309,7 +1309,7 @@ def generate_web():
         <div class="header">
             <h1>🏆 Mundial 2026 — Cuartos de Final</h1>
             <div class="subtitle">Predicciones basadas en 72 partidos · 48 equipos · Estadísticas reales de Sofascore + sportdb.dev</div>
-            <div class="badge">📅 9 de julio de 2026 · 1 partido</div>
+            <div class="badge">📅 10 de julio de 2026 · 1 partido</div>
         </div>
         
         <!-- ─── PESTAÑAS ─── -->
@@ -1585,7 +1585,7 @@ def generate_web():
         <div class="footer">
             ⚡ Sistema de predicción basado en modelo compuesto (Elo + Estadísticas + Goles esperados)<br>
             Datos de Sofascore · 72 partidos analizados · 48 selecciones · {len(engine.team_stats)} con estadísticas completas<br>
-            <small>Generado el 9 de julio de 2026 · Solo con fines informativos</small>
+            <small>Generado el 10 de julio de 2026 · Solo con fines informativos</small>
         </div>
     </div>
 </body>

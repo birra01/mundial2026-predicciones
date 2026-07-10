@@ -1,167 +1,153 @@
 {
-  "date": "2026-07-09",
+  "date": "2026-07-10",
   "matches": {
-    "France_vs_Morocco": {
+    "Spain_vs_Belgium": {
       "value_bets": [
         {
-          "market": "Goles",
-          "pick": "Goles +1.5",
-          "cuota": 1.3,
-          "prob": 93.0,
-          "edge": 16.3
+          "market": "Tarjetas",
+          "pick": "Tarjetas Menos de 3.5",
+          "cuota": 1.61,
+          "prob": 70.0,
+          "edge": 8.9
+        },
+        {
+          "market": "Corners",
+          "pick": "Corners Menos de 9.5",
+          "cuota": 1.72,
+          "prob": 62.2,
+          "edge": 4.1
         },
         {
           "market": "Goles",
-          "pick": "Goles +2.5",
-          "cuota": 2.0,
-          "prob": 81.5,
-          "edge": 31.5
-        },
-        {
-          "market": "Goles",
-          "pick": "Goles +3.5",
-          "cuota": 3.5,
-          "prob": 59.9,
-          "edge": 31.3
+          "pick": "Goles Más de 2.5",
+          "cuota": 1.80,
+          "prob": 60.0,
+          "edge": 4.4
         },
         {
           "market": "BTTS",
-          "pick": "Ambos Marcan",
-          "cuota": 2.0,
-          "prob": 52.5,
-          "edge": 2.5
-        },
-        {
-          "market": "Corners",
-          "pick": "Corners +8.5",
-          "cuota": 1.66,
-          "prob": 80.8,
-          "edge": 20.6
-        },
-        {
-          "market": "Corners",
-          "pick": "Corners +9.5",
-          "cuota": 1.83,
-          "prob": 70.3,
-          "edge": 15.7
+          "pick": "Ambos NO Marcan",
+          "cuota": 2.00,
+          "prob": 64.6,
+          "edge": 14.6
         },
         {
           "market": "1X2",
-          "pick": "Morocco gana",
-          "cuota": 6.25,
-          "prob": 22.4,
-          "edge": 6.4
+          "pick": "Bélgica gana",
+          "cuota": 5.50,
+          "prob": 21.0,
+          "edge": 2.8
         }
       ],
       "combinadas": [
         {
           "name": "SEGURA",
-          "desc": "Baja varianza, ambos picks muy probables",
+          "desc": "Cuartos conservadores: pocas tarjetas y pocos corners",
           "picks": [
             {
-              "market": "Goles",
-              "pick": "Goles +1.5",
-              "cuota": 1.3,
-              "prob": 93.0,
-              "edge": 16.3
+              "market": "Tarjetas",
+              "pick": "Tarjetas Menos de 3.5",
+              "cuota": 1.61,
+              "prob": 70.0,
+              "edge": 8.9
             },
             {
               "market": "Corners",
-              "pick": "Corners +8.5",
-              "cuota": 1.66,
-              "prob": 80.8,
-              "edge": 20.6
+              "pick": "Corners Menos de 9.5",
+              "cuota": 1.72,
+              "prob": 62.2,
+              "edge": 4.1
             }
           ],
-          "cuota_total": 2.16,
-          "prob_total": 75.1
+          "cuota_total": 2.78,
+          "prob_total": 43.5
         },
         {
           "name": "MEDIA",
-          "desc": "Riesgo moderado, xG 3.10 justifica +2.5",
+          "desc": "España marca, Bélgica defensa débil → goles y pocas tarjetas",
           "picks": [
             {
-              "market": "Goles",
-              "pick": "Goles +2.5",
-              "cuota": 2.0,
-              "prob": 81.5,
-              "edge": 31.5
+              "market": "Tarjetas",
+              "pick": "Tarjetas Menos de 3.5",
+              "cuota": 1.61,
+              "prob": 70.0,
+              "edge": 8.9
             },
             {
-              "market": "Corners",
-              "pick": "Corners +8.5",
-              "cuota": 1.66,
-              "prob": 80.8,
-              "edge": 20.6
+              "market": "Goles",
+              "pick": "Goles Más de 2.5",
+              "cuota": 1.80,
+              "prob": 60.0,
+              "edge": 4.4
             }
           ],
-          "cuota_total": 3.32,
-          "prob_total": 65.9
+          "cuota_total": 3.08,
+          "prob_total": 42.0
         },
         {
-          "name": "SONADORA",
-          "desc": "Francia gana pero Marruecos marca",
+          "name": "SOÑADORA",
+          "desc": "Goles + limpieza defensiva: España no sufre, goles de sobra",
           "picks": [
             {
-              "market": "1X2",
-              "pick": "France gana",
-              "cuota": 1.57,
-              "prob": 55.5,
-              "edge": -6.3
+              "market": "Corners",
+              "pick": "Corners Menos de 9.5",
+              "cuota": 1.72,
+              "prob": 62.2,
+              "edge": 4.1
             },
             {
               "market": "Goles",
-              "pick": "Goles +2.5",
-              "cuota": 2.0,
-              "prob": 81.5,
-              "edge": 31.5
+              "pick": "Goles Más de 2.5",
+              "cuota": 1.80,
+              "prob": 60.0,
+              "edge": 4.4
             },
             {
               "market": "BTTS",
-              "pick": "Ambos Marcan",
-              "cuota": 2.0,
-              "prob": 52.5,
-              "edge": 2.5
+              "pick": "Ambos NO Marcan",
+              "cuota": 2.00,
+              "prob": 64.6,
+              "edge": 14.6
             }
           ],
-          "cuota_total": 6.28,
-          "prob_total": 23.7
+          "cuota_total": 6.19,
+          "prob_total": 24.3
         },
         {
           "name": "VOLATIL",
-          "desc": "Escenario soñado: goleada con emoción",
+          "desc": "Triple limpieza: España golea, Bélgica no aparece, pocas faltas",
           "picks": [
             {
-              "market": "1X2",
-              "pick": "France gana",
-              "cuota": 1.57,
-              "prob": 55.5,
-              "edge": -6.3
+              "market": "Tarjetas",
+              "pick": "Tarjetas Menos de 3.5",
+              "cuota": 1.61,
+              "prob": 70.0,
+              "edge": 8.9
             },
             {
               "market": "Goles",
-              "pick": "Goles +3.5",
-              "cuota": 3.5,
-              "prob": 59.9,
-              "edge": 31.3
+              "pick": "Goles Más de 2.5",
+              "cuota": 1.80,
+              "prob": 60.0,
+              "edge": 4.4
             },
             {
               "market": "BTTS",
-              "pick": "Ambos Marcan",
-              "cuota": 2.0,
-              "prob": 52.5,
-              "edge": 2.5
+              "pick": "Ambos NO Marcan",
+              "cuota": 2.00,
+              "prob": 64.6,
+              "edge": 14.6
             },
             {
               "market": "Corners",
-              "pick": "Corners +9.5",
-              "cuota": 1.83,
-              "prob": 70.3,
-              "edge": 15.7
+              "pick": "Corners Menos de 9.5",
+              "cuota": 1.72,
+              "prob": 62.2,
+              "edge": 4.1
             }
           ],
-          "cuota_total": 20.11,
-          "prob_total": 12.3
+          "cuota_total": 9.44,
+          "prob_total": 16.3
         }
       ]
     }
