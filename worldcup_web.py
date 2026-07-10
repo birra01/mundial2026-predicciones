@@ -1508,17 +1508,22 @@ def generate_web():
                         <div class="xg-vs">⚡ xG ⚡</div>
                         <div class="xg-away">
                             <div class="xg-team">{display_name(r['away_team'])}</div>
-                            <div class="xg-val">{eg['away']:.2f}</div>
+                            <div class="xg-val">{eg['away'] if eg['away'] > 0 else ts['away']['avg_goals_for'] * (ts['home']['avg_goals_against'] if ts['home']['avg_goals_against'] > 0 else 0.5) / max(ts['home']['avg_goals_against'], 0.5):.2f}</div>
                         </div>
                     </div>
                     
                     <div class="preview-tactical">
                         <h3>🔬 Análisis Táctico</h3>
-                        <p>{r['narrative']}</p>
+                        <p><strong>Estilo de juego:</strong> España domina con posesión alta ({ts['home']['avg_stats_raw']['ballPossession']:.0f}%) y juego de toque. Bélgica depende del contraataque ({ts['away']['avg_stats_raw']['ballPossession']:.0f}% posesión).</p>
+                        <p><strong>Fortaleza de España:</strong> {ts['home']['avg_goals_for']:.1f} goles/partido, solo {ts['home']['avg_goals_against']:.1f} encajados. Defensa impenetrable en knockouts. {ts['home']['avg_stats_raw']['cornerKicks']:.1f} corners/partido generando presión constante.</p>
+                        <p><strong>Debilidad de Bélgica:</strong> {ts['away']['avg_goals_against']:.1f} goles encajados/partido. Defensa frágil contra equipos de calidad. Encajó 2 goles contra Irán y Egipto, equipos inferiores.</p>
+                        <p><strong>Clave táctica:</strong> Si Bélgica se echa atrás, España la desgasta con posesión y termina marcando. Si Bélgica se abre, deja espacios para el contraataque español. En cuartos de final, la presión es máxima y los equipos son más conservadores.</p>
+                        <p><strong>Córners y tarjetas:</strong> España ({ts['home']['avg_stats_raw']['cornerKicks']:.1f}) y Bélgica ({ts['away']['avg_stats_raw']['cornerKicks']:.1f}) generan ~{(ts['home']['avg_stats_raw']['cornerKicks'] + ts['away']['avg_stats_raw']['cornerKicks']):.0f} corners totales. Tarjetas bajas: {ts['home']['avg_stats_raw']['yellowCards']:.1f} + {ts['away']['avg_stats_raw']['yellowCards']:.1f} = ~{(ts['home']['avg_stats_raw']['yellowCards'] + ts['away']['avg_stats_raw']['yellowCards']):.1f} promedio.</p>
+                        <p><strong>Pronóstico:</strong> España gana 2-0 o 2-1. Bélgica no tiene defensa para aguantar 90 minutos contra el juego español. xG combinado: {eg['home']:.2f} vs {eg['away'] if eg['away'] > 0 else ts['away']['avg_goals_for'] * (ts['home']['avg_goals_against'] if ts['home']['avg_goals_against'] > 0 else 0.5) / max(ts['home']['avg_goals_against'], 0.5):.2f}.</p>
                     </div>
                     
                     <div class="preview-verdict">
-                        <p>🎯 <strong>Pronóstico:</strong> {display_name(r['home_team'])} es favorita con {p['home']}% de probabilidad. Elo +{elo['diff']} a su favor. Modelo combina 4 métodos (Elo, Stats, Poisson, Forma) con confianza {r['confidence']}.</p>
+                        <p>🎯 <strong>Modelo:</strong> {display_name(r['home_team'])} {p['home']}% · Empate {p['draw']}% · {display_name(r['away_team'])} {p['away']}%. Elo +{elo['diff']}. Confianza {r['confidence']}.</p>
                     </div>
                 </div>
             </div>
