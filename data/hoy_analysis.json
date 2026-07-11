@@ -1,0 +1,383 @@
+{
+  "date": "2026-07-11",
+  "matches": {
+    "Norway_vs_England": {
+      "fixture": "id1000001653452529",
+      "probabilities": {
+        "home": 37.9,
+        "draw": 25.8,
+        "away": 36.2
+      },
+      "expected_goals": {
+        "home": 1.18,
+        "away": 3.1
+      },
+      "prediction": "HOME",
+      "confidence": "BAJA",
+      "narrative": "Elo ligeramente a favor de England (+3) | Norway marca 2.7 goles/partido y encaja 2.3 | England marca 2.0 goles/partido y encaja 0.7 | England domina en errores que terminan en gol (+100.0%) | Forma: Norway [LWW] | England [DWW] | Momento favorable a England",
+      "value_bets": [
+        {
+          "market": "YC U2.0",
+          "pick": "U2.0",
+          "cuota": 1.729,
+          "prob": 91.96986029286059,
+          "edge": 34.13296035069748,
+          "src": "pinnacle"
+        },
+        {
+          "market": "YC U2.5",
+          "pick": "U2.5",
+          "cuota": 1.72,
+          "prob": 91.96986029286059,
+          "edge": 33.83032540913965,
+          "src": "bet365"
+        },
+        {
+          "market": "YC U3.5",
+          "pick": "U3.5",
+          "cuota": 1.467,
+          "prob": 98.10118431238463,
+          "edge": 29.934858477347138,
+          "src": "pinnacle"
+        },
+        {
+          "market": "YC U1.5",
+          "pick": "U1.5",
+          "cuota": 2.27,
+          "prob": 73.57588823428847,
+          "edge": 29.52302479816512,
+          "src": "pinnacle"
+        },
+        {
+          "market": "Goles O3.5",
+          "pick": "Over 3.5",
+          "cuota": 2.75,
+          "prob": 61.9239233169896,
+          "edge": 25.56028695335324,
+          "src": "bet365"
+        },
+        {
+          "market": "CK O9.5",
+          "pick": "O9.5",
+          "cuota": 1.8,
+          "prob": 81.10251355329942,
+          "edge": 25.546957997743856,
+          "src": "bet365"
+        },
+        {
+          "market": "YC U3.0",
+          "pick": "U3.0",
+          "cuota": 1.377,
+          "prob": 98.10118431238463,
+          "edge": 25.479543063292397,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O10.5",
+          "pick": "O10.5",
+          "cuota": 2.07,
+          "prob": 71.85985416501242,
+          "edge": 23.55067542105106,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O11.5",
+          "pick": "O11.5",
+          "cuota": 2.64,
+          "prob": 61.21679183910616,
+          "edge": 23.338003960318275,
+          "src": "pinnacle"
+        },
+        {
+          "market": "YC U2.5",
+          "pick": "U2.5",
+          "cuota": 1.454,
+          "prob": 91.96986029286059,
+          "edge": 23.19406937126498,
+          "src": "pinnacle"
+        },
+        {
+          "market": "Goles O4.5",
+          "pick": "Over 4.5",
+          "cuota": 5.0,
+          "prob": 42.56935667087163,
+          "edge": 22.569356670871628,
+          "src": "bet365"
+        },
+        {
+          "market": "CK O9.5",
+          "pick": "O9.5",
+          "cuota": 1.671,
+          "prob": 81.10251355329942,
+          "edge": 21.25810900512467,
+          "src": "pinnacle"
+        },
+        {
+          "market": "Goles O2.5",
+          "pick": "Over 2.5",
+          "cuota": 1.66,
+          "prob": 80.01230336009051,
+          "edge": 19.771339504668827,
+          "src": "bet365"
+        },
+        {
+          "market": "CK O11.0",
+          "pick": "O11.0",
+          "cuota": 2.4,
+          "prob": 61.21679183910616,
+          "edge": 19.550125172439486,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O12.0",
+          "pick": "O12.0",
+          "cuota": 3.19,
+          "prob": 49.982448272871785,
+          "edge": 18.63448589042664,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O10.0",
+          "pick": "O10.0",
+          "cuota": 1.877,
+          "prob": 71.85985416501242,
+          "edge": 18.58334910374444,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O8.5",
+          "pick": "O8.5",
+          "cuota": 1.398,
+          "prob": 88.39934991247337,
+          "edge": 16.86859168643616,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O7.5",
+          "pick": "O7.5",
+          "cuota": 1.264,
+          "prob": 93.58394416767591,
+          "edge": 14.470020117043003,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O9.0",
+          "pick": "O9.0",
+          "cuota": 1.495,
+          "prob": 81.10251355329942,
+          "edge": 14.212881446276004,
+          "src": "pinnacle"
+        },
+        {
+          "market": "1X2",
+          "pick": "Norway",
+          "cuota": 3.8,
+          "prob": 37.9,
+          "edge": 11.584210526315792,
+          "src": "bet365"
+        },
+        {
+          "market": "Goles O1.5",
+          "pick": "Over 1.5",
+          "cuota": 1.22,
+          "prob": 92.69107441833883,
+          "edge": 10.723861303584725,
+          "src": "bet365"
+        },
+        {
+          "market": "CK O8.0",
+          "pick": "O8.0",
+          "cuota": 1.257,
+          "prob": 88.39934991247337,
+          "edge": 8.844855083515524,
+          "src": "pinnacle"
+        },
+        {
+          "market": "BTTS",
+          "pick": "BTTS Sí",
+          "cuota": 1.61,
+          "prob": 66.15147210917904,
+          "edge": 4.039670866943023,
+          "src": "bet365"
+        },
+        {
+          "market": "Goles O0.5",
+          "pick": "Over 0.5",
+          "cuota": 1.04,
+          "prob": 98.61573379135204,
+          "edge": 2.4618876375058996,
+          "src": "bet365"
+        }
+      ]
+    },
+    "Argentina_vs_Switzerland": {
+      "fixture": "id1000001653452531",
+      "probabilities": {
+        "home": 54.1,
+        "draw": 22.8,
+        "away": 23.1
+      },
+      "expected_goals": {
+        "home": 1.77,
+        "away": 0.52
+      },
+      "prediction": "HOME",
+      "confidence": "MEDIA",
+      "narrative": "Elo favorece claramente a Argentina (+57) | Argentina marca 2.7 goles/partido y encaja 0.3 | Switzerland marca 2.3 goles/partido y encaja 1.0 | Argentina domina en errores que terminan en gol (+100000.0%) | Forma: Argentina [WWW] | Switzerland [WWD]",
+      "value_bets": [
+        {
+          "market": "YC U2.0",
+          "pick": "U2.0",
+          "cuota": 3.16,
+          "prob": 76.59955003967785,
+          "edge": 44.953980419424695,
+          "src": "pinnacle"
+        },
+        {
+          "market": "YC U3.0",
+          "pick": "U3.0",
+          "cuota": 2.03,
+          "prob": 91.17328482652675,
+          "edge": 41.91220108268438,
+          "src": "pinnacle"
+        },
+        {
+          "market": "YC U2.5",
+          "pick": "U2.5",
+          "cuota": 2.48,
+          "prob": 76.59955003967785,
+          "edge": 36.27696939451656,
+          "src": "pinnacle"
+        },
+        {
+          "market": "YC U2.5",
+          "pick": "U2.5",
+          "cuota": 2.2,
+          "prob": 76.59955003967785,
+          "edge": 31.1450045851324,
+          "src": "bet365"
+        },
+        {
+          "market": "YC U3.5",
+          "pick": "U3.5",
+          "cuota": 1.66,
+          "prob": 91.17328482652675,
+          "edge": 30.932320971105064,
+          "src": "bet365"
+        },
+        {
+          "market": "YC U3.5",
+          "pick": "U3.5",
+          "cuota": 1.625,
+          "prob": 91.17328482652675,
+          "edge": 29.634823288065213,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O7.5",
+          "pick": "O7.5",
+          "cuota": 1.854,
+          "prob": 71.36729569710967,
+          "edge": 17.42986311890039,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O8.5",
+          "pick": "O8.5",
+          "cuota": 2.33,
+          "prob": 58.73859922766018,
+          "edge": 15.820144292037863,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O9.5",
+          "pick": "O9.5",
+          "cuota": 2.97,
+          "prob": 45.64217325934219,
+          "edge": 11.972139589308522,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O8.0",
+          "pick": "O8.0",
+          "cuota": 2.1,
+          "prob": 58.73859922766018,
+          "edge": 11.119551608612566,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O6.5",
+          "pick": "O6.5",
+          "cuota": 1.396,
+          "prob": 82.19189267092352,
+          "edge": 10.558654848573957,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O9.0",
+          "pick": "O9.0",
+          "cuota": 2.74,
+          "prob": 45.64217325934219,
+          "edge": 9.145822894378686,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O8.5",
+          "pick": "O8.5",
+          "cuota": 2.0,
+          "prob": 58.73859922766018,
+          "edge": 8.738599227660181,
+          "src": "bet365"
+        },
+        {
+          "market": "CK O7.0",
+          "pick": "O7.0",
+          "cuota": 1.558,
+          "prob": 71.36729569710967,
+          "edge": 7.182443322270126,
+          "src": "pinnacle"
+        },
+        {
+          "market": "BTTS",
+          "pick": "BTTS No",
+          "cuota": 1.66,
+          "prob": 66.35870749417204,
+          "edge": 6.11774363875035,
+          "src": "bet365"
+        },
+        {
+          "market": "CK O10.0",
+          "pick": "O10.0",
+          "cuota": 3.61,
+          "prob": 33.418842355578725,
+          "edge": 5.718011330647976,
+          "src": "pinnacle"
+        },
+        {
+          "market": "1X2",
+          "pick": "Switzerland",
+          "cuota": 5.5,
+          "prob": 23.1,
+          "edge": 4.918181818181819,
+          "src": "bet365"
+        },
+        {
+          "market": "CK O5.5",
+          "pick": "O5.5",
+          "cuota": 1.154,
+          "prob": 90.31034040128392,
+          "edge": 3.6552277496374685,
+          "src": "pinnacle"
+        },
+        {
+          "market": "CK O10.5",
+          "pick": "O10.5",
+          "cuota": 3.33,
+          "prob": 33.418842355578725,
+          "edge": 3.3888123255486957,
+          "src": "pinnacle"
+        }
+      ]
+    }
+  }
+}

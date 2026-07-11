@@ -578,9 +578,10 @@ def generate_web():
     # Cargar datos de sportdb.dev
     sportdb_details = load_sportdb_details()
     
-    # Partidos de hoy 10 julio (Cuartos de final)
+    # Partidos de hoy 11 julio (Cuartos de final)
     matches_today = [
-        ("Spain", "Belgium", "12:00"),
+        ("Norway", "England", "21:00"),
+        ("Argentina", "Switzerland", "01:00"),
     ]
     
     predictions = []
@@ -657,7 +658,7 @@ def generate_web():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mundial 2026 — Predicciones 10 Julio</title>
+    <title>Mundial 2026 — Predicciones 11 Julio</title>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         
@@ -1902,61 +1903,10 @@ def generate_web():
     print(f"   Tamaño: {len(html):,} bytes")
     print(f"   Partidos: {len(predictions)}")
     
-    # ─── TRACKER: registrar predicciones y resultados ───
-    try:
-        tracker = BetTracker()
-        vbs_path = Path(__file__).parent / "data" / "vbs_bug_fixed.json"
-        
-        # 1) Log resultados de partidos terminados (ayer)
-        import requests as _req
-        try:
-            API_KEY = open(Path(__file__).parent / ".sportdb_key").read().strip()
-            COMP = 'world:8/world-championship:lvUBR5F8/2026'
-            r = _req.get(f'https://api.sportdb.dev/api/flashscore/football/{COMP}/results',
-                        headers={'X-API-Key': API_KEY}, timeout=10)
-            finished = r.json()
-            for match in finished:
-                if match.get('finished') == 'TRUE':
-                    mname = f"{match.get('homeName','')} vs {match.get('awayName','')}"
-                    hs = int(match.get('homeScore', 0) or 0)
-                    as_ = int(match.get('awayScore', 0) or 0)
-                    eid = match.get('eventId', '')
-                    # Fetch stats
-                    try:
-                        sr = _req.get(f'https://api.sportdb.dev/api/flashscore/match/{eid}/stats',
-                                     headers={'X-API-Key': API_KEY}, timeout=10)
-                        sstats = sr.json()
-                        eval_count, _, ns_res = log_vbs_result(
-                            tracker, mname, sstats, hs, as_,
-                            match.get('homeName',''), match.get('awayName','')
-                        )
-                        if eval_count > 0 or ns_res:
-                            total_bets = eval_count + len(ns_res)
-                            wins = sum(1 for b in (ns_res or []) if b.get('won'))
-                            print(f"   📊 Tracker: {mname} {hs}-{as_} → {total_bets} bets evaluados")
-                    except Exception:
-                        pass
-        except Exception as e:
-            print(f"   ⚠️ Tracker results error: {e}")
-        
-        # 2) Log predicciones de hoy
-        for pred in predictions:
-            home = pred['home_team']
-            away = pred['away_team']
-            mname = f"{home} vs {away}"
-            stat_c, ns_c, combi_c = log_vbs_predictions(
-                tracker, mname, home, away, str(vbs_path)
-            )
-            print(f"   🎯 Tracker: {mname} → {stat_c} stat + {ns_c} non-stat + {combi_c} combinadas")
-        
-        # 3) Build tracker HTML for the aprendizaje tab
-        tracker_report = tracker.get_report()
-        tracker_html = build_tracker_section(tracker_report)
-        
-    except Exception as e:
-        print(f"   ⚠️ Tracker error: {e}")
-    
-    return out_path
+    # ─── TRACKER: DESHABILITADO (Kevin: sin tab de aprendizaje / sin logging) ───
+    # El bloque original loggeaba resultados y predicciones al BetTracker y
+    # construía el tab "aprendizaje". Se desactiva por decisión de Kevin.
+    tracker_html = ''
 
 if __name__ == '__main__':
     generate_web()
