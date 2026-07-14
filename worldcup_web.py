@@ -590,8 +590,64 @@ def build_tracker_section(report):
     return html
 
 
+def _real_form_html(team_name, real_form):
+    """Devuelve el bloque HTML de la forma real de un equipo en el Mundial 2026.
+    team_name: 'Spain' | 'France'. Usa REAL_FORM si el equipo está registrado."""
+    data = real_form.get(team_name)
+    if not data:
+        return ''
+    matches = data['matches']
+    gf = sum(m[2] for m in matches)   # goles a favor (columna 3 = goles_mio)
+    ga = sum(m[1] for m in matches)   # goles en contra (columna 2 = goles_rival)
+    rows = []
+    for opp, opp_goals, my_goals, stage in matches:
+        if my_goals > opp_goals:
+            res = '✅'
+        elif my_goals == opp_goals:
+            res = '🟡'
+        else:
+            res = '❌'
+        rows.append(
+            f'<div class="form-row">{res} <span class="form-stage">{stage}</span> '
+            f'vs {opp}: <b>{my_goals}-{opp_goals}</b></div>'
+        )
+    return f'''<div class="preview-team real-form">
+        <h3>🏳️ {display_name(team_name)} — {data['group']} ({len(matches)} partidos)</h3>
+        <div class="preview-stat"><span class="label">Goles a favor</span><span class="value">{gf}</span></div>
+        <div class="preview-stat"><span class="label">Goles en contra</span><span class="value">{ga}</span></div>
+        <div class="form-matches">{''.join(rows)}</div>
+    </div>'''
+
+
 def generate_web():
     """Genera predicciones.html con diseño premium"""
+    
+    # ─── FORMA REAL en el Mundial 2026 (datos verificados, no del motor) ───
+    # El motor solo carga 2-3 partidos por equipo; para la previa mostramos el
+    # registro COMPLETO del torneo (grupos + eliminatorias).
+    # Formato tupla: (rival_display, goles_rival, goles_mio, fase)
+    REAL_FORM = {
+        'Spain': {
+            'group': 'Grupo H',
+            'matches': [
+                ('Uruguay', 0, 1, 'Grupos'),
+                ('Cabo Verde', 0, 0, 'Grupos'),
+                ('Arabia Saudí', 0, 4, 'Grupos'),
+                ('Portugal', 0, 1, 'Octavos'),
+                ('Bélgica', 1, 2, 'Cuartos'),
+            ],
+        },
+        'France': {
+            'group': 'Grupo I',
+            'matches': [
+                ('Senegal', 1, 3, 'Grupos'),
+                ('Países Bajos', 0, 2, 'Grupos'),
+                ('Noruega', 1, 4, 'Grupos'),
+                ('Paraguay', 0, 1, 'Octavos'),
+                ('Marruecos', 0, 2, 'Cuartos'),
+            ],
+        },
+    }
     
     # Cargar motor
     engine = WorldCupEngine()
@@ -1134,6 +1190,11 @@ def generate_web():
         }}
         .value-bet-card.low-fi {{ opacity: 0.82; }}
         .value-bet-card.low-fi::before {{ background: #f06090; }}
+        .real-form {{ border: 1px solid #2a4a3a; }}
+        .form-note {{ display:block; color:#6a70a0; font-size:0.8em; margin-bottom:12px; }}
+        .form-matches {{ margin-top:10px; font-size:0.85em; color:#c0c0d0; }}
+        .form-row {{ padding:3px 0; border-bottom:1px solid #1a1f3a; }}
+        .form-stage {{ color:#e09020; font-weight:600; margin-right:4px; }}
         .value-bets-intro {{
             text-align: center;
             color: #8890b0;
@@ -1586,6 +1647,16 @@ def generate_web():
                                 <div class="preview-stat"><span class="label">Goles en contra</span><span class="value">{ts['away']['goals_against']}</span></div>
                                 <div class="preview-stat"><span class="label">Rivales enfrentados</span><span class="value">{', '.join(ts['away']['opponents'])}</span></div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- FORMA REAL EN EL TORNEO (datos verificados, no del motor) -->
+                    <div class="preview-section">
+                        <h3>🏆 Forma Real en el Mundial 2026</h3>
+                        <small class="form-note">Registro completo del torneo (grupos + eliminatorias). El motor solo usa 2-3 partidos para sus cálculos; aquí el historial real.</small>
+                        <div class="preview-grid">
+                            {_real_form_html(r['home_team'], REAL_FORM)}
+                            {_real_form_html(r['away_team'], REAL_FORM)}
                         </div>
                     </div>
 
