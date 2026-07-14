@@ -630,6 +630,7 @@ def generate_web():
         'Spain': {
             'group': 'Eliminatorias',
             'matches': [
+                ('Austria', 0, 3, 'Dieciseisavos'),
                 ('Portugal', 0, 1, 'Octavos'),
                 ('Bélgica', 1, 2, 'Cuartos'),
             ],
@@ -637,6 +638,7 @@ def generate_web():
         'France': {
             'group': 'Eliminatorias',
             'matches': [
+                ('Suecia', 0, 3, 'Dieciseisavos'),
                 ('Paraguay', 0, 1, 'Octavos'),
                 ('Marruecos', 0, 2, 'Cuartos'),
             ],
