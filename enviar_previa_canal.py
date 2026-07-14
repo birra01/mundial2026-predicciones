@@ -27,7 +27,7 @@ sys.path.insert(0, str(Path.home() / "bot_apuestas" / "venv" / "lib" / "python3.
 
 from telegram import Bot
 
-previa = Path(__file__).parent / "data" / "previas" / "noruega_inglaterra_11jul.md"
+previa = Path(__file__).parent / "data" / "previas" / "espana_francia_14jul.md"
 texto = previa.read_text(encoding="utf-8")
 
 # Telegram limita a 4096 chars por mensaje; la previa cabe de sobra
