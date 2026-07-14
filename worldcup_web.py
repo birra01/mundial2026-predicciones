@@ -332,13 +332,18 @@ def get_sportdb_odds(match_key):
 
 
 def _build_value_bets_html():
-    """Genera el HTML de la sección Value Bets - SOLO análisis exhaustivo (5 mercados)"""
+    """Genera el HTML de la sección Value Bets - SOLO análisis exhaustivo (5 mercados).
+    Muestra ADVERTENCIA de fiabilidad cuando el modelo discrepa del mercado o el
+    track record está vacío. Las value bets se presentan como ANÁLISIS, no como
+    recomendación de apuesta."""
     # Cargar el JSON del análisis exhaustivo
     all_vbs_path = Path(__file__).parent / "data" / "vbs_bug_fixed.json"
     extra_vbs = []
+    meta = {}
     if all_vbs_path.exists():
         with open(all_vbs_path) as f:
             raw = json.load(f)
+        meta = {k: raw.get(k) for k in ('model_reliable', 'max_divergence_pp', 'ga_floor_used')}
         # Handle both old flat format and new nested format
         if isinstance(raw, dict) and 'matches' in raw:
             for match_key, match_data in raw['matches'].items():
@@ -353,7 +358,26 @@ def _build_value_bets_html():
     if not extra_vbs:
         return '<div class="no-value-bets">🔍 No se encontraron value bets para los próximos partidos.<br><small>Genera primero el análisis exhaustivo con value_bets.py</small></div>'
 
-    html = '<div class="value-bets-intro">🎯 Predicciones de eventos (goles, córners, tarjetas, tiros, BTTS, 1X2). Edge = diferencia entre la probabilidad del modelo y la implícita de la cuota. 🟢 EV+ es value bet real.</div>\n'
+    # ─── Advertencia de fiabilidad (honesta) ───
+    warn = ''
+    if not meta.get('model_reliable'):
+        div = meta.get('max_divergence_pp', 0)
+        warn += (
+            f'⚠️ <b>Fiabilidad BAJA para este partido.</b> El modelo discrepa <b>{div:+.1f} pp</b> '
+            f'del mercado (bet365/Pinnacle) en el 1X2. Con solo 2-3 partidos de muestra por equipo, '
+            f'el modelo no es fiable en fase de eliminación: el mercado manda. '
+            f'Las cifras de goles/BTTS usan un xG con piso defensivo artificial '
+            f'(España aún no ha encajado en la muestra). '
+            f'<b>Trátalo como análisis, no como apuesta.</b><br>'
+        )
+    warn += (
+        '📊 Track record del motor: <b>0 apuestas validadas</b> (sin histórico de aciertos). '
+        'Edge = diferencia entre probabilidad del modelo y la implícita de la cuota. '
+        'Un edge positivo NO garantiza valor real sin histórico.'
+    )
+    html = f'<div class="value-bets-warning">{warn}</div>\n'
+
+    html += '<div class="value-bets-intro">🎯 Predicciones de eventos (goles, córners, tarjetas, tiros, BTTS, 1X2) con su edge vs cuota. 🔴 = fiabilidad baja del modelo para ese mercado.</div>\n'
 
     # ─── ÚNICA SECCIÓN: VALUE BETS EXHAUSTIVOS (5 mercados) ───
     html += '<h3 class="vb-section-title">📊 Value Bets — Análisis Exhaustivo (5 mercados)</h3>\n'
@@ -367,6 +391,7 @@ def _build_value_bets_html():
         cuota = vb['cuota']
         prob = vb['prob']
         edge = vb['edge']
+        reliable = vb.get('reliable', False)
 
         # Icono por mercado
         market_icons = {
@@ -389,10 +414,13 @@ def _build_value_bets_html():
             edge_class = 'edge-flat'
             edge_icon = '🟡'
 
+        # Fiabilidad del modelo para este mercado
+        rel_badge = '' if reliable else '<span class="rel-badge">🔴 baja fiabilidad</span>'
+
         ev = (prob / 100) * cuota * 100  # EV%
         edge_sign = '+' if edge >= 0 else ''
 
-        html += f'''        <div class="value-bet-card {edge_class}">
+        html += f'''        <div class="value-bet-card {edge_class}{'' if reliable else ' low-fi'}">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ {match}</span>
                 <span class="value-bet-market">{icon} {market} — {pick}</span>
@@ -415,6 +443,7 @@ def _build_value_bets_html():
                     <div class="edge-label">EDGE · EV {edge_sign}{(ev-100):.0f}%</div>
                 </div>
             </div>
+            {rel_badge}
         </div>
 '''
     html += '</div>\n'
@@ -1080,6 +1109,31 @@ def generate_web():
         .combi-payout strong {{ color: #e0e0e0; font-size: 1.15em; }}
         
         /* ─── VALUE BETS ─── */
+        .value-bets-warning {{
+            background: #2a1500;
+            border: 1px solid #e09020;
+            border-left: 4px solid #f06060;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            color: #f0d8a0;
+            font-size: 0.88em;
+            line-height: 1.5;
+        }}
+        .value-bets-warning b {{ color: #ffd060; }}
+        .rel-badge {{
+            display: inline-block;
+            margin-top: 10px;
+            background: #2a0f1a;
+            color: #ff8a8a;
+            border: 1px solid #f06090;
+            border-radius: 6px;
+            padding: 3px 10px;
+            font-size: 0.72em;
+            font-weight: 700;
+        }}
+        .value-bet-card.low-fi {{ opacity: 0.82; }}
+        .value-bet-card.low-fi::before {{ background: #f06090; }}
         .value-bets-intro {{
             text-align: center;
             color: #8890b0;

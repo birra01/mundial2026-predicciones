@@ -426,6 +426,31 @@
         .combi-payout strong { color: #e0e0e0; font-size: 1.15em; }
         
         /* ─── VALUE BETS ─── */
+        .value-bets-warning {
+            background: #2a1500;
+            border: 1px solid #e09020;
+            border-left: 4px solid #f06060;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            color: #f0d8a0;
+            font-size: 0.88em;
+            line-height: 1.5;
+        }
+        .value-bets-warning b { color: #ffd060; }
+        .rel-badge {
+            display: inline-block;
+            margin-top: 10px;
+            background: #2a0f1a;
+            color: #ff8a8a;
+            border: 1px solid #f06090;
+            border-radius: 6px;
+            padding: 3px 10px;
+            font-size: 0.72em;
+            font-weight: 700;
+        }
+        .value-bet-card.low-fi { opacity: 0.82; }
+        .value-bet-card.low-fi::before { background: #f06090; }
         .value-bets-intro {
             text-align: center;
             color: #8890b0;
@@ -1081,10 +1106,11 @@
         </div><!-- /tab-combinadas -->
         
         <div id="tab-valuebets" class="tab-panel">
-<div class="value-bets-intro">🎯 Predicciones de eventos (goles, córners, tarjetas, tiros, BTTS, 1X2). Edge = diferencia entre la probabilidad del modelo y la implícita de la cuota. 🟢 EV+ es value bet real.</div>
+<div class="value-bets-warning">⚠️ <b>Fiabilidad BAJA para este partido.</b> El modelo discrepa <b>+17.9 pp</b> del mercado (bet365/Pinnacle) en el 1X2. Con solo 2-3 partidos de muestra por equipo, el modelo no es fiable en fase de eliminación: el mercado manda. Las cifras de goles/BTTS usan un xG con piso defensivo artificial (España aún no ha encajado en la muestra). <b>Trátalo como análisis, no como apuesta.</b><br>📊 Track record del motor: <b>0 apuestas validadas</b> (sin histórico de aciertos). Edge = diferencia entre probabilidad del modelo y la implícita de la cuota. Un edge positivo NO garantiza valor real sin histórico.</div>
+<div class="value-bets-intro">🎯 Predicciones de eventos (goles, córners, tarjetas, tiros, BTTS, 1X2) con su edge vs cuota. 🔴 = fiabilidad baja del modelo para ese mercado.</div>
 <h3 class="vb-section-title">📊 Value Bets — Análisis Exhaustivo (5 mercados)</h3>
 <div class="value-bets-grid">
-        <div class="value-bet-card edge-strong">
+        <div class="value-bet-card edge-strong low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🟨 Tarjetas — U2.0</span>
@@ -1107,8 +1133,9 @@
                     <div class="edge-label">EDGE · EV +201%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-strong">
+        <div class="value-bet-card edge-strong low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🟨 Tarjetas — U2.5</span>
@@ -1131,8 +1158,9 @@
                     <div class="edge-label">EDGE · EV +120%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-strong">
+        <div class="value-bet-card edge-strong low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🟨 Tarjetas — U2.5</span>
@@ -1155,8 +1183,9 @@
                     <div class="edge-label">EDGE · EV +113%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-strong">
+        <div class="value-bet-card edge-strong low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🟨 Tarjetas — U3.0</span>
@@ -1179,8 +1208,9 @@
                     <div class="edge-label">EDGE · EV +88%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-strong">
+        <div class="value-bet-card edge-strong low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🟨 Tarjetas — U3.5</span>
@@ -1203,8 +1233,9 @@
                     <div class="edge-label">EDGE · EV +64%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-strong">
+        <div class="value-bet-card edge-strong low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🟨 Tarjetas — U3.5</span>
@@ -1227,8 +1258,9 @@
                     <div class="edge-label">EDGE · EV +55%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-strong">
+        <div class="value-bet-card edge-strong low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">⚽ Goles — Under 2.5</span>
@@ -1251,8 +1283,9 @@
                     <div class="edge-label">EDGE · EV +46%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-strong">
+        <div class="value-bet-card edge-strong low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🥅 BTTS — BTTS No</span>
@@ -1275,8 +1308,9 @@
                     <div class="edge-label">EDGE · EV +50%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-strong">
+        <div class="value-bet-card edge-strong low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">⚽ Goles — Under 1.5</span>
@@ -1299,8 +1333,9 @@
                     <div class="edge-label">EDGE · EV +90%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-strong">
+        <div class="value-bet-card edge-strong low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">⚽ Goles — Under 3.5</span>
@@ -1323,8 +1358,9 @@
                     <div class="edge-label">EDGE · EV +24%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-strong">
+        <div class="value-bet-card edge-strong low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🏳️ Córners — O9.5</span>
@@ -1347,8 +1383,9 @@
                     <div class="edge-label">EDGE · EV +36%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-strong">
+        <div class="value-bet-card edge-strong low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🏳️ Córners — O8.5</span>
@@ -1371,8 +1408,9 @@
                     <div class="edge-label">EDGE · EV +27%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-strong">
+        <div class="value-bet-card edge-strong low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🏳️ Córners — O10.5</span>
@@ -1395,8 +1433,9 @@
                     <div class="edge-label">EDGE · EV +40%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-mild">
+        <div class="value-bet-card edge-mild low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🏆 1X2 — España</span>
@@ -1419,8 +1458,9 @@
                     <div class="edge-label">EDGE · EV +45%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-mild">
+        <div class="value-bet-card edge-mild low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🏳️ Córners — O9.0</span>
@@ -1443,8 +1483,9 @@
                     <div class="edge-label">EDGE · EV +22%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-mild">
+        <div class="value-bet-card edge-mild low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🏳️ Córners — O10.0</span>
@@ -1467,8 +1508,9 @@
                     <div class="edge-label">EDGE · EV +27%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-mild">
+        <div class="value-bet-card edge-mild low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🏳️ Córners — O9.5</span>
@@ -1491,8 +1533,9 @@
                     <div class="edge-label">EDGE · EV +21%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-mild">
+        <div class="value-bet-card edge-mild low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🏳️ Córners — O11.5</span>
@@ -1515,8 +1558,9 @@
                     <div class="edge-label">EDGE · EV +35%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-mild">
+        <div class="value-bet-card edge-mild low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🏳️ Córners — O7.5</span>
@@ -1539,8 +1583,9 @@
                     <div class="edge-label">EDGE · EV +15%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-mild">
+        <div class="value-bet-card edge-mild low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🏳️ Córners — O11.0</span>
@@ -1563,8 +1608,9 @@
                     <div class="edge-label">EDGE · EV +29%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
-        <div class="value-bet-card edge-mild">
+        <div class="value-bet-card edge-mild low-fi">
             <div class="value-bet-header">
                 <span class="value-bet-match">⚽ Spain vs France</span>
                 <span class="value-bet-market">🏳️ Córners — O8.0</span>
@@ -1587,6 +1633,157 @@
                     <div class="edge-label">EDGE · EV +10%</div>
                 </div>
             </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
+        </div>
+        <div class="value-bet-card edge-flat low-fi">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs France</span>
+                <span class="value-bet-market">🏆 1X2 — Empate</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">29.3%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">3.25</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">30.8%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-flat">
+                    <div class="edge-badge">🟡 -1.5%</div>
+                    <div class="edge-label">EDGE · EV -5%</div>
+                </div>
+            </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
+        </div>
+        <div class="value-bet-card edge-flat low-fi">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs France</span>
+                <span class="value-bet-market">🏆 1X2 — Francia</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">23.8%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">2.40</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">41.7%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-flat">
+                    <div class="edge-badge">🟡 -17.9%</div>
+                    <div class="edge-label">EDGE · EV -43%</div>
+                </div>
+            </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
+        </div>
+        <div class="value-bet-card edge-flat low-fi">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs France</span>
+                <span class="value-bet-market">⚽ Goles — Over 3.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">8.7%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">3.20</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">31.2%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-flat">
+                    <div class="edge-badge">🟡 -22.5%</div>
+                    <div class="edge-label">EDGE · EV -72%</div>
+                </div>
+            </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
+        </div>
+        <div class="value-bet-card edge-flat low-fi">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs France</span>
+                <span class="value-bet-market">⚽ Goles — Over 1.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">49.4%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.28</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">78.1%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-flat">
+                    <div class="edge-badge">🟡 -28.7%</div>
+                    <div class="edge-label">EDGE · EV -37%</div>
+                </div>
+            </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
+        </div>
+        <div class="value-bet-card edge-flat low-fi">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs France</span>
+                <span class="value-bet-market">⚽ Goles — Over 2.5</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">23.2%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.90</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">52.6%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-flat">
+                    <div class="edge-badge">🟡 -29.4%</div>
+                    <div class="edge-label">EDGE · EV -56%</div>
+                </div>
+            </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
+        </div>
+        <div class="value-bet-card edge-flat low-fi">
+            <div class="value-bet-header">
+                <span class="value-bet-match">⚽ Spain vs France</span>
+                <span class="value-bet-market">🥅 BTTS — BTTS Sí</span>
+            </div>
+            <div class="value-bet-body">
+                <div class="value-bet-stat highlight">
+                    <div class="stat-num">28.4%</div>
+                    <div class="stat-label">Prob. modelo</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">1.66</div>
+                    <div class="stat-label">Cuota bet365</div>
+                </div>
+                <div class="value-bet-stat">
+                    <div class="stat-num">60.2%</div>
+                    <div class="stat-label">Implícita</div>
+                </div>
+                <div class="value-bet-verdict edge-flat">
+                    <div class="edge-badge">🟡 -31.9%</div>
+                    <div class="edge-label">EDGE · EV -53%</div>
+                </div>
+            </div>
+            <span class="rel-badge">🔴 baja fiabilidad</span>
         </div>
 </div>
 
