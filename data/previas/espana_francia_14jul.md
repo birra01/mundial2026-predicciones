@@ -25,6 +25,4 @@ Historial: 38 duelos → España 18 · Francia 13 · 7 empates. España ganó lo
 Francia 44.1% · Empate 24.2% · España 31.7% · xG 1.25–1.46
 ⚠️ El modelo discrepa del mercado y no tiene track record en eliminatorias. Tómalo como referencia, no como apuesta.
 
-📈 Análisis completo: https://birra01.github.io/mundial2026-predicciones/
-
 🔞 Juega con responsabilidad. +18

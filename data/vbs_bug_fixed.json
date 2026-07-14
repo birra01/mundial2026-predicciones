@@ -249,6 +249,61 @@
           "src": "bet365",
           "reliable": false
         }
+      ],
+      "combinadas": [
+        {
+          "name": "SEGURA",
+          "desc": "2 partidos con goles casi asegurados",
+          "picks": [
+            {
+              "pick": "Fra-Esp: Más de 1.5 goles",
+              "cuota": 1.36,
+              "prob": 78
+            },
+            {
+              "pick": "Ing-Arg: Más de 1.5 goles",
+              "cuota": 1.3,
+              "prob": 80
+            }
+          ]
+        },
+        {
+          "name": "MEDIA",
+          "desc": "Ambos marcan + doble oportunidad",
+          "picks": [
+            {
+              "pick": "Fra-Esp: Ambos marcan Sí",
+              "cuota": 1.8,
+              "prob": 58
+            },
+            {
+              "pick": "Ing-Arg: Inglaterra o empate",
+              "cuota": 1.45,
+              "prob": 65
+            }
+          ]
+        },
+        {
+          "name": "SOÑADORA",
+          "desc": "Triple de alto riesgo, pago gordo",
+          "picks": [
+            {
+              "pick": "Fra-Esp: Gana Francia",
+              "cuota": 2.4,
+              "prob": 42
+            },
+            {
+              "pick": "Fra-Esp: Mbappé anotador",
+              "cuota": 2.0,
+              "prob": 50
+            },
+            {
+              "pick": "Ing-Arg: Gana Argentina",
+              "cuota": 2.87,
+              "prob": 35
+            }
+          ]
+        }
       ]
     }
   }

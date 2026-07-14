@@ -209,7 +209,7 @@ def build_combinadas(predictions, odds_cache):
                 implied = 100.0 / p['cuota']
                 pick_edge = pick_prob - implied
                 legs.append({
-                    'text': f"{label}: {p['pick']}",
+                    'text': p['pick'],
                     'cuota': p['cuota'],
                     'prob': pick_prob / 100.0,
                     'edge': round(pick_edge, 1),
@@ -1972,7 +1972,7 @@ def generate_web():
             <h2>🎰 COMBINADAS RECOMENDADAS (cuotas bet365)</h2>
 """
     for match_label, combis_list in combinadas:
-        html += f'            <h3 style="color:#f0c040;font-size:1.1em;margin:18px 0 8px;">⚽ {match_label}</h3>\n'
+        html += f'            <h3 style="color:#f0c040;font-size:1.1em;margin:18px 0 8px;">⚽ Semifinales Mundial 2026</h3>\n'
         html += '            <div class="combi-row">\n'
         for c in combis_list:
             tier = c['tier']
