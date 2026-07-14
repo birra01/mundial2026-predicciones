@@ -622,27 +622,21 @@ def _real_form_html(team_name, real_form):
 def generate_web():
     """Genera predicciones.html con diseño premium"""
     
-    # ─── FORMA REAL en el Mundial 2026 (datos verificados, no del motor) ───
-    # El motor solo carga 2-3 partidos por equipo; para la previa mostramos el
-    # registro COMPLETO del torneo (grupos + eliminatorias).
+    # ─── FORMA REAL en ELIMINATORIAS del Mundial 2026 (datos verificados) ───
+    # Lo que importa en una semifinal son los partidos de eliminación directa,
+    # no la fase de grupos. Mostramos solo octavos + cuartos.
     # Formato tupla: (rival_display, goles_rival, goles_mio, fase)
     REAL_FORM = {
         'Spain': {
-            'group': 'Grupo H',
+            'group': 'Eliminatorias',
             'matches': [
-                ('Uruguay', 0, 1, 'Grupos'),
-                ('Cabo Verde', 0, 0, 'Grupos'),
-                ('Arabia Saudí', 0, 4, 'Grupos'),
                 ('Portugal', 0, 1, 'Octavos'),
                 ('Bélgica', 1, 2, 'Cuartos'),
             ],
         },
         'France': {
-            'group': 'Grupo I',
+            'group': 'Eliminatorias',
             'matches': [
-                ('Senegal', 1, 3, 'Grupos'),
-                ('Países Bajos', 0, 2, 'Grupos'),
-                ('Noruega', 1, 4, 'Grupos'),
                 ('Paraguay', 0, 1, 'Octavos'),
                 ('Marruecos', 0, 2, 'Cuartos'),
             ],
@@ -1642,7 +1636,7 @@ def generate_web():
                     <!-- FORMA REAL EN EL TORNEO (datos verificados) -->
                     <div class="preview-section">
                         <h3>📊 Forma Reciente</h3>
-                        <small class="form-note">Registro completo en el Mundial 2026 (fase de grupos + eliminatorias), verificado contra resultados oficiales.</small>
+                        <small class="form-note">Solo eliminatorias (octavos + cuartos) del Mundial 2026, verificado contra resultados oficiales.</small>
                         <div class="preview-grid">
                             {_real_form_html(r['home_team'], REAL_FORM)}
                             {_real_form_html(r['away_team'], REAL_FORM)}
