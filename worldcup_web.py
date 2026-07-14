@@ -578,10 +578,9 @@ def generate_web():
     # Cargar datos de sportdb.dev
     sportdb_details = load_sportdb_details()
     
-    # Partidos de hoy 11 julio (Cuartos de final)
+    # Partidos de hoy 14 julio (Semifinales)
     matches_today = [
-        ("Norway", "England", "21:00"),
-        ("Argentina", "Switzerland", "01:00"),
+        ("France", "Spain", "21:00"),
     ]
     
     predictions = []
@@ -658,7 +657,7 @@ def generate_web():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mundial 2026 — Predicciones 11 Julio</title>
+    <title>Mundial 2026 — Predicciones 14 Julio (Semifinales)</title>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         
@@ -1885,7 +1884,7 @@ def generate_web():
         <div class="footer">
             ⚡ Sistema de predicción basado en modelo compuesto (Elo + Estadísticas + Goles esperados)<br>
             Datos de Sofascore · 72 partidos analizados · 48 selecciones · {len(engine.team_stats)} con estadísticas completas<br>
-            <small>Generado el 10 de julio de 2026 · Solo con fines informativos</small>
+            <small>Generado el 14 de julio de 2026 · Solo con fines informativos</small>
         </div>
     </div>
 </body>

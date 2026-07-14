@@ -316,18 +316,22 @@ class WorldCupEngine:
         # Esto captura correctamente la interacción: Egypt poco goleador vs Argentina sólida defensa
         all_gf = [ts['avg_goals_for'] for ts in self.team_stats.values()]
         league_avg = sum(all_gf) / len(all_gf) if all_gf else 1.5
-        
+        # Piso defensivo mínimo: evita xG rival = 0 cuando un equipo aún no ha
+        # encajado (muestra pequeña). 0.25 ~ mitad de la media de liga más baja
+        # de goles encajados; solo afecta a equipos con GA ≈ 0.
+        MIN_GA = 0.25
+
         h_gf = ht['avg_goals_for']
-        h_ga = ht['avg_goals_against']
+        h_ga = max(ht['avg_goals_against'], MIN_GA)
         a_gf = at['avg_goals_for']
-        a_ga = at['avg_goals_against']
-        
+        a_ga = max(at['avg_goals_against'], MIN_GA)
+
         # Strengths relativos al promedio de la liga
         h_attack = h_gf / league_avg      # Argentina ataque: 1.77
         h_defense = h_ga / league_avg     # Argentina defensa: 0.22 (muy bajo = muy bueno)
         a_attack = a_gf / league_avg      # Egypt ataque: 1.11
         a_defense = a_ga / league_avg     # Egypt defensa: 0.66
-        
+
         # xG = fuerza atacante × debilidad defensiva rival × promedio liga
         exp_hg = h_attack * a_defense * league_avg   # Argentina goles esperados
         exp_ag = a_attack * h_defense * league_avg   # Egypt goles esperados (bajo contra defensa ARG)
