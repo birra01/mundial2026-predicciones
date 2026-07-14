@@ -1620,6 +1620,16 @@ def generate_web():
         hxg_blend = (home_xg + home_lam) / 2
         axg_blend = (away_xg + away_lam) / 2
 
+        # Totales reales del torneo (desde REAL_FORM, no del motor)
+        _rh = REAL_FORM.get(r['home_team'], {}).get('matches', [])
+        _ra = REAL_FORM.get(r['away_team'], {}).get('matches', [])
+        real_home_gf = sum(m[2] for m in _rh)
+        real_home_ga = sum(m[1] for m in _rh)
+        real_home_n = len(_rh)
+        real_away_gf = sum(m[2] for m in _ra)
+        real_away_ga = sum(m[1] for m in _ra)
+        real_away_n = len(_ra)
+
         html += f"""
         <div class="match-preview">
             <div class="preview-header" onclick="this.nextElementSibling.classList.toggle('open')">
@@ -1629,31 +1639,10 @@ def generate_web():
             <div class="preview-body">
                 <div class="preview-content">
 
-                    <!-- FORMA RECIENTE -->
+                    <!-- FORMA REAL EN EL TORNEO (datos verificados) -->
                     <div class="preview-section">
                         <h3>📊 Forma Reciente</h3>
-                        <div class="preview-grid">
-                            <div class="preview-team home">
-                                <h3>🏳️ {display_name(r['home_team'])} ({ts['home']['games']} partidos oficiales)</h3>
-                                <div class="preview-stat"><span class="label">Forma</span><span class="value">{''.join('✅' if x=='W' else '🟡' if x=='D' else '❌' for x in ts['home']['results'])}</span></div>
-                                <div class="preview-stat"><span class="label">Goles a favor</span><span class="value">{ts['home']['goals_for']}</span></div>
-                                <div class="preview-stat"><span class="label">Goles en contra</span><span class="value">{ts['home']['goals_against']}</span></div>
-                                <div class="preview-stat"><span class="label">Rivales enfrentados</span><span class="value">{', '.join(ts['home']['opponents'])}</span></div>
-                            </div>
-                            <div class="preview-team away">
-                                <h3>🏳️ {display_name(r['away_team'])} ({ts['away']['games']} partidos oficiales)</h3>
-                                <div class="preview-stat"><span class="label">Forma</span><span class="value">{''.join('✅' if x=='W' else '🟡' if x=='D' else '❌' for x in ts['away']['results'])}</span></div>
-                                <div class="preview-stat"><span class="label">Goles a favor</span><span class="value">{ts['away']['goals_for']}</span></div>
-                                <div class="preview-stat"><span class="label">Goles en contra</span><span class="value">{ts['away']['goals_against']}</span></div>
-                                <div class="preview-stat"><span class="label">Rivales enfrentados</span><span class="value">{', '.join(ts['away']['opponents'])}</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- FORMA REAL EN EL TORNEO (datos verificados, no del motor) -->
-                    <div class="preview-section">
-                        <h3>🏆 Forma Real en el Mundial 2026</h3>
-                        <small class="form-note">Registro completo del torneo (grupos + eliminatorias). El motor solo usa 2-3 partidos para sus cálculos; aquí el historial real.</small>
+                        <small class="form-note">Registro completo en el Mundial 2026 (fase de grupos + eliminatorias), verificado contra resultados oficiales.</small>
                         <div class="preview-grid">
                             {_real_form_html(r['home_team'], REAL_FORM)}
                             {_real_form_html(r['away_team'], REAL_FORM)}
@@ -1731,11 +1720,11 @@ def generate_web():
                     <div class="preview-tactical">
                         <h3>🔬 Análisis Táctico</h3>
                         <p><strong>Estilo de juego:</strong> {display_name(r['home_team'])} domina con posesión alta ({ts['home']['avg_stats_raw']['ballPossession']:.0f}%) y juego de toque. {display_name(r['away_team'])} depende del contraataque y transiciones rápidas ({ts['away']['avg_stats_raw']['ballPossession']:.0f}% posesión).</p>
-                        <p><strong>Fortaleza {display_name(r['home_team'])}:</strong> {ts['home']['avg_goals_for']:.1f} goles/partido, solo {ts['home']['avg_goals_against']:.1f} encajados. Defensa impenetrable en knockouts. {ts['home']['avg_stats_raw']['cornerKicks']:.1f} corners/partido generando presión constante.</p>
-                        <p><strong>Debilidad {display_name(r['away_team'])}:</strong> {ts['away']['avg_goals_against']:.1f} goles encajados/partido. Defensa frágil contra equipos de calidad.</p>
-                        <p><strong>Clave táctica:</strong> Si {display_name(r['away_team'])} se echa atrás, {display_name(r['home_team'])} la desgasta con posesión y termina marcando. Si se abre, deja espacios para el contraataque. En cuartos de final la presión es máxima y los equipos son más conservadores.</p>
-                        <p><strong>Cárneros y tarjetas:</strong> {display_name(r['home_team'])} ({ts['home']['avg_stats_raw']['cornerKicks']:.1f}) + {display_name(r['away_team'])} ({ts['away']['avg_stats_raw']['cornerKicks']:.1f}) = ~{total_corners:.0f} corners esperados. Tarjetas: ~{total_cards:.1f} promedio.</p>
-                        <p><strong>Pronóstico:</strong> {display_name(r['home_team'])} gana 2-0 o 2-1. {display_name(r['away_team'])} no tiene defensa para aguantar 90 minutos.</p>
+                        <p><strong>Fortaleza {display_name(r['home_team'])}:</strong> en el Mundial 2026 lleva {real_home_gf} goles a favor y solo {real_home_ga} en contra en {real_home_n} partidos. {ts['home']['avg_stats_raw']['cornerKicks']:.1f} corners/partido generando presión constante.</p>
+                        <p><strong>Debilidad {display_name(r['away_team'])}:</strong> en el torneo suma {real_away_gf} goles a favor y {real_away_ga} en contra en {real_away_n} partidos. Defensa sólida pero frente a ataques de nivel mundial se complica.</p>
+                        <p><strong>Clave táctica:</strong> Si {display_name(r['away_team'])} se echa atrás, {display_name(r['home_team'])} la desgasta con posesión. Si se abre, deja espacios para el contraataque. En semifinales la presión es máxima y los equipos son más conservadores.</p>
+                        <p><strong>Córners y tarjetas:</strong> {display_name(r['home_team'])} ({ts['home']['avg_stats_raw']['cornerKicks']:.1f}) + {display_name(r['away_team'])} ({ts['away']['avg_stats_raw']['cornerKicks']:.1f}) = ~{total_corners:.0f} corners esperados. Tarjetas: ~{total_cards:.1f} promedio.</p>
+                        <p><strong>Pronóstico del modelo:</strong> {display_name(r['home_team'])} {p['home']}% · Empate {p['draw']}% · {display_name(r['away_team'])} {p['away']}%. xG estimado: {hxg_blend:.2f} vs {axg_blend:.2f}. <em>Nota: el modelo discrepa del mercado (ver aviso de fiabilidad) y no es concluyente en eliminatorias.</em></p>
                     </div>
 
                     <!-- MODELO -->
@@ -1762,13 +1751,13 @@ def generate_web():
                     <!-- NARRATIVA -->
                     <div class="preview-tactical">
                         <h3>📝 Narrativa del Partido</h3>
-                        <p>{display_name(r['home_team'])} llega como favorita clara. {ts['home']['wins']} victorias de {ts['home']['games']}, {ts['home']['goals_against']} goles encajados en knockouts. Su posesión y control del juego sofocan a los rivales.</p>
-                        <p>{display_name(r['away_team'])} es el caballo oscuro. {ts['away']['avg_goals_for']:.1f} goles/partido pero con {ts['away']['avg_goals_against']:.1f} encajados. Su defensa es el talón de Aquiles.</p>
-                        <p>En cuartos de final, la presión es máxima. {display_name(r['away_team'])} necesita atacar si quiere ganar, lo que deja espacios para {display_name(r['home_team'])}. Si se echa atrás, {display_name(r['home_team'])} la desgasta con posesión.</p>
+                        <p>{display_name(r['home_team'])} llega invicta al torneo: {real_home_gf} goles a favor y {real_home_ga} en contra en {real_home_n} partidos. Su dominio con balón y control del juego la han llevado a semifinales.</p>
+                        <p>{display_name(r['away_team'])} también viene imbatida en el Mundial 2026: {real_away_gf} goles a favor y {real_away_ga} en contra en {real_away_n} partidos. Semifinal entre dos favoritas que han ganado todo lo que han jugado.</p>
+                        <p>En semifinales la presión es máxima. {display_name(r['away_team'])} necesita atacar si quiere ganar, lo que deja espacios para {display_name(r['home_team'])}. Si se echa atrás, {display_name(r['home_team'])} la desgasta con posesión. Partido muy ajustado sobre el papel.</p>
                     </div>
 
                     <div class="preview-verdict">
-                        <p>🎯 <strong>Pronóstico final:</strong> {display_name(r['home_team'])} gana 2-0 o 2-1. xG: {hxg_blend:.2f} vs {axg_blend:.2f}. {display_name(r['away_team'])} no tiene defensa para aguantar.</p>
+                        <p>🎯 <strong>Conclusión:</strong> dos selecciones invictas y muy sólidas defensivamente (solo 2 goles encajados cada una en el torneo). El modelo da {display_name(r['home_team'])} {p['home']}% · Empate {p['draw']}% · {display_name(r['away_team'])} {p['away']}%, pero <em>discrepa fuerte del mercado y su track record es 0</em>, así que no es una predicción fiable. Se espera un partido cerrado.</p>
                     </div>
                 </div>
             </div>
