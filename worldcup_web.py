@@ -1626,6 +1626,16 @@ def generate_web():
         real_away_ga = sum(m[1] for m in _ra)
         real_away_n = len(_ra)
 
+        # Rol por posesión real (no por local/visitante): quien más balón = dominador
+        _hp = ts['home']['avg_stats_raw']['ballPossession']
+        _ap = ts['away']['avg_stats_raw']['ballPossession']
+        if _hp >= _ap:
+            poss_team, poss_pct = display_name(r['home_team']), _hp
+            direct_team, direct_pct = display_name(r['away_team']), _ap
+        else:
+            poss_team, poss_pct = display_name(r['away_team']), _ap
+            direct_team, direct_pct = display_name(r['home_team']), _hp
+
         html += f"""
         <div class="match-preview">
             <div class="preview-header" onclick="this.nextElementSibling.classList.toggle('open')">
@@ -1731,10 +1741,10 @@ def generate_web():
                     <!-- ANÁLISIS TÁCTICO -->
                     <div class="preview-tactical">
                         <h3>🔬 Análisis Táctico</h3>
-                        <p><strong>Estilo de juego:</strong> {display_name(r['home_team'])} domina con posesión alta ({ts['home']['avg_stats_raw']['ballPossession']:.0f}%) y juego de toque. {display_name(r['away_team'])} depende del contraataque y transiciones rápidas ({ts['away']['avg_stats_raw']['ballPossession']:.0f}% posesión).</p>
+                        <p><strong>Estilo de juego:</strong> {poss_team} domina con posesión alta ({poss_pct:.0f}%) y juego de toque. {direct_team} juega más vertical, buscando transiciones rápidas y el contraataque ({direct_pct:.0f}% posesión).</p>
                         <p><strong>Fortaleza {display_name(r['home_team'])}:</strong> en el Mundial 2026 lleva {real_home_gf} goles a favor y solo {real_home_ga} en contra en {real_home_n} partidos. {ts['home']['avg_stats_raw']['cornerKicks']:.1f} corners/partido generando presión constante.</p>
                         <p><strong>Debilidad {display_name(r['away_team'])}:</strong> en el torneo suma {real_away_gf} goles a favor y {real_away_ga} en contra en {real_away_n} partidos. Defensa sólida pero frente a ataques de nivel mundial se complica.</p>
-                        <p><strong>Clave táctica:</strong> Si {display_name(r['away_team'])} se echa atrás, {display_name(r['home_team'])} la desgasta con posesión. Si se abre, deja espacios para el contraataque. En semifinales la presión es máxima y los equipos son más conservadores.</p>
+                        <p><strong>Clave táctica:</strong> Si {direct_team} se echa atrás, {poss_team} la desgasta con posesión. Si {direct_team} se abre, deja espacios para su propio contraataque. En semifinales la presión es máxima y los equipos son más conservadores.</p>
                         <p><strong>Córners y tarjetas:</strong> {display_name(r['home_team'])} ({ts['home']['avg_stats_raw']['cornerKicks']:.1f}) + {display_name(r['away_team'])} ({ts['away']['avg_stats_raw']['cornerKicks']:.1f}) = ~{total_corners:.0f} corners esperados. Tarjetas: ~{total_cards:.1f} promedio.</p>
                         <p><strong>Pronóstico del modelo:</strong> {display_name(r['home_team'])} {p['home']}% · Empate {p['draw']}% · {display_name(r['away_team'])} {p['away']}%. xG estimado: {hxg_blend:.2f} vs {axg_blend:.2f}. <em>Nota: el modelo discrepa del mercado (ver aviso de fiabilidad) y no es concluyente en eliminatorias.</em></p>
                     </div>
@@ -1765,7 +1775,7 @@ def generate_web():
                         <h3>📝 Narrativa del Partido</h3>
                         <p>{display_name(r['home_team'])} llega invicta al torneo: {real_home_gf} goles a favor y {real_home_ga} en contra en {real_home_n} partidos. Su dominio con balón y control del juego la han llevado a semifinales.</p>
                         <p>{display_name(r['away_team'])} también viene imbatida en el Mundial 2026: {real_away_gf} goles a favor y {real_away_ga} en contra en {real_away_n} partidos. Semifinal entre dos favoritas que han ganado todo lo que han jugado.</p>
-                        <p>En semifinales la presión es máxima. {display_name(r['away_team'])} necesita atacar si quiere ganar, lo que deja espacios para {display_name(r['home_team'])}. Si se echa atrás, {display_name(r['home_team'])} la desgasta con posesión. Partido muy ajustado sobre el papel.</p>
+                        <p>En semifinales la presión es máxima. {direct_team} necesita atacar si quiere ganar, lo que deja espacios atrás. Si se echa atrás, {poss_team} la desgasta con posesión. Partido muy ajustado sobre el papel.</p>
                     </div>
 
                     <div class="preview-verdict">
